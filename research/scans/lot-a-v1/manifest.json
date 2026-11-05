@@ -1,0 +1,137 @@
+{
+  "revision": "lot-a-v1-preliminary",
+  "status": "requires_human_review",
+  "coordinateConvention": {
+    "origin": "upper-left",
+    "x": "right",
+    "y": "down",
+    "units": "pixels",
+    "width": 1698,
+    "height": 1378,
+    "scaleToMeters": null,
+    "sceneScale": null,
+    "exportCropOffset": [
+      0,
+      0
+    ]
+  },
+  "sources": [
+    {
+      "path": "images/Mosst updated satelite image.png",
+      "role": "primary geometry",
+      "width": 1698,
+      "height": 1378,
+      "sha256": "7c6aaaf4b6f23774459b3bf5b1d5d1a35789db9dfec31b5ec36551fa46187da5",
+      "registration": {
+        "status": "identity",
+        "offset": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "path": "images/Lot labels.png",
+      "role": "lot identification",
+      "width": 1520,
+      "height": 848,
+      "sha256": "6f9c0abb41514172441e7ae36654d5734dd135d8e937802e2fae64d7c73d1255",
+      "registration": {
+        "status": "unregistered_no_coordinates_transferred"
+      }
+    },
+    {
+      "path": "images/apple.png",
+      "role": "supporting building evidence; not registered",
+      "width": 1136,
+      "height": 918,
+      "sha256": "19999376f7ce8dc48c58b0a23aba1101d61efd64e11873d1161c4859206a4cc5",
+      "registration": {
+        "status": "unregistered_no_coordinates_transferred"
+      }
+    },
+    {
+      "path": "images/google.png",
+      "role": "supporting striping evidence; not registered",
+      "width": 1228,
+      "height": 962,
+      "sha256": "8520f9143b705fe1115f38fc2a88ff0dd6238f402d5dabacbb0461cbb6042cc2",
+      "registration": {
+        "status": "unregistered_no_coordinates_transferred"
+      }
+    },
+    {
+      "path": "images/zoomed in.png",
+      "role": "supporting evidence; not registered",
+      "width": 2030,
+      "height": 906,
+      "sha256": "e5f697e27945d1521374217490135ff59b14d010b961e34a949103f29073220b",
+      "registration": {
+        "status": "unregistered_no_coordinates_transferred"
+      }
+    },
+    {
+      "path": "research/building-references/lot-a-latest.png",
+      "role": "approved geometry crop",
+      "width": 410,
+      "height": 500,
+      "sha256": "25725af250fb6cdb12a5ceb2308f71c26ea442e45a61b7ee9ae75e0a2240ea79",
+      "registration": {
+        "status": "pixel_identical_crop",
+        "offset": [
+          190,
+          180
+        ],
+        "coordinateTransfer": "x+190,y+180",
+        "pixelEqualityVerified": true
+      }
+    }
+  ],
+  "approvedGeometry": {
+    "path": "src/lotA.js",
+    "preserved": true,
+    "sha256": "2999a9adc36efa5d27cdfffb50f84b4cdaefb13b8ef15fd145597b14fedf9105",
+    "correctionsProposed": false
+  },
+  "capacities": {
+    "A": 411,
+    "B": 487,
+    "C": 686,
+    "total": 1584,
+    "basis": "Commander supplied operational capacity; not image-counted"
+  },
+  "annotationMethod": "Manually interpreted source-pixel draft generated as editable LabelMe JSON; NOT GUI-traced or segmented automatically",
+  "networkJunctions": [
+    {
+      "point": [
+        251,
+        192
+      ],
+      "features": [
+        "A-west-connection",
+        "A-west-aisle"
+      ]
+    },
+    {
+      "point": [
+        357,
+        642
+      ],
+      "features": [
+        "A-south-connection",
+        "A-east-aisle",
+        "A-south-aisle"
+      ]
+    },
+    {
+      "point": [
+        603,
+        347
+      ],
+      "features": [
+        "A-east-connection",
+        "A-east-aisle"
+      ]
+    }
+  ]
+}

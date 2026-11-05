@@ -1,0 +1,1088 @@
+{
+  "seconds": 6300,
+  "delta": 0.05,
+  "steps": 126000,
+  "initializationMs": 809.5017920000003,
+  "totalStepMs": 68470.48910499764,
+  "medianStepMs": 0.5949169999985315,
+  "p95StepMs": 1.0251660000067204,
+  "p99StepMs": 1.2952919999952428,
+  "maxStepMs": 219.58804099999998,
+  "peakCars": 97,
+  "blocks": [
+    {
+      "simulatedSecond": 30,
+      "ms": 593.3793340000002,
+      "cars": 37
+    },
+    {
+      "simulatedSecond": 60,
+      "ms": 127.56395799999973,
+      "cars": 38
+    },
+    {
+      "simulatedSecond": 90,
+      "ms": 99.84279199999992,
+      "cars": 29
+    },
+    {
+      "simulatedSecond": 120,
+      "ms": 46.5815419999999,
+      "cars": 20
+    },
+    {
+      "simulatedSecond": 150,
+      "ms": 49.076290999999856,
+      "cars": 18
+    },
+    {
+      "simulatedSecond": 180,
+      "ms": 36.21791699999994,
+      "cars": 16
+    },
+    {
+      "simulatedSecond": 210,
+      "ms": 31.296374999999898,
+      "cars": 17
+    },
+    {
+      "simulatedSecond": 240,
+      "ms": 28.37270800000033,
+      "cars": 20
+    },
+    {
+      "simulatedSecond": 270,
+      "ms": 38.10445900000013,
+      "cars": 13
+    },
+    {
+      "simulatedSecond": 300,
+      "ms": 22.534832999999708,
+      "cars": 14
+    },
+    {
+      "simulatedSecond": 330,
+      "ms": 28.604624999999942,
+      "cars": 17
+    },
+    {
+      "simulatedSecond": 360,
+      "ms": 32.20425000000023,
+      "cars": 17
+    },
+    {
+      "simulatedSecond": 390,
+      "ms": 32.42766699999993,
+      "cars": 15
+    },
+    {
+      "simulatedSecond": 420,
+      "ms": 21.572625000000244,
+      "cars": 6
+    },
+    {
+      "simulatedSecond": 450,
+      "ms": 22.70833300000004,
+      "cars": 13
+    },
+    {
+      "simulatedSecond": 480,
+      "ms": 24.988875000000007,
+      "cars": 13
+    },
+    {
+      "simulatedSecond": 510,
+      "ms": 21.21095800000012,
+      "cars": 8
+    },
+    {
+      "simulatedSecond": 540,
+      "ms": 16.78120799999988,
+      "cars": 11
+    },
+    {
+      "simulatedSecond": 570,
+      "ms": 28.546707999999853,
+      "cars": 16
+    },
+    {
+      "simulatedSecond": 600,
+      "ms": 35.71162499999991,
+      "cars": 15
+    },
+    {
+      "simulatedSecond": 630,
+      "ms": 20.830749999999625,
+      "cars": 10
+    },
+    {
+      "simulatedSecond": 660,
+      "ms": 12.652875000000222,
+      "cars": 7
+    },
+    {
+      "simulatedSecond": 690,
+      "ms": 15.016166999999768,
+      "cars": 6
+    },
+    {
+      "simulatedSecond": 720,
+      "ms": 20.97004199999992,
+      "cars": 15
+    },
+    {
+      "simulatedSecond": 750,
+      "ms": 21.21133400000008,
+      "cars": 12
+    },
+    {
+      "simulatedSecond": 780,
+      "ms": 18.97387499999968,
+      "cars": 10
+    },
+    {
+      "simulatedSecond": 810,
+      "ms": 17.169582999999875,
+      "cars": 12
+    },
+    {
+      "simulatedSecond": 840,
+      "ms": 18.19275000000016,
+      "cars": 11
+    },
+    {
+      "simulatedSecond": 870,
+      "ms": 16.396792000000005,
+      "cars": 9
+    },
+    {
+      "simulatedSecond": 900,
+      "ms": 14.556875000000218,
+      "cars": 5
+    },
+    {
+      "simulatedSecond": 930,
+      "ms": 12.75912500000004,
+      "cars": 10
+    },
+    {
+      "simulatedSecond": 960,
+      "ms": 17.56970799999999,
+      "cars": 7
+    },
+    {
+      "simulatedSecond": 990,
+      "ms": 12.30808399999978,
+      "cars": 7
+    },
+    {
+      "simulatedSecond": 1020,
+      "ms": 18.634708000000046,
+      "cars": 16
+    },
+    {
+      "simulatedSecond": 1050,
+      "ms": 22.879209000000174,
+      "cars": 12
+    },
+    {
+      "simulatedSecond": 1080,
+      "ms": 22.050624999999854,
+      "cars": 6
+    },
+    {
+      "simulatedSecond": 1110,
+      "ms": 9.000040999999783,
+      "cars": 7
+    },
+    {
+      "simulatedSecond": 1140,
+      "ms": 13.889165999999932,
+      "cars": 10
+    },
+    {
+      "simulatedSecond": 1170,
+      "ms": 18.859042000000045,
+      "cars": 11
+    },
+    {
+      "simulatedSecond": 1200,
+      "ms": 22.29620900000009,
+      "cars": 8
+    },
+    {
+      "simulatedSecond": 1230,
+      "ms": 22.902208999999857,
+      "cars": 9
+    },
+    {
+      "simulatedSecond": 1260,
+      "ms": 27.267041999999947,
+      "cars": 9
+    },
+    {
+      "simulatedSecond": 1290,
+      "ms": 27.522457999999915,
+      "cars": 15
+    },
+    {
+      "simulatedSecond": 1320,
+      "ms": 32.13074999999981,
+      "cars": 11
+    },
+    {
+      "simulatedSecond": 1350,
+      "ms": 33.51529100000016,
+      "cars": 13
+    },
+    {
+      "simulatedSecond": 1380,
+      "ms": 18.62387499999977,
+      "cars": 16
+    },
+    {
+      "simulatedSecond": 1410,
+      "ms": 60.17887500000052,
+      "cars": 21
+    },
+    {
+      "simulatedSecond": 1440,
+      "ms": 81.79804200000035,
+      "cars": 25
+    },
+    {
+      "simulatedSecond": 1470,
+      "ms": 87.96570799999972,
+      "cars": 28
+    },
+    {
+      "simulatedSecond": 1500,
+      "ms": 114.16125000000011,
+      "cars": 32
+    },
+    {
+      "simulatedSecond": 1530,
+      "ms": 135.46329099999912,
+      "cars": 39
+    },
+    {
+      "simulatedSecond": 1560,
+      "ms": 179.9627499999997,
+      "cars": 44
+    },
+    {
+      "simulatedSecond": 1590,
+      "ms": 210.13887500000055,
+      "cars": 48
+    },
+    {
+      "simulatedSecond": 1620,
+      "ms": 246.94979199999943,
+      "cars": 51
+    },
+    {
+      "simulatedSecond": 1650,
+      "ms": 246.7647079999997,
+      "cars": 58
+    },
+    {
+      "simulatedSecond": 1680,
+      "ms": 271.0656660000004,
+      "cars": 62
+    },
+    {
+      "simulatedSecond": 1710,
+      "ms": 273.29933299999993,
+      "cars": 65
+    },
+    {
+      "simulatedSecond": 1740,
+      "ms": 261.9480000000003,
+      "cars": 66
+    },
+    {
+      "simulatedSecond": 1770,
+      "ms": 291.24741600000016,
+      "cars": 65
+    },
+    {
+      "simulatedSecond": 1800,
+      "ms": 295.53570799999943,
+      "cars": 66
+    },
+    {
+      "simulatedSecond": 1830,
+      "ms": 298.23820799999976,
+      "cars": 68
+    },
+    {
+      "simulatedSecond": 1860,
+      "ms": 306.40866599999936,
+      "cars": 74
+    },
+    {
+      "simulatedSecond": 1890,
+      "ms": 323.36683300000004,
+      "cars": 72
+    },
+    {
+      "simulatedSecond": 1920,
+      "ms": 310.61912500000017,
+      "cars": 72
+    },
+    {
+      "simulatedSecond": 1950,
+      "ms": 339.4344579999997,
+      "cars": 76
+    },
+    {
+      "simulatedSecond": 1980,
+      "ms": 343.6190000000006,
+      "cars": 76
+    },
+    {
+      "simulatedSecond": 2010,
+      "ms": 325.84370800000033,
+      "cars": 78
+    },
+    {
+      "simulatedSecond": 2040,
+      "ms": 333.5174999999999,
+      "cars": 78
+    },
+    {
+      "simulatedSecond": 2070,
+      "ms": 336.55145900000025,
+      "cars": 79
+    },
+    {
+      "simulatedSecond": 2100,
+      "ms": 364.12504199999967,
+      "cars": 81
+    },
+    {
+      "simulatedSecond": 2130,
+      "ms": 346.2021249999998,
+      "cars": 85
+    },
+    {
+      "simulatedSecond": 2160,
+      "ms": 356.34850000000006,
+      "cars": 85
+    },
+    {
+      "simulatedSecond": 2190,
+      "ms": 338.4473340000004,
+      "cars": 84
+    },
+    {
+      "simulatedSecond": 2220,
+      "ms": 357.01195800000096,
+      "cars": 84
+    },
+    {
+      "simulatedSecond": 2250,
+      "ms": 363.78662500000064,
+      "cars": 85
+    },
+    {
+      "simulatedSecond": 2280,
+      "ms": 355.1165829999991,
+      "cars": 82
+    },
+    {
+      "simulatedSecond": 2310,
+      "ms": 375.0258750000012,
+      "cars": 86
+    },
+    {
+      "simulatedSecond": 2340,
+      "ms": 375.35104200000023,
+      "cars": 88
+    },
+    {
+      "simulatedSecond": 2370,
+      "ms": 367.8336250000011,
+      "cars": 87
+    },
+    {
+      "simulatedSecond": 2400,
+      "ms": 363.3292079999992,
+      "cars": 88
+    },
+    {
+      "simulatedSecond": 2430,
+      "ms": 376.826959,
+      "cars": 86
+    },
+    {
+      "simulatedSecond": 2460,
+      "ms": 378.33479200000147,
+      "cars": 86
+    },
+    {
+      "simulatedSecond": 2490,
+      "ms": 390.49745900000016,
+      "cars": 88
+    },
+    {
+      "simulatedSecond": 2520,
+      "ms": 417.9524999999994,
+      "cars": 88
+    },
+    {
+      "simulatedSecond": 2550,
+      "ms": 385.03399999999965,
+      "cars": 88
+    },
+    {
+      "simulatedSecond": 2580,
+      "ms": 398.6581249999999,
+      "cars": 90
+    },
+    {
+      "simulatedSecond": 2610,
+      "ms": 371.6893340000024,
+      "cars": 89
+    },
+    {
+      "simulatedSecond": 2640,
+      "ms": 387.1811669999988,
+      "cars": 91
+    },
+    {
+      "simulatedSecond": 2670,
+      "ms": 427.87208400000236,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 2700,
+      "ms": 410.3486669999984,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 2730,
+      "ms": 407.62687500000175,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 2760,
+      "ms": 395.8500830000012,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 2790,
+      "ms": 415.9581249999974,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 2820,
+      "ms": 431.0661250000012,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 2850,
+      "ms": 416.1521250000005,
+      "cars": 92
+    },
+    {
+      "simulatedSecond": 2880,
+      "ms": 408.7197500000002,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 2910,
+      "ms": 412.93366700000115,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 2940,
+      "ms": 412.1018330000006,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 2970,
+      "ms": 443.71700000000055,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 3000,
+      "ms": 423.01904099999956,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 3030,
+      "ms": 406.6749579999996,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 3060,
+      "ms": 406.39274999999907,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 3090,
+      "ms": 409.908875000001,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3120,
+      "ms": 417.2303750000028,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3150,
+      "ms": 439.6856669999979,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3180,
+      "ms": 467.76750000000175,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 3210,
+      "ms": 409.99866699999984,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3240,
+      "ms": 423.8162080000002,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3270,
+      "ms": 435.6991249999992,
+      "cars": 92
+    },
+    {
+      "simulatedSecond": 3300,
+      "ms": 401.7067080000015,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3330,
+      "ms": 411.2089999999989,
+      "cars": 92
+    },
+    {
+      "simulatedSecond": 3360,
+      "ms": 397.5642079999998,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 3390,
+      "ms": 425.26787499999773,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3420,
+      "ms": 415.5557090000002,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3450,
+      "ms": 434.16045799999847,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3480,
+      "ms": 431.18304200000057,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3510,
+      "ms": 406.8362500000003,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3540,
+      "ms": 418.42733299999963,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 3570,
+      "ms": 426.2283749999988,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 3600,
+      "ms": 437.25112499999886,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3630,
+      "ms": 422.8927079999994,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3660,
+      "ms": 441.0643749999981,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3690,
+      "ms": 444.8195830000004,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3720,
+      "ms": 420.828125,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3750,
+      "ms": 426.42862500000047,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3780,
+      "ms": 413.8918330000015,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3810,
+      "ms": 442.46399999999994,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 3840,
+      "ms": 478.79762499999924,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3870,
+      "ms": 466.49733299999934,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 3900,
+      "ms": 470.29579199999716,
+      "cars": 96
+    },
+    {
+      "simulatedSecond": 3930,
+      "ms": 447.89933400000155,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3960,
+      "ms": 446.135457999997,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 3990,
+      "ms": 524.4877080000006,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4020,
+      "ms": 539.2168339999989,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4050,
+      "ms": 624.4793749999953,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 4080,
+      "ms": 538.9729579999985,
+      "cars": 97
+    },
+    {
+      "simulatedSecond": 4110,
+      "ms": 526.0700829999987,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4140,
+      "ms": 465.0386670000007,
+      "cars": 96
+    },
+    {
+      "simulatedSecond": 4170,
+      "ms": 445.58391599999595,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 4200,
+      "ms": 439.4925829999993,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4230,
+      "ms": 457.3367500000022,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4260,
+      "ms": 432.5894579999949,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4290,
+      "ms": 434.12970900000073,
+      "cars": 96
+    },
+    {
+      "simulatedSecond": 4320,
+      "ms": 434.6709170000031,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 4350,
+      "ms": 438.9400000000023,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4380,
+      "ms": 425.3937089999963,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4410,
+      "ms": 541.565042000002,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 4440,
+      "ms": 423.5090829999972,
+      "cars": 96
+    },
+    {
+      "simulatedSecond": 4470,
+      "ms": 431.567833000001,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 4500,
+      "ms": 419.6601660000015,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4530,
+      "ms": 419.8807090000046,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4560,
+      "ms": 448.2113329999993,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 4590,
+      "ms": 435.40612500000134,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 4620,
+      "ms": 459.67095900000277,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 4650,
+      "ms": 435.0847089999952,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 4680,
+      "ms": 438.0727079999997,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 4710,
+      "ms": 426.5047080000004,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 4740,
+      "ms": 438.2168339999989,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4770,
+      "ms": 446.52466700000514,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4800,
+      "ms": 429.9560840000049,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4830,
+      "ms": 449.92862500000047,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4860,
+      "ms": 421.1185409999962,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4890,
+      "ms": 433.8072500000053,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4920,
+      "ms": 440.47675000000163,
+      "cars": 96
+    },
+    {
+      "simulatedSecond": 4950,
+      "ms": 428.0193749999962,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 4980,
+      "ms": 436.85445900000195,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 5010,
+      "ms": 431.27604099999735,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 5040,
+      "ms": 457.84133300000394,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 5070,
+      "ms": 454.1417499999952,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 5100,
+      "ms": 443.2152920000008,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 5130,
+      "ms": 430.20500000000175,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 5160,
+      "ms": 439.71583400000236,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 5190,
+      "ms": 445.3582500000048,
+      "cars": 95
+    },
+    {
+      "simulatedSecond": 5220,
+      "ms": 459.10120800000004,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5250,
+      "ms": 448.3445830000055,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 5280,
+      "ms": 450.97762499999953,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 5310,
+      "ms": 455.9336659999972,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 5340,
+      "ms": 452.31241600000067,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 5370,
+      "ms": 433.82395800000086,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 5400,
+      "ms": 461.950334000001,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 5430,
+      "ms": 428.89574999999604,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5460,
+      "ms": 436.3317920000045,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5490,
+      "ms": 426.525791,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5520,
+      "ms": 481.1445409999942,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5550,
+      "ms": 456.95624999999563,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5580,
+      "ms": 430.3327500000014,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5610,
+      "ms": 453.2079159999994,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5640,
+      "ms": 439.7113329999993,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5670,
+      "ms": 431.3142910000024,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5700,
+      "ms": 441.0425830000022,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 5730,
+      "ms": 463.63558300000295,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5760,
+      "ms": 472.33204199999454,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5790,
+      "ms": 452.6231659999976,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5820,
+      "ms": 454.3470409999936,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5850,
+      "ms": 461.77700000000186,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5880,
+      "ms": 456.2542090000061,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5910,
+      "ms": 458.7582909999983,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5940,
+      "ms": 464.6913329999952,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 5970,
+      "ms": 441.58970899999986,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 6000,
+      "ms": 449.28804200000013,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 6030,
+      "ms": 437.268333,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 6060,
+      "ms": 432.7372500000056,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 6090,
+      "ms": 446.72033300000476,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 6120,
+      "ms": 443.0972499999916,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 6150,
+      "ms": 431.42570800000976,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 6180,
+      "ms": 432.6429589999898,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 6210,
+      "ms": 435.5346669999999,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 6240,
+      "ms": 427.7992920000106,
+      "cars": 94
+    },
+    {
+      "simulatedSecond": 6270,
+      "ms": 433.94229199999245,
+      "cars": 93
+    },
+    {
+      "simulatedSecond": 6300,
+      "ms": 425.3373329999886,
+      "cars": 93
+    }
+  ],
+  "departed": {
+    "a": 221,
+    "b": 405,
+    "c": 103
+  },
+  "entered": [
+    49,
+    3,
+    61
+  ],
+  "parked": {
+    "a": 141,
+    "b": 41,
+    "c": 64
+  },
+  "issues": [],
+  "busTrips": [
+    12,
+    12,
+    12,
+    11,
+    9
+  ],
+  "digest": "8fdf255768e5b5a239a694d3a2cf86d56c2712690c3027e6259ec152354525c2"
+}

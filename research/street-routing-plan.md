@@ -1,0 +1,5 @@
+# Street routing implementation
+
+Use research/Map with streets.json in its original pixel frame, matching the existing satellite image. Preserve source geometry and render all three named roads. Feeder arrivals travel south to north only. Public feeder arrivals allocate A -> B -> C using open status and remaining capacity, reserving a space during travel. Equity arrivals favor C. Badge access to A through Black Permit is restricted to badge-marked vehicles. B west/north and C two north access points are available. Widths and untraced connectors are provisional, not surveyed geometry.
+
+Implementation: update source/category rendering; implement capacity-aware campus traffic; expose occupancy presets and live routing counts so spillover can be observed without waiting for 411 arrivals; build and numerically verify direction and allocation. No new speculative stalls or architectural changes. Existing user layouts are not silently replaced. Simulation occupancy is session-only and separate from confirmed capacity.

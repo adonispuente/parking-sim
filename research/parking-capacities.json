@@ -1,0 +1,9 @@
+{
+  "source": "Commander-provided parking space counts",
+  "lots": {
+    "A": 411,
+    "B": 487,
+    "C": 686
+  },
+  "total": 1584
+}

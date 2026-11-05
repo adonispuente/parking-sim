@@ -1,0 +1,1298 @@
+{
+  "schemaVersion": "1.0",
+  "coordinateFrame": "source-image-pixels",
+  "imageWidth": 1698,
+  "imageHeight": 1378,
+  "features": [
+    {
+      "id": "A-roof-west",
+      "lot": "A",
+      "featureType": "roof_section",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            330,
+            248
+          ],
+          [
+            400,
+            285
+          ],
+          [
+            333,
+            394
+          ],
+          [
+            475,
+            475
+          ],
+          [
+            410,
+            457
+          ],
+          [
+            374,
+            516
+          ],
+          [
+            298,
+            501
+          ],
+          [
+            316,
+            470
+          ],
+          [
+            274,
+            479
+          ],
+          [
+            216,
+            445
+          ],
+          [
+            330,
+            248
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "high",
+      "evidence": "commander_approved_existing_trace",
+      "notes": "Approved source outline preserved from src/lotA.js, crop offset (190,180); approval is not a survey. No roof correction proposed.",
+      "uncertain": false
+    },
+    {
+      "id": "A-roof-main",
+      "lot": "A",
+      "featureType": "roof_section",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            400,
+            263
+          ],
+          [
+            550,
+            345
+          ],
+          [
+            475,
+            475
+          ],
+          [
+            333,
+            394
+          ],
+          [
+            400,
+            263
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "high",
+      "evidence": "commander_approved_existing_trace",
+      "notes": "Approved source outline preserved from src/lotA.js, crop offset (190,180); approval is not a survey. No roof correction proposed.",
+      "uncertain": false
+    },
+    {
+      "id": "A-roof-south",
+      "lot": "A",
+      "featureType": "roof_section",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            298,
+            501
+          ],
+          [
+            374,
+            516
+          ],
+          [
+            304,
+            631
+          ],
+          [
+            238,
+            603
+          ],
+          [
+            298,
+            501
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "high",
+      "evidence": "commander_approved_existing_trace",
+      "notes": "Approved source outline preserved from src/lotA.js, crop offset (190,180); approval is not a survey. No roof correction proposed.",
+      "uncertain": false
+    },
+    {
+      "id": "A-east-pavement",
+      "lot": "A",
+      "featureType": "ground_pavement",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            550,
+            345
+          ],
+          [
+            559,
+            387
+          ],
+          [
+            559,
+            511
+          ],
+          [
+            475,
+            475
+          ],
+          [
+            550,
+            345
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "high",
+      "evidence": "commander_approved_existing_trace",
+      "notes": "Approved eastern ground-level paved area copied from src/lotA.js. Shared roof edge is exactly (550,345)-(475,475). Not roof.",
+      "uncertain": false
+    },
+    {
+      "id": "A-envelope",
+      "lot": "A",
+      "featureType": "lot_envelope",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            108,
+            404
+          ],
+          [
+            132,
+            334
+          ],
+          [
+            165,
+            262
+          ],
+          [
+            196,
+            204
+          ],
+          [
+            227,
+            156
+          ],
+          [
+            271,
+            137
+          ],
+          [
+            298,
+            151
+          ],
+          [
+            319,
+            139
+          ],
+          [
+            347,
+            104
+          ],
+          [
+            379,
+            81
+          ],
+          [
+            407,
+            78
+          ],
+          [
+            439,
+            93
+          ],
+          [
+            478,
+            105
+          ],
+          [
+            519,
+            122
+          ],
+          [
+            563,
+            141
+          ],
+          [
+            602,
+            163
+          ],
+          [
+            636,
+            191
+          ],
+          [
+            651,
+            213
+          ],
+          [
+            639,
+            245
+          ],
+          [
+            624,
+            288
+          ],
+          [
+            620,
+            332
+          ],
+          [
+            610,
+            378
+          ],
+          [
+            600,
+            428
+          ],
+          [
+            589,
+            478
+          ],
+          [
+            578,
+            528
+          ],
+          [
+            563,
+            574
+          ],
+          [
+            540,
+            610
+          ],
+          [
+            510,
+            638
+          ],
+          [
+            467,
+            661
+          ],
+          [
+            420,
+            677
+          ],
+          [
+            384,
+            693
+          ],
+          [
+            350,
+            691
+          ],
+          [
+            320,
+            674
+          ],
+          [
+            280,
+            661
+          ],
+          [
+            239,
+            645
+          ],
+          [
+            202,
+            620
+          ],
+          [
+            169,
+            594
+          ],
+          [
+            145,
+            564
+          ],
+          [
+            125,
+            524
+          ],
+          [
+            111,
+            481
+          ],
+          [
+            106,
+            439
+          ],
+          [
+            108,
+            404
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Approximate parking/pavement envelope, not property line. Tree-obscured perimeter and driveway throats require manual curb refinement. Contains buildings and landscaping; subtract classified islands at integration.",
+      "uncertain": true
+    },
+    {
+      "id": "A-loop-center",
+      "lot": "A",
+      "featureType": "landscaped_island",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            205,
+            506
+          ],
+          [
+            209,
+            502
+          ],
+          [
+            215,
+            500
+          ],
+          [
+            222,
+            503
+          ],
+          [
+            226,
+            509
+          ],
+          [
+            226,
+            516
+          ],
+          [
+            222,
+            522
+          ],
+          [
+            215,
+            525
+          ],
+          [
+            209,
+            523
+          ],
+          [
+            204,
+            518
+          ],
+          [
+            203,
+            512
+          ],
+          [
+            205,
+            506
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Visible dark circular center of western pickup/drop-off area; apparent pixel boundary includes shadow.",
+      "uncertain": true
+    },
+    {
+      "id": "A-shuttle-pavement",
+      "lot": "A",
+      "featureType": "shuttle_pavement",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            161,
+            483
+          ],
+          [
+            176,
+            472
+          ],
+          [
+            195,
+            469
+          ],
+          [
+            219,
+            476
+          ],
+          [
+            244,
+            491
+          ],
+          [
+            264,
+            511
+          ],
+          [
+            249,
+            542
+          ],
+          [
+            224,
+            580
+          ],
+          [
+            207,
+            609
+          ],
+          [
+            185,
+            604
+          ],
+          [
+            171,
+            587
+          ],
+          [
+            163,
+            563
+          ],
+          [
+            156,
+            539
+          ],
+          [
+            155,
+            513
+          ],
+          [
+            161,
+            483
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Approximate visible western circular forecourt pavement; shuttle function supplied by Commander, no lane directions inferred.",
+      "uncertain": true
+    },
+    {
+      "id": "A-loop-island-north",
+      "lot": "A",
+      "featureType": "landscaped_island",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            150,
+            470
+          ],
+          [
+            162,
+            467
+          ],
+          [
+            178,
+            474
+          ],
+          [
+            183,
+            485
+          ],
+          [
+            178,
+            494
+          ],
+          [
+            168,
+            490
+          ],
+          [
+            157,
+            485
+          ],
+          [
+            150,
+            470
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Tree-obscured planted lobe at northwest of loop.",
+      "uncertain": true
+    },
+    {
+      "id": "A-loop-island-south",
+      "lot": "A",
+      "featureType": "landscaped_island",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            163,
+            543
+          ],
+          [
+            175,
+            551
+          ],
+          [
+            193,
+            552
+          ],
+          [
+            204,
+            561
+          ],
+          [
+            200,
+            576
+          ],
+          [
+            190,
+            588
+          ],
+          [
+            174,
+            590
+          ],
+          [
+            162,
+            581
+          ],
+          [
+            170,
+            571
+          ],
+          [
+            163,
+            543
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Curved planted lobe; boundary partly shadowed.",
+      "uncertain": true
+    },
+    {
+      "id": "A-island-west-1",
+      "lot": "A",
+      "featureType": "landscaped_island",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            144,
+            377
+          ],
+          [
+            152,
+            371
+          ],
+          [
+            158,
+            378
+          ],
+          [
+            157,
+            392
+          ],
+          [
+            151,
+            404
+          ],
+          [
+            144,
+            398
+          ],
+          [
+            144,
+            377
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Visible planted patch; shadow/tree cover makes exact curb uncertain.",
+      "uncertain": true
+    },
+    {
+      "id": "A-island-west-2",
+      "lot": "A",
+      "featureType": "landscaped_island",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            182,
+            431
+          ],
+          [
+            192,
+            434
+          ],
+          [
+            187,
+            447
+          ],
+          [
+            179,
+            443
+          ],
+          [
+            182,
+            431
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Visible planted patch; shadow/tree cover makes exact curb uncertain.",
+      "uncertain": true
+    },
+    {
+      "id": "A-island-north-bar",
+      "lot": "A",
+      "featureType": "landscaped_island",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            263,
+            169
+          ],
+          [
+            269,
+            164
+          ],
+          [
+            291,
+            174
+          ],
+          [
+            287,
+            182
+          ],
+          [
+            278,
+            177
+          ],
+          [
+            246,
+            227
+          ],
+          [
+            240,
+            224
+          ],
+          [
+            271,
+            175
+          ],
+          [
+            263,
+            169
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Visible planted patch; shadow/tree cover makes exact curb uncertain.",
+      "uncertain": true
+    },
+    {
+      "id": "A-island-north-small",
+      "lot": "A",
+      "featureType": "landscaped_island",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            313,
+            210
+          ],
+          [
+            325,
+            207
+          ],
+          [
+            336,
+            211
+          ],
+          [
+            332,
+            219
+          ],
+          [
+            321,
+            223
+          ],
+          [
+            312,
+            220
+          ],
+          [
+            313,
+            210
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Visible planted patch; shadow/tree cover makes exact curb uncertain.",
+      "uncertain": true
+    },
+    {
+      "id": "A-island-southeast-1",
+      "lot": "A",
+      "featureType": "landscaped_island",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            479,
+            531
+          ],
+          [
+            488,
+            525
+          ],
+          [
+            500,
+            526
+          ],
+          [
+            496,
+            541
+          ],
+          [
+            485,
+            542
+          ],
+          [
+            479,
+            531
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Visible planted patch; shadow/tree cover makes exact curb uncertain.",
+      "uncertain": true
+    },
+    {
+      "id": "A-island-southeast-2",
+      "lot": "A",
+      "featureType": "landscaped_island",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            516,
+            544
+          ],
+          [
+            523,
+            542
+          ],
+          [
+            533,
+            550
+          ],
+          [
+            534,
+            564
+          ],
+          [
+            522,
+            560
+          ],
+          [
+            514,
+            554
+          ],
+          [
+            516,
+            544
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Visible planted patch; shadow/tree cover makes exact curb uncertain.",
+      "uncertain": true
+    },
+    {
+      "id": "A-island-southeast-3",
+      "lot": "A",
+      "featureType": "landscaped_island",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            499,
+            580
+          ],
+          [
+            507,
+            579
+          ],
+          [
+            521,
+            587
+          ],
+          [
+            512,
+            602
+          ],
+          [
+            498,
+            601
+          ],
+          [
+            499,
+            580
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Visible planted patch; shadow/tree cover makes exact curb uncertain.",
+      "uncertain": true
+    },
+    {
+      "id": "A-west-connection",
+      "lot": "A",
+      "featureType": "entrance_connection",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            62,
+            116
+          ],
+          [
+            99,
+            117
+          ],
+          [
+            166,
+            118
+          ],
+          [
+            226,
+            122
+          ],
+          [
+            252,
+            147
+          ],
+          [
+            251,
+            192
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Visible northwest driveway to western street; endpoint shared with west aisle. Not a traffic permission.",
+      "uncertain": true
+    },
+    {
+      "id": "A-west-aisle",
+      "lot": "A",
+      "featureType": "road_centerline",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            251,
+            192
+          ],
+          [
+            213,
+            257
+          ],
+          [
+            175,
+            326
+          ],
+          [
+            139,
+            406
+          ],
+          [
+            132,
+            458
+          ],
+          [
+            144,
+            512
+          ],
+          [
+            161,
+            557
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Approximate center of visible west circulation aisle; trees obscure edges.",
+      "uncertain": true
+    },
+    {
+      "id": "A-south-connection",
+      "lot": "A",
+      "featureType": "entrance_connection",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            357,
+            642
+          ],
+          [
+            358,
+            673
+          ],
+          [
+            369,
+            705
+          ],
+          [
+            377,
+            731
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Southern driveway connects to Corporate Drive. Centerline approximate.",
+      "uncertain": true
+    },
+    {
+      "id": "A-east-connection",
+      "lot": "A",
+      "featureType": "entrance_connection",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            574,
+            345
+          ],
+          [
+            603,
+            347
+          ],
+          [
+            632,
+            348
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Visible east paved throat; access rules not inferred. Shared east aisle junction.",
+      "uncertain": true
+    },
+    {
+      "id": "A-east-aisle",
+      "lot": "A",
+      "featureType": "road_centerline",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            619,
+            218
+          ],
+          [
+            603,
+            281
+          ],
+          [
+            603,
+            347
+          ],
+          [
+            591,
+            422
+          ],
+          [
+            576,
+            495
+          ],
+          [
+            555,
+            560
+          ],
+          [
+            526,
+            605
+          ],
+          [
+            477,
+            641
+          ],
+          [
+            412,
+            669
+          ],
+          [
+            357,
+            642
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Approximate internal outer circulation path, not lane routing. Junctions reuse exact vertices.",
+      "uncertain": true
+    },
+    {
+      "id": "A-south-aisle",
+      "lot": "A",
+      "featureType": "road_centerline",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            389,
+            533
+          ],
+          [
+            366,
+            576
+          ],
+          [
+            340,
+            620
+          ],
+          [
+            357,
+            642
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "medium",
+      "evidence": "visual_interpretation",
+      "notes": "Approximate aisle beside south wing.",
+      "uncertain": true
+    },
+    {
+      "id": "A-row-west-1",
+      "lot": "A",
+      "featureType": "parking_row",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            156,
+            362
+          ],
+          [
+            224,
+            240
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "low",
+      "evidence": "visual_interpretation",
+      "notes": "Provisional visible parking-bank extent and orientation only. Faint markings; no inferred stalls or capacity allocation.",
+      "uncertain": true
+    },
+    {
+      "id": "A-row-west-2",
+      "lot": "A",
+      "featureType": "parking_row",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            184,
+            365
+          ],
+          [
+            245,
+            251
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "low",
+      "evidence": "visual_interpretation",
+      "notes": "Provisional visible parking-bank extent and orientation only. Faint markings; no inferred stalls or capacity allocation.",
+      "uncertain": true
+    },
+    {
+      "id": "A-row-north-1",
+      "lot": "A",
+      "featureType": "parking_row",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            368,
+            115
+          ],
+          [
+            588,
+            232
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "low",
+      "evidence": "visual_interpretation",
+      "notes": "Provisional visible parking-bank extent and orientation only. Faint markings; no inferred stalls or capacity allocation.",
+      "uncertain": true
+    },
+    {
+      "id": "A-row-north-2",
+      "lot": "A",
+      "featureType": "parking_row",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            355,
+            141
+          ],
+          [
+            573,
+            257
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "low",
+      "evidence": "visual_interpretation",
+      "notes": "Provisional visible parking-bank extent and orientation only. Faint markings; no inferred stalls or capacity allocation.",
+      "uncertain": true
+    },
+    {
+      "id": "A-row-north-3",
+      "lot": "A",
+      "featureType": "parking_row",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            344,
+            167
+          ],
+          [
+            558,
+            282
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "low",
+      "evidence": "visual_interpretation",
+      "notes": "Provisional visible parking-bank extent and orientation only. Faint markings; no inferred stalls or capacity allocation.",
+      "uncertain": true
+    },
+    {
+      "id": "A-row-south-1",
+      "lot": "A",
+      "featureType": "parking_row",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            399,
+            549
+          ],
+          [
+            495,
+            603
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "low",
+      "evidence": "visual_interpretation",
+      "notes": "Provisional visible parking-bank extent and orientation only. Faint markings; no inferred stalls or capacity allocation.",
+      "uncertain": true
+    },
+    {
+      "id": "A-row-south-2",
+      "lot": "A",
+      "featureType": "parking_row",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            385,
+            575
+          ],
+          [
+            477,
+            626
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "low",
+      "evidence": "visual_interpretation",
+      "notes": "Provisional visible parking-bank extent and orientation only. Faint markings; no inferred stalls or capacity allocation.",
+      "uncertain": true
+    },
+    {
+      "id": "A-row-south-3",
+      "lot": "A",
+      "featureType": "parking_row",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            371,
+            603
+          ],
+          [
+            438,
+            642
+          ]
+        ]
+      },
+      "sourceImage": "../../../images/Mosst updated satelite image.png",
+      "confidence": "low",
+      "evidence": "visual_interpretation",
+      "notes": "Provisional visible parking-bank extent and orientation only. Faint markings; no inferred stalls or capacity allocation.",
+      "uncertain": true
+    }
+  ]
+}

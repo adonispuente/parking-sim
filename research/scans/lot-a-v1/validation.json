@@ -1,0 +1,22 @@
+{
+  "status": "pass",
+  "features": 30,
+  "imageSize": [
+    1698,
+    1378
+  ],
+  "sourceSha256": "7c6aaaf4b6f23774459b3bf5b1d5d1a35789db9dfec31b5ec36551fa46187da5",
+  "checks": [
+    "original image dimensions",
+    "finite in-frame coordinates",
+    "unique IDs",
+    "closed exported polygon rings",
+    "nonzero polygon area",
+    "polygon self-intersection"
+  ],
+  "limitations": [
+    "No automatic proof of real-world accuracy",
+    "No inferred traffic permissions",
+    "Shared edges and network junctions require explicit source review"
+  ]
+}

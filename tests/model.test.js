@@ -8,14 +8,14 @@ test('starter layout round-trips and has three provisional lots', () => {
   assert.deepEqual(restored, layout);
   assert.notEqual(restored, layout);
   assert.equal(stats(layout).lots, 3);
-  assert.equal(stats(layout).capacity, 140);
-  assert.equal(stats(layout).marked, 28);
+  assert.equal(stats(layout).capacity, 898); // A411 + B487; C starts closed.
+  assert.equal(stats(layout).marked, 159); // Approximate trace, not capacity.
 });
 
 test('closing a lot reduces capacity and removes its demonstration route', () => {
   const layout = initialLayout();
   layout.items.find(i => i.id === 'lot-a').open = false;
-  assert.equal(stats(layout).capacity, 80);
+  assert.equal(stats(layout).capacity, 487);
   assert.deepEqual(previewRoutes(layout).map(r=>r.lotId), ['lot-b']);
   layout.items.find(i=>i.id==='lot-b').capacity=0;
   assert.equal(previewRoutes(layout).length, 0);
@@ -54,13 +54,16 @@ test('invalid imports are rejected without mutating input', () => {
   const duplicate=initialLayout(); duplicate.items[1].id=duplicate.items[0].id; bad.push(duplicate);
   const dangling=initialLayout(); dangling.items.find(i=>i.type==='spaces').lotId='missing'; bad.push(dangling);
   const excessive=initialLayout(); excessive.items.find(i=>i.type==='spaces').count=100; bad.push(excessive);
-  const role=initialLayout(); role.items.find(i=>i.type==='position').notes='a'.repeat(2001); bad.push(role);
+  const role=initialLayout();
+  role.items.push({...makeItem('position', 40, 30), notes:'a'.repeat(2001)});
+  bad.push(role);
   for(const layout of bad) assert.throws(()=>validateLayout(layout),/Invalid layout/);
 });
 
 test('roles, assignees, geometry and notes survive export/import', () => {
   const layout=initialLayout();
-  const position=layout.items.find(i=>i.type==='position');
+  const position=makeItem('position', 40, 30);
+  layout.items.push(position);
   Object.assign(position,{role:'Team lead',assignee:'Volunteer One',notes:'Keep pedestrians clear.',x:38.2,rotation:45});
   const imported=validateLayout(JSON.parse(JSON.stringify(layout)));
   assert.deepEqual(imported.items.find(i=>i.id===position.id),position);
