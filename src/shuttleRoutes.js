@@ -6,7 +6,7 @@ export const SHUTTLE_STOPS = [
   ...[['bSouth','b',45],['bNorth','b',46]].map(([id,lot,index])=>({id,lot,label:`${lot.toUpperCase()} · ${id}`,point:pointAt(index),sourceIndex:index})),
   ...Object.entries(C_LOOP_STOPS).map(([id,stop])=>({id,lot:'c',label:`C · ${id}`,point:stop.point,
     sourceIndex:stop.sourceIndex,routeSource:'images/ExitPathsAndC.json#50',originalPoint:stop.originalPoint,
-    provenance:'Commander-approved relocation to closest point on new C loop'})),
+    provenance:'Original source pickup; drivable access spur from new C loop'})),
 ];
 const stops=Object.fromEntries(SHUTTLE_STOPS.map(s=>[s.id,s.point]));
 export const avoidsShuttleObstacles=avoidsObstacles;
@@ -34,7 +34,7 @@ export function buildShuttleRoutes() {
     const legs=c[id.startsWith('b')?'b':id==='cRoundabout'?'cNorth':id],k=legs.findIndex(l=>l.stop===id);
     routes[id]={outbound:join(...legs.slice(0,k+1).map(l=>l.points)),inbound:join(...legs.slice(k+1).map(l=>l.points)),provisionalInternalAisles:true,
       provenance:id.startsWith('b')?'source #25 B loop; explicit obstacle-checked pickup connectors':
-        'ExitPathsAndC #50 C loop with relocated pickups; #30 approach / #29 return; ground-checked joins'};
+        'ExitPathsAndC #50 C loop with original source pickups; #30 approach / #29 return; ground-checked pickup spurs'};
   }
   return routes;
 }

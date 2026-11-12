@@ -52,6 +52,13 @@ test('built C leg changes and forced branch changes have no pose teleport', () =
   const s = createCampusTraffic({ service: { enabled: false }, shuttles: { activeCount: 5 } });
   for (const id of ['cNorth', 'cSouth']) {
     const ids = s.shuttleLaneIds[id];
+    const legs = buildShuttleCircuits()[id];
+    for (let i = 0; i < ids.length; i++) {
+      const pose = s.lanes[ids[i]].path.getPointAt(1);
+      const pickup = SHUTTLE_STOPS.find(stop => stop.id === legs[i].stop).point;
+      assert.ok(distance([pose.x / WORLD_SCALE, pose.z / WORLD_SCALE], pickup) < .001,
+        `${id} leg${i} must reach its displayed dwell marker`);
+    }
     for (let i = 1; i < ids.length; i++) {
       const a = s.lanes[ids[i - 1]].path.getPointAt(1), b = s.lanes[ids[i]].path.getPointAt(0);
       assert.ok(a.distanceTo(b) < .001 * WORLD_SCALE, `${id} leg${i} jumps ${a.distanceTo(b) / WORLD_SCALE}px`);
