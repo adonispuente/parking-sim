@@ -4705,6 +4705,192 @@
       "shape_type": "linestrip",
       "flags": {},
       "mask": null
+    },
+    {
+      "label": "Lot B hub",
+      "points": [
+        [
+          577.9351799954516,
+          161.55044521632163
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "point",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "Lot B hub",
+      "points": [
+        [
+          655.4078362454516,
+          218.59732021632163
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "point",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "Lot B hub",
+      "points": [
+        [
+          628.8922112454516,
+          263.98794521632163
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "point",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "Lot B hub",
+      "points": [
+        [
+          607.3570549954516,
+          210.81607021632163
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "point",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "Lot B hub",
+      "points": [
+        [
+          547.2633049954516,
+          211.26919521632163
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "point",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "Lot B hub",
+      "points": [
+        [
+          732.3375237454516,
+          517.3473202163216
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "point",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "Lot B hub",
+      "points": [
+        [
+          782.7711174954516,
+          512.8902889663216
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "point",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "Lot B hub",
+      "points": [
+        [
+          534.6422112454516,
+          446.07778896632163
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "point",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "Lot B hub",
+      "points": [
+        [
+          775.3218987454516,
+          285.61685146632163
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "point",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "Lot B hub",
+      "points": [
+        [
+          849.6500237454516,
+          305.76138271632163
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "point",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "Lot C Exit Path",
+      "points": [
+        [
+          930.6528175594096,
+          384.0207404543401
+        ],
+        [
+          936.3006393149261,
+          283.2590851924153
+        ],
+        [
+          958.6661691613749,
+          285.7326832114578
+        ],
+        [
+          971.8359864665366,
+          281.7760940905189
+        ],
+        [
+          980.681386149108,
+          267.5533920266616
+        ],
+        [
+          983.3165173196694,
+          227.4951166325217
+        ],
+        [
+          984.1631067282324,
+          183.96095920690271
+        ],
+        [
+          990.9747456477043,
+          118.16247342735284
+        ],
+        [
+          995.5074048029757,
+          77.31210173600579
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "linestrip",
+      "flags": {},
+      "mask": null
     }
   ],
   "imagePath": "../research/runs/m3-s5-3318/Clear Image.png",
