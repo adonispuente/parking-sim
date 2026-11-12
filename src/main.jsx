@@ -178,7 +178,7 @@ function App() {
             <small>{trafficStats.active} on road · {trafficStats.entered.reduce((a,b)=>a+b,0)} entered · {trafficStats.exited.reduce((a,b)=>a+b,0)} reached lot · {trafficStats.waiting.reduce((a,b)=>a+b,0)} waiting off-map</small>
             <small>Feeder arrivals normally fill A → B → C, with 10% continuing along Corporate to B, then C, even while A is open. {trafficOptions.service?.enabled&&trafficOptions.service.id==='final'?'At 1:15, both Equity approaches use B’s main entrance; C is fallback only.':'Both Equity approaches enter staffed Lot C. If C is unavailable, Equity cars wait outside campus.'}</small>
             <div className={`capacity-status ${trafficStats.atCapacity?'at-capacity':''}`} role="status"><strong>{trafficStats.atCapacity?'General parking at capacity · send arrivals away':'Parking allocation active'}</strong><small>{trafficStats.sentAway??0} sent away · no overflow parking configured. Authorized badge parking is separate.</small></div>
-            <small>{Object.values(trafficStats.departed??{}).reduce((a,b)=>a+b,0)} departed campus · {trafficStats.departing??0} exiting now. Cars become ready around their own service dismissal, including the final service. Parking locations are section staging points, not invented individual stalls.</small>
+            <small>{Object.values(trafficStats.departed??{}).reduce((a,b)=>a+b,0)} departed campus · {trafficStats.departing??0} exiting now. Cars become ready around their own service dismissal, including the final service. Lot C uses seven parking hubs; other lots use section staging points.</small>
             <RouteSourcesPanel/>
             <div className="traffic-rates">{['a','b','c'].map(id=><label key={id}>Lot {id.toUpperCase()} initial parked<input type="number" min="0" max={{a:411,b:487,c:686}[id]} value={trafficOptions.initialOccupancy[id]} onChange={e=>{const value=Math.max(0,Math.min({a:411,b:487,c:686}[id],Number(e.target.value)||0));setTrafficOptions(o=>({...o,initialServiceCarry:undefined,initialOccupancy:{...o.initialOccupancy,[id]:value}}));setRunning(false);setTrafficReset(v=>v+1);}}/><span>{trafficStats.occupancy?.[id]??trafficOptions.initialOccupancy[id]} parked · {trafficStats.reserved?.[id]??0} inbound</span></label>)}</div>
             <small>Black Permit · badge arrivals fixed at 5% · {trafficStats.badgeParking??0} / 51 parked · {trafficStats.badgeReserved??0} inbound. Included in Lot A's total.</small>
@@ -194,6 +194,11 @@ function App() {
                 <strong>Equity / Clay · three-way stop</strong>
                 <p>{trafficStats.equityClayStop.reason} · {trafficStats.equityClayStop.waiting} at stop lines · {trafficStats.equityClayStop.cleared} cleared</p>
                 <small>Two-way approaches. Stop before entering; release one movement after the intersection clears. Shuttle → departure → arrival priority.</small>
+              </section>}
+              {trafficStats.cRoundabout&&<section className="traffic-control" aria-label="Lot C roundabout marshal">
+                <strong>Lot C roundabout · four-way marshal</strong>
+                <p>{trafficStats.cRoundabout.reason} · {trafficStats.cRoundabout.held.length} held</p>
+                <small>Shuttles → exits → entries. Separated lanes continue together; occupied movements clear first.</small>
               </section>}
               {trafficStats.northernRadio&&<section className="traffic-control" aria-label="Northern positions radio coordination">
                 <strong>Northern positions · shared walkie-talkie</strong>

@@ -5,8 +5,9 @@ What every person on the map does, where the code implements it, and which new p
 ## Registry API
 - `POSITIONS`: the **unchanged eight staffed source points** (#57–#64).
 - `CONTROL_POINTS`: the existing unstaffed Equity / Clay stop; unlike a new stub, it has implemented stop behavior.
+- `C_HUB_POSITIONS`: the active Lot C roundabout marshal from `images/LotCHubs.json` #48. Its four-way area is #49; source indices belong to that separate drawing.
 - `OVERLAY_POSITIONS`: named `pos:` points plus definitions from `overlayDefinitions.js`. **Advisory/inactive**, with zero controllers.
-- `ALL_POSITIONS`: those three lists combined. `positionById('pos:...')` includes new points. `positionByIndex` only resolves original source indices/aliases; null never resolves to an advisory entry.
+- `ALL_POSITIONS`: all four lists combined. `positionById('pos:...')` includes new points. `positionByIndex` only resolves original source indices/aliases; null never resolves to an advisory entry.
 - `duty`, `implemented`, `intended`, `provisional`, `controllers`: real duty versus actual model behavior, unmodeled duties, estimates, and implementing files. Describe them honestly.
 
 | # | id | Position |
@@ -20,6 +21,7 @@ What every person on the map does, where the code implements it, and which new p
 | 63 (alias 34) | cEntrance | Lot C staffed entrance |
 | 64 (alias 35) | cExit | Lot C exit |
 | — | equityClayStop | Equity / Clay three-way stop (implemented, unstaffed) |
+| LotCHubs #48 | cRoundabout | Active four-way marshal: shuttles, exits, then entries; compatible movements continue together |
 | — | pos:c-layout-demo | Illustrative unstaffed overlay sample; not a real worker location |
 
 ## Add a map-defined position (M3 S4)

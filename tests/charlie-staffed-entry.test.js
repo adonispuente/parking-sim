@@ -10,7 +10,9 @@ for (const key of ['cWest', 'eCWest', 'e2CWest']) for (const zone of ['cFirstNor
     const points = zoneArrivalRoute(key, zone), k = points.findIndex(p => distance(p, pointAt(63)) < .001);
     assert.ok(k >= 0); assert.deepEqual(points[k + 1], C_ENTRANCE_INTERIOR);
     const inside = points.slice(k);
-    assert.ok(inside.every(p => p[0] < 1050), JSON.stringify(inside));
+    // Hubs now serve the east side too. Reject entry via the northeast EXIT,
+    // while allowing the drawn interior aisle to reach those parking hubs.
+    assert.ok(inside.every(p => !(p[0] > 1200 && p[1] < 145)), JSON.stringify(inside));
     for (let i = 1; i < inside.length; i++) assert.ok(clearSegment(inside[i - 1], inside[i]));
   });
 test('actual built C lanes from all origins stay at staffed mouth, not northeast exit', () => {
@@ -28,7 +30,7 @@ test('actual built C lanes from all origins stay at staffed mouth, not northeast
     assert.ok(best * WORLD_SCALE < 1.5);
     for (let d = admission; d <= lane.length; d += .03) {
       const p = lane.path.getPointAt(d / lane.length), pixel = fromWorld([p.x, p.z]);
-      assert.ok(pixel[0] < 1050, `${lane.name}: ${pixel}`);
+      assert.ok(!(pixel[0] > 1200 && pixel[1] < 145), `${lane.name}: ${pixel}`);
     }
   }
   assert.deepEqual(s.routingIssues, []);

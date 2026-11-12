@@ -1,4 +1,5 @@
 import source, { SOURCE_FILE, SOURCE_PAIR, toWorld, STAFF_POSITIONS, POSITION_ALIASES } from './clearImageSource.js';
+import { C_HUB_POSITIONS } from './positions/index.js';
 export const TRACE_SOURCE = SOURCE_FILE;
 export const traceWorldPoint = toWorld;
 function category(shape,index) {
@@ -37,9 +38,9 @@ export function tracedLayout(base={items:[]}) {
       points:f.points.map(([px,pz])=>[px-x,pz-z]),lotId:f.lotId??'',sourceIndex:f.index,
       ...(type==='surface'?{color:f.category==='road'?'#46585e':'#727b7b',elevation:f.category==='road'?.11:.15}:{})});
   }
-  for(const station of STAFF_POSITIONS) {
+  for(const station of [...STAFF_POSITIONS,...C_HUB_POSITIONS]) {
     const [x,z]=toWorld(station.point);
-    items.push({id:`staff-${station.id}`,type:'position',name:station.label,role:station.label,assignee:'',notes:`${SOURCE_FILE} #${station.index}; source position, not inferred policy.`,x,z,width:1,depth:1,rotation:0,sourceIndex:station.index});
+    items.push({id:`staff-${station.id}`,type:'position',name:station.label,role:station.label,assignee:'',notes:`${station.sourceFile??SOURCE_FILE} #${station.sourceIndex??station.index}; source position.`,x,z,width:1,depth:1,rotation:0,sourceIndex:station.sourceIndex??station.index});
   }
   return {version:1,name:'Hope City · Clear Image campus',sourcePair:SOURCE_PAIR,tracedMapRevision:4,items};
 }

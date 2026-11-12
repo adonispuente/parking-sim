@@ -8,6 +8,15 @@ Source: `images/EverythingClearImage.json`, bound in `src/clearImageSource.js`. 
 
 **Current code registry:** `src/positions/index.js` contains the eight staffed definitions and the unstaffed Equity/Clay stop, canonical bindings, alias lookup, duties, current implementation, unmodeled duties, provisional settings and controller paths. Its short guide is `src/positions/README.md`. It replaces the deleted legacy `trafficPositions.js` module; current importers use the registry. Adding a staffed map point without a definition throws at registry load. That guard checks documentation coverage, not correctness of new traffic behavior.
 
+Lot C adds a ninth staffed position from `images/LotCHubs.json` #48, in its own source namespace. The seven hubs (#51–57) are parking and launch anchors, not extra spaces. `C_HUB_POSITIONS` registers the active roundabout marshal; the original eight-point `POSITIONS` API is preserved.
+
+## LotCHubs #48 — Lot C roundabout marshal (`cRoundabout`)
+
+- **Location:** exact #48 point, managing the four-way polygon #49 above the roundabout.
+- **Implemented:** `src/cRoundaboutControl.js` admits compatible movements together. Conflicting movements yield to shuttles, then departures, then arrivals. Occupied movements and the physical blocking chains of admitted traffic clear first.
+- **Routing:** `src/cHubRoutes.js` builds a bidirectional aisle network from the C drawing. Cars keep their hub through parking, service carry and departure. Both C exits remain available; their public-road tails merge onto one downstream Corporate trace. Shuttle pickup locations stay unchanged.
+- **Provisional:** wide-aisle offsets up to 14px per side, reduced at mapped boundaries and recorded in route provenance; 10 scene-unit lookahead and 1.25 stop gap. Each hub admits two departing cars into the interior at once; further cars remain parked until a slot clears. This models pull-out room, not surveyed aisle capacity. Original parking totals and first-half allocation remain unchanged.
+
 ## #57 — Lot A Main (`aMain`)
 - **Location:** canonical #57; #31 is an alias.
 - **Person's duty:** coordinate inbound Main, North departures and South departures in five-car handoffs; keep held vehicle bodies out of the released movement's sweep.

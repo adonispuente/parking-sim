@@ -12,6 +12,7 @@ import { LAYOUT } from '../layoutOverlay.js';
 import { buildOverlayPositions } from './overlayDefinitions.js';
 import { pointAt, STAFF_POSITIONS, POSITION_ALIASES } from '../clearImageSource.js';
 import { EQUITY_CLAY_STOP_POSITION, EQUITY_CLAY_MAX_WAIT_S } from '../equityClayStop.js';
+import { C_ROUNDABOUT_POSITION, C_HUB_SOURCE } from '../cHubSource.js';
 
 // Point bindings used by controllers and the route panel (formerly src/trafficPositions.js).
 export const RESOLVED_A_MAIN_POSITION = Object.freeze([...pointAt(57)]);
@@ -109,10 +110,20 @@ export const CONTROL_POINTS = Object.freeze([Object.freeze({
   controllers: ['src/equityClayStop.js'],
 })]);
 
-// Preserve the eight-entry staffed API; consumers opt into advisory entries.
+// Separate drawing namespace: #48 here is not EverythingClearImage #48.
+export const C_HUB_POSITIONS = Object.freeze([Object.freeze({
+  id: 'cRoundabout', title: 'Lot C roundabout marshal', label: 'Lot C roundabout',
+  index: null, sourceIndex: 48, sourceFile: C_HUB_SOURCE, point: C_ROUNDABOUT_POSITION, aliases: [], staffed: true,
+  duty: 'Manages the four-way above the roundabout, giving shuttles first priority, then exits, while separated entering and exiting lanes continue together.',
+  implemented: 'Holds only conflicting movements at the drawn four-way; occupied movements and physical leaders clear first. Compatible paths may enter together.',
+  intended: [], provisional: ['28px aisle separation on wide interior roads', '10 scene-unit shuttle lookahead', '1.25 scene-unit stop gap'],
+  controllers: ['src/cRoundaboutControl.js', 'src/cHubRoutes.js'],
+})]);
+
+// Preserve the eight-entry source API; the new drawing has a separate namespace.
 export const OVERLAY_POSITIONS = buildOverlayPositions(LAYOUT, undefined,
-  [...POSITIONS, ...CONTROL_POINTS].map(p => p.id));
-export const ALL_POSITIONS = Object.freeze([...POSITIONS, ...CONTROL_POINTS, ...OVERLAY_POSITIONS]);
+  [...POSITIONS, ...CONTROL_POINTS, ...C_HUB_POSITIONS].map(p => p.id));
+export const ALL_POSITIONS = Object.freeze([...POSITIONS, ...CONTROL_POINTS, ...C_HUB_POSITIONS, ...OVERLAY_POSITIONS]);
 export const positionById = id => ALL_POSITIONS.find(p => p.id === id);
 export const positionByIndex = index => index == null ? undefined
   : POSITIONS.find(p => p.index === (POSITION_ALIASES[index] ?? index));

@@ -7,6 +7,8 @@ import { drivingPrefix, nearestIndex, distance, inPolygon, avoidsObstacles, join
 import { recordRouteUse } from './vehicleRouteCatalog.js';
 import { C_THROAT, C_STAGING_TARGET, B_NORTH_DIRECT_PATH } from './layoutOverlay.js';
 import { A_SOUTH_CENTRELINE, A_SOUTH_CENTRELINE_PROVENANCE } from './aSouthCentreline.js';
+import { cHubForCar } from './cHubSource.js';
+import { cHubArrival, cHubDeparture } from './cHubRoutes.js';
 const ZONE_SOURCE={aNorth:39,aSouth:38,aBadge:37,bSouth:40,bBanana:41,bPocket:42,bNorth:44,cFirstNorth:51,cFirstSouth:52,cNorth:51,cSouth:52};
 const ARRIVAL_SOURCE={aNorth:1,aSouth:0,aBadge:2,bSouth:4,bBanana:5,bPocket:6,bNorth:7};
 // #63 lies beside the street/lot boundary. Generic pavement A* snapped back
@@ -349,8 +351,8 @@ function bForwardExit(zone,start,target) {
   }
   throw new Error(`Unavailable Lot B forward exit for ${zone}: no traced #${B_CIRCULATION_SOURCES.join('/#')} join`);
 }
-export function zoneArrivalRoute(key,zone) {
-  const id=`in:${key}:${zone}`;if(cache.has(id))return cache.get(id);
+export function zoneArrivalRoute(key,zone,hubId) {
+  const id=`in:${key}:${zone}:${hubId??''}`;if(cache.has(id))return cache.get(id);
   const lot=ZONE_BY_ID[zone].lot,end=ZONE_STAGING[zone];let points;
   if(lot==='a'&&zone!=='aBadge') {
     const source=ARRIVAL_SOURCE[zone],raw=drivingPrefix(source),{road:rawRoad,rest}=mainCrossing(raw);
@@ -382,26 +384,13 @@ export function zoneArrivalRoute(key,zone) {
   } else if(lot==='c') {
     const road=VECTOR_ROUTES.arrival[key];
     if(distance(road.at(-1),pointAt(63))>.001)throw new Error('C arrival bypasses staffed entrance');
-    if(zone==='cFirstNorth'||zone==='cNorth') {
-      // Clear the entry throat before turning east toward the staging point.
-      const waypoint=[C_ENTRANCE_INTERIOR[0],C_STAGING_TARGET[1]];
-      const approach=[C_ENTRANCE_INTERIOR,waypoint,end];
-      for(let i=1;i<approach.length;i++) {
-        if(!clearSegment(approach[i-1],approach[i])||!clearSegment(approach[i-1],approach[i],drivableAllowed))
-          throw new Error('C north below-throat waypoint not clear/drivable');
-      }
-      CONNECTOR_PROVENANCE.push({context:'Lot C north arrival below-throat waypoint',mode:'derived-waypoint',provisional:true,
-        source:'C_ENTRANCE_INTERIOR x, C_STAGING_TARGET y; keeps arrival out of departure throat path'});
-      points=join(road,C_ENTRANCE_JOIN,approach);
-    } else {
-      points=join(road,C_ENTRANCE_JOIN,connect('c',C_ENTRANCE_INTERIOR,end));
-    }
+    points=join(road,C_ENTRANCE_JOIN,cHubArrival(hubId??cHubForCar(zone).id));
   } else {
     const road=VECTOR_ROUTES.arrival[key];
     points=join(road,connect(lot,road.at(-1),end));
   }
-  recordRouteUse(key,zone,{source:'EverythingClearImage',routeId:ARRIVAL_SOURCE[zone]??(key.startsWith('e2')?10:key.startsWith('e')?9:8),
-    reason:'traced driving prefix, row sweeps excluded; explicit obstacle-checked source-frame staging/staff joins'});
+  recordRouteUse(key,zone,{source:lot==='c'?`LotCHubs.json · ${hubId??cHubForCar(zone).id}; EverythingClearImage staffed approach`:'EverythingClearImage',routeId:ARRIVAL_SOURCE[zone]??(key.startsWith('e2')?10:key.startsWith('e')?9:8),
+    reason:lot==='c'?'hub aisle network; separate travel lanes and exact parking anchor':'traced driving prefix, row sweeps excluded; explicit obstacle-checked source-frame staging/staff joins'});
   cache.set(id,points);return points;
 }
 // Lot A North departure approach (Commander 2026-11-10: the Main aisle "is wide
@@ -433,14 +422,23 @@ function aNorthDepartureApproach(start) {
     source:'derived waypoints (not a traced aisle); Commander-approved separate departure lane',start,end:main,points:pts.length});
   return pts;
 }
-export function zoneDepartureRoute(access,zone) {
-  const id=`out:${access}:${zone}`;if(cache.has(id))return cache.get(id);
+export function zoneDepartureRoute(access,zone,hubId) {
+  const id=`out:${access}:${zone}:${hubId??''}`;if(cache.has(id))return cache.get(id);
   const lot=ZONE_BY_ID[zone].lot,start=ZONE_STAGING[zone];let result;
   if(access==='a'&&['aNorth','aSouth'].includes(zone)) {
     // Zone staging -> Main Position (separate approaches) -> shared exit tail,
     // on the exit side of the Main median (see medianSide).
     const approach=zone==='aNorth'?aNorthDepartureApproach(start):aSouthLoop('departure');
     result=medianSide(join(approach,mainToExit(),A_EXIT_TAIL),'after',`out:${access}:${zone}`);
+  } else if(lot==='c') {
+    // All hubs join the same exit throat before the public road, so its built
+    // lane geometry remains identical regardless of the parking approach.
+    const raw=VECTOR_ROUTES.departure[access];
+    // Both C exits merge onto the same eastbound Corporate road. Keeping two
+    // slightly different source traces around its eastern bend made queues
+    // weave into one another there. Use #13's common downstream road for both.
+    const road=access==='cEast'?join(raw.slice(0,2),connect('c',raw[1],routeAt(13)[3]),routeAt(13).slice(3)):raw;
+    result=join(cHubDeparture(hubId??cHubForCar(zone).id,access),road);
   } else {
     const raw=VECTOR_ROUTES.departure[access];
     let lead=zone==='bNorth'&&access==='bNorth'?bNorthDirectExit(raw[0]):null;
@@ -456,8 +454,8 @@ export function zoneDepartureRoute(access,zone) {
   }
   cache.set(id,result);return result;
 }
-export function redirectedArrivalRoute(current,key,zone) {
-  const arrival=zoneArrivalRoute(key,zone),base=VECTOR_ROUTES.arrival[key];
+export function redirectedArrivalRoute(current,key,zone,hubId) {
+  const arrival=zoneArrivalRoute(key,zone,hubId),base=VECTOR_ROUTES.arrival[key];
   const approach=base[Math.max(0,STREET_SECTIONS.arrival[key]-1)];
   const k=nearestIndex(arrival,approach);
   return join([current],streetPath(current,approach),obstacleConnector(approach,arrival[k],'redirect to source route'),arrival.slice(k));
