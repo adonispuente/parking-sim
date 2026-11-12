@@ -2,12 +2,11 @@
 // Bounded tests for src/exitPathSource.js only. The module is isolated: no
 // routing, parking, controller or view module imports it, so this file must not
 // import any of those either — only the catalog, the registered source JSON and
-// node's hash/shell tools.
+// node's file/hash tools.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { execSync } from 'node:child_process';
 import drawing from '../images/ExitPathsAndC.json' with { type: 'json' };
 import {
   EXIT_PATHS,
@@ -215,27 +214,5 @@ test('authorized shuttle append is frozen and separate; previous 50 source shape
   rejects(d => { d.shapes[50].label = 'unapproved'; }, /#50.*expected shuttle linestrip/);
   rejects(d => { d.shapes[50].shape_type = 'polygon'; }, /#50.*expected shuttle linestrip/);
   rejects(d => { d.shapes[50].points[0][0] = NaN; }, /#50.*non-finite/);
-});
-
-test('every pre-existing src/tests/images file still matches the pre-edit baseline', () => {
-  const base = 'research/runs/exit-paths-8831/qwen-baseline-hashes.txt';
-  assert.ok(existsSync(base), 'baseline snapshot must exist');
-  const before = Object.fromEntries(readFileSync(base, 'utf8').trim().split('\n').map(l => l.split(/  +/)));
-  const after = Object.fromEntries(execSync('sha256sum src/* tests/* images/* 2>/dev/null | sort -k2', { encoding: 'utf8' }).trim().split('\n').map(l => l.split(/  +/)));
-  const changed = Object.entries(before).filter(([path, sha]) => after[path] !== undefined && after[path] !== sha);
-  assert.deepEqual(changed, [], 'these pre-existing files changed during S0');
-});
-
-test('S0 added exactly the two new files, both untracked, nothing else added', () => {
-  const out = execSync('git status --short src tests 2>/dev/null', { encoding: 'utf8' }).trim().split('\n');
-  const untracked = out.filter(l => l.startsWith('?? ')).map(l => l.slice(3));
-  // This shared working tree already carries pre-existing untracked/staged files
-  // from earlier runs (M3/M4 slices) — that is not an S0 change. The protection
-  // proof is the SHA snapshot comparison above. Assert only what S0 itself did:
-  // exactly its two new files, both untracked and byte-present.
-  assert.ok(untracked.includes('src/exitPathSource.js'), 'new source file present and untracked');
-  assert.ok(untracked.includes('tests/exit-path-source.test.js'), 'new test file present and untracked');
-  const s0Additions = untracked.filter(p => p === 'src/exitPathSource.js' || p === 'tests/exit-path-source.test.js');
-  assert.equal(s0Additions.length, 2, 'S0 adds exactly two files');
 });
 

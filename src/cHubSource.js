@@ -6,8 +6,8 @@ export const C_HUB_SOURCE = 'images/LotCHubs.json';
 // Provisional pull-out allowance per hub, not a parking-space capacity.
 export const C_HUB_RELEASE_SLOTS = 2;
 const freezePoints = points => Object.freeze(points.map(p => Object.freeze([...p])));
-if (drawing.imageWidth !== IMAGE_SIZE.width || drawing.imageHeight !== IMAGE_SIZE.height || drawing.shapes.length !== 60)
-  throw new Error(`${C_HUB_SOURCE}: expected the registered 1374x1118, 60-shape drawing`);
+if (drawing.imageWidth !== IMAGE_SIZE.width || drawing.imageHeight !== IMAGE_SIZE.height || drawing.shapes.length < 60)
+  throw new Error(`${C_HUB_SOURCE}: expected the registered 1374x1118 drawing with at least 60 shapes`);
 function bind(index, label, type) {
   const shape = drawing.shapes[index];
   if (shape?.label !== label || shape.shape_type !== type || !shape.points.length ||

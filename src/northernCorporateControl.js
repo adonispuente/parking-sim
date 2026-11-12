@@ -141,7 +141,7 @@ export function attachNorthernCorporateControl(state, options = {}) {
     if(!radio.clayBackedUp)radio.diversionRemaining=0;
   };
   state.northernDepartureAccess = (car,normal) => {
-    if(car.target!=='b'||normal!=='bNorth'||!radio.clayBackedUp)return normal;
+    if(car.target!=='b'||car.zone==='bSouth'||normal!=='bNorth'||!radio.clayBackedUp)return normal;
     if(state.clock<radio.nextBatchAt&&!radio.diversionRemaining)return null;
     if(!radio.diversionRemaining)radio.diversionRemaining=config.batchSize;
     return 'bWest';

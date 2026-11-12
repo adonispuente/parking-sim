@@ -14,11 +14,12 @@ function counter() {
   }};
 }
 const inputs = { rates: [2,0,0], phase:'arrival', lots: [] };
-test('UI speed contract has matching reverse/forward speeds, initially 5; elapsed timeline removed', () => {
-  assert.deepEqual(PLAYBACK_SPEEDS, [-30,-20,-10,-5,5,10,20,30]);
+test('UI speed contract includes 40× forward playback, initially 5; elapsed timeline removed', () => {
+  assert.deepEqual(PLAYBACK_SPEEDS, [-30,-20,-10,-5,5,10,20,30,40]);
   const ui = readFileSync(new URL('../src/main.jsx', import.meta.url), 'utf8');
   assert.match(ui, /playbackSpeed,setPlaybackSpeed\]=useState\(5\)/);
-  assert.match(ui, /PLAYBACK_SPEEDS.map/);
+  const controls=readFileSync(new URL('../src/SimulationControls.jsx', import.meta.url), 'utf8');
+  assert.match(controls, /PLAYBACK_SPEEDS.map/);
   assert.doesNotMatch(ui, /aria-label="Simulation timeline"/);
 });
 test('fixed live ticks and rewind-forward replay preserve private state exactly', async () => {
@@ -149,4 +150,11 @@ test('30× advances thirty simulated seconds per real second without enlarging f
   for(let i=0;i<60;i++)playback.advance(1/60,30);
   assert.ok(Math.abs(playback.clock-30)<1e-8);
   assert.equal(playback.simulation.events.length,600);
+});
+
+test('40× advances forty seconds per real second with fixed safe ticks',()=>{
+ const playback=createSeekablePlayback(counter,inputs,{yieldWork:immediate});
+ for(let i=0;i<60;i++)playback.advance(1/60,40);
+ assert.equal(playback.clock,40);
+ assert.equal(playback.simulation.events.length,800);
 });

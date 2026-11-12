@@ -17,6 +17,7 @@ export default function RouteSourcesPanel() {
       <dt>Feeder officer</dt><dd>Canonical source #58 · [{FEEDER_OFFICER_POSITION.map(n=>n.toFixed(2)).join(', ')}]; admission distances remain provisional simulation settings</dd>
       <dt>Routes</dt><dd>Source driving prefixes are live. Row zigzags are parking guidance, not a tour. Purple potential C exits remain proposals. Cyan = source-composed arrival centerlines before the runtime right-hand lane offset (street segments drive slightly right of cyan), muted = original source lines.</dd>
       <dt>Derived geometry</dt><dd>{d.connectors.length} cached obstacle-checked centerline connectors. Not surveyed aisles or swept-body clearance.</dd>
+      <dt>Lot A/B hubs</dt><dd>{d.abHubs.count} parking hubs from ABHubs.json, with arrivals and departures at the same anchor. Internal lanes and short aisle joins are estimated.</dd>
       <dt>Lot C hubs</dt><dd>{d.cHubs.count} parking hubs with arrivals and departures on the drawn aisle network. The roundabout marshal prioritizes shuttles, then exits; separated lanes move together. Aisle widths are estimated.</dd>
     </dl>
     <table data-route-diag="zones"><thead><tr><th>Zone</th><th>Source route</th><th>Built provenance</th></tr></thead><tbody>{d.zones.map(z=><tr key={`${z.zone}-${z.uses[0].road}`}><td>{z.zone}</td><td>#{z.routeId}</td><td>{z.uses[0].road}: {z.uses[0].source}</td></tr>)}</tbody></table>

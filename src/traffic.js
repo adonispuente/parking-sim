@@ -157,7 +157,6 @@ const lane=(coords,name,metadata={})=>{
 const arrivalNames={a:'Feeder → A public',badgeA:'Feeder → A Black Permit',bWest:'Feeder → B west',cWest:'Feeder → C staffed entrance',eCWest:'Equity Entrance → C staffed entrance',e2CWest:'Equity entrance/exit 2 → C staffed entrance'};
 const legacyLanes=Object.entries(arrivalNames).map(([key,name])=>lane(VECTOR_ROUTES.arrival[key],name));
 export function createCampusTraffic(options={}) {return createZonedCampus(options,lane,legacyLanes);}
-export function createTraffic(){return createCampusTraffic();}
 export function createTenCarDemo(options={}){
   const state=createCampusTraffic({...options,service:{enabled:false}});state.mode='demo';
   const step=state.step;let issued=0,nextArrival=0;

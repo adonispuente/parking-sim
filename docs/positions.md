@@ -51,20 +51,21 @@ Lot C adds a ninth staffed position from `images/LotCHubs.json` #48, in its own 
 ## #62 — Bravo north exit (`bExit`)
 - **Location:** #62; #33 is its alias.
 - **Person's duty:** coordinate B departures and radio public-road/shuttle conditions.
-- **Implemented:** `src/northernCorporateControl.js` and `src/campusSimulation.js` can send B North departures west in prelaunch five-car batches during sustained eastbound backup. Already-moving cars are not teleported. Normal B split remains section-based, **not a fixed per-car percentage**.
+- **Implemented:** `src/northernCorporateControl.js` and `src/campusSimulation.js` can send B North departures west in prelaunch five-car batches during sustained eastbound backup. Already-moving cars are not teleported. Normal directions split B North evenly by hub between north and west; B South goes north, Banana west, and Pocket north. B South keeps its north exit during radio diversions.
 - **Limits:** backup thresholds (three cars, eight seconds, five-car batches) are provisional. The approved northern-row staging abstraction serves B North north-bound departures; it is not a surveyed connector from the original west staging. No standalone #62 admission gate exists.
 
 ## #63 — Charlie staffed entrance (`cEntrance`)
 - **Location:** #63; #34 is its alias.
 - **Person's duty:** receive ordinary C arrivals, coordinate with #62/#64, and keep entry and exit movement separated.
-- **Implemented:** `src/parkingRoutes.js` checks that ordinary C arrival access ends at #63 before the interior join; median geometry separates opposing movement where modeled. `src/vectorRoutes.js` and northern radio bind this point.
+- **Implemented:** `src/parkingRoutes.js` checks that ordinary C arrivals pass #63. `src/cEntranceControl.js` holds conflicting cars before an approaching shuttle turn, using the actual shared parts of the built lanes. Cars already admitted, shared-lane leaders, and the roundabout marshal’s exit stream keep clearing. The local entrance apron permits a shuttle to pull around a dependency cycle; ordinary cars keep their lanes. Northern radio still coordinates the point.
+- **Estimated settings:** turn area around #63, 14 scene units of lookahead, and body-length stop buffers plus a 1.25-unit gap.
 - **Limits:** route checkpoint/radio role, not an independent per-person quota. Multiple departure exits do not grant new ordinary-arrival entry permissions.
 
 ## #64 — Charlie exit (`cExit`)
 - **Location:** #64; #35 is its alias.
 - **Person's duty:** coordinate C shuttle returns with Corporate and tell conflicting cars to hold or clear.
 - **Implemented:** `src/northernCorporateControl.js` detects C North/South exit-leg shuttles, computes local lane conflicts and holds cars before the region. Already-admitted cars and physical leaders clear first; bus waits when needed.
-- **Current car policy:** C cars may use both exits, with configurable default deterministic 50/50 split. Shuttles retain their #64 return/hold behavior. Old shuttle-only car-exit descriptions are obsolete. This differs from B's section-based policy.
+- **Current car policy:** C cars may use both exits, with configurable default deterministic 50/50 split. Shuttles retain their #64 return/hold behavior. Old shuttle-only car-exit descriptions are obsolete. B North uses a balanced hub split; B South uses north.
 
 ## Shared rules
 

@@ -7,6 +7,7 @@ import { zoneDepartureRoute } from '../src/parkingRoutes.js';
 import { avoidsShuttleObstacles } from '../src/shuttleRoutes.js';
 import * as THREE from 'three';
 import { indexLanePath } from '../src/lanePath.js';
+import { AB_HUBS } from '../src/abHubSource.js';
 
 test('indexed lane sampling preserves Three points and tangents including segment boundaries',()=>{
   const path=new THREE.CurvePath();
@@ -29,7 +30,8 @@ test('failed route construction is attempted once per scenario, not once per rea
   assert.ok(attempts>0);
   const first=attempts;
   for(let i=0;i<200;i++)state.step(.05);
-  assert.ok(attempts<=4,'at most the four B section routes are attempted');
+  assert.equal(attempts,first,'failed hub routes are cached across subsequent ticks');
+  assert.ok(attempts<=AB_HUBS.filter(h=>h.lot==='b').length,'at most one route per B hub is attempted');
   assert.equal(state.routingIssues.length,1);
   assert.ok(attempts>=first);
   assert.equal(state.parkedVehicles.length,487,'do not delete cars to hide failures');

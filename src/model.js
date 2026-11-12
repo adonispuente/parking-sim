@@ -1,6 +1,5 @@
-import { IMAGE_SIZE, WORLD_SCALE, SOURCE_PAIR } from './clearImageSource.js';
+import { IMAGE_SIZE, WORLD_SCALE } from './clearImageSource.js';
 import { tracedLayout } from './tracedMap.js';
-export const upgradeLotAParking = layout => layout;
 export const STORAGE_KEY = 'parking-flow-clear-image-v1';
 export const WORLD = { width: IMAGE_SIZE.width*WORLD_SCALE, height: IMAGE_SIZE.height*WORLD_SCALE };
 export const COLORS = ['#d2f481', '#83cbd5', '#bba8ed'];

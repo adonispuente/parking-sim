@@ -16,7 +16,6 @@ const PAVEMENT_BINDINGS = Object.freeze([
   [12, 'Lot A North pedestrian area road'],
 ]);
 export const REPLACED_WORLD_SURFACES = Object.freeze(['clear-37', 'clear-38', 'clear-39', 'clear-40', 'clear-41', 'clear-42', 'clear-44']);
-export const PRESENTATION_LOT_SOURCE = 'images/NoMedians.json';
 export const PRESENTATION_LOT_FILL_RULE = 'evenodd';
 export const PRESENTATION_LOT_ELEVATION = .15;
 

@@ -3,11 +3,11 @@ import { createRoot } from 'react-dom/client';
 import Scene from './Scene.jsx';
 import { openParkingCapacity } from './parkingAvailability.js';
 import SundayControls from './SundayControls.jsx';
+import SimulationControls from './SimulationControls.jsx';
 import RouteSourcesPanel from './RouteSourcesPanel.jsx';
 import { serviceOptions } from './sundayServices.js';
-import { PLAYBACK_SPEEDS } from './playback.js';
 import { SHUTTLE_CAR_EQUIVALENT, TRAFFIC_PRIORITY_ORDER } from './trafficPriority.js';
-import { initialLayout, makeItem, validateLayout, deleteItem, stats, STORAGE_KEY, ROLES, WORLD, upgradeLotAParking } from './model.js';
+import { initialLayout, makeItem, validateLayout, deleteItem, stats, STORAGE_KEY, ROLES, WORLD } from './model.js';
 import './styles.css';
 import { SOURCE_PAIR } from './clearImageSource.js';
 
@@ -27,18 +27,17 @@ function load() {
       const raw=JSON.parse(stored);
       if(raw.sourcePair!==SOURCE_PAIR) {
         localStorage.setItem(`${STORAGE_KEY}-before-unified-source`,stored);
-        return {layout:tracedLayout(raw),message:'Clear Image unified source loaded. Previous coordinates backed up; only lot open/closed settings migrated.'};
+        return tracedLayout(raw);
       }
       const parsed=validateLayout(raw);
-      return {layout:parsed,message:'Clear Image + EverythingClearImage: one source for map, routes and positions.'};
+      return parsed;
     }
-  } catch { return { layout:initialLayout(), message:'Saved layout could not be read. Loaded the starter layout; import a backup if you have one.' }; }
-  return { layout:initialLayout(), message:'Loaded Clear Image unified-source campus.' };
+  } catch { return initialLayout(); }
+  return initialLayout();
 }
 
 function App() {
-  const [boot] = useState(load);
-  const [layout,setLayout]=useState(boot.layout), [selectedId,setSelectedId]=useState(null);
+  const [layout,setLayout]=useState(load), [selectedId,setSelectedId]=useState(null);
   const [tool,setTool]=useState('select'), [reference,setReference]=useState(false), [running,setRunning]=useState(false);
   const [presentation,setPresentation]=useState('world');
   const traced=presentation==='trace', world=presentation==='world';
@@ -55,14 +54,13 @@ function App() {
   const updatePlayback=patch=>setPlaybackState(state=>({...state,...patch}));
   function invalidateReplay() {
     setRunning(false);
-    notify('Traffic inputs changed. Playback restarted so replay remains reproducible.');
   }
-  const [trafficOptions,setTrafficOptions]=useState({initialOccupancy:{a:0,b:0,c:0},badgePercent:5,phase:'arrival',service:{enabled:true,...serviceOptions('nine')},zonePreferences:{a:'auto',b:'auto',c:'auto'},shuttles:{enabled:true,activeCount:3,bFullPercent:100,randomDwell:true,dwellSeconds:45,cDirection:'auto',bStop:'circuit',dispatchMode:'demand'}});
+  const [trafficOptions,setTrafficOptions]=useState(()=>{const service=serviceOptions('eleven');return {initialOccupancy:{...service.initialOccupancy},badgePercent:5,phase:'arrival',service:{enabled:true,...service},zonePreferences:{a:'auto',b:'auto',c:'auto'},shuttles:{enabled:true,activeCount:service.activeBuses,bFullPercent:100,randomDwell:true,dwellSeconds:45,cDirection:'auto',bStop:'circuit',dispatchMode:'demand',dispatchDuringDepartures:service.transition}};});
   const [trafficStats,setTrafficStats]=useState({active:0,entered:[0,0],exited:[0,0],waiting:[0,0]});
   const [view,setView]=useState('3d'), [zoom,setZoom]=useState(1), [tab,setTab]=useState('lots'), [showRoutes,setShowRoutes]=useState(false);
-  const [message,setMessage]=useState(boot.message), [saved,setSaved]=useState('Saving…');
+  const [message,setMessage]=useState(''), [saved,setSaved]=useState('Saving…');
   const [history,setHistory]=useState([]), [confirmation,setConfirmation]=useState(null);
-  const inputRef=useRef(null), messageTimer=useRef(null);
+  const messageTimer=useRef(null);
   const selected=layout.items.find(i=>i.id===selectedId), totals=stats(layout);
   const lots=layout.items.filter(i=>i.type==='lot');
   const positions=layout.items.filter(i=>i.type==='position');
@@ -70,7 +68,7 @@ function App() {
 
   useEffect(()=>{
     try { localStorage.setItem(STORAGE_KEY,JSON.stringify(layout)); setSaved('Saved on this device'); }
-    catch { setSaved('Not saved · export a backup'); }
+    catch { setSaved('Local saving unavailable'); }
   },[layout]);
   useEffect(()=>()=>clearTimeout(messageTimer.current),[]);
 
@@ -97,22 +95,6 @@ function App() {
     if(!history.length) return;
     setLayout(history.at(-1)); setHistory(history.slice(0,-1)); setTool('select'); notify('Last edit undone.');
   }
-  function exportLayout() {
-    const blob=new Blob([JSON.stringify(layout,null,2)],{type:'application/json'});
-    const url=URL.createObjectURL(blob), anchor=document.createElement('a');
-    anchor.href=url; anchor.download='church-parking-layout.json'; anchor.click();
-    setTimeout(()=>URL.revokeObjectURL(url),1000); notify('Layout exported. Keep the JSON as your backup.');
-  }
-  async function importLayout(event) {
-    const file=event.target.files?.[0]; if(!file) return;
-    try {
-      if(file.size>1_000_000) throw new Error('That file is too large. Layouts must be under 1 MB.');
-      const raw=JSON.parse(await file.text());
-      const next=raw.sourcePair===SOURCE_PAIR?validateLayout(raw):tracedLayout(raw);
-      setConfirmation({title:'Replace this layout?',description:`Import “${next.name}” (${next.items.length} objects). Your current layout can be restored with Undo.`,action:()=>{commit(next); setSelectedId(null); setRunning(false); notify('Layout imported and saved on this device.');}});
-    } catch(error) { notify(error instanceof SyntaxError?'That is not valid JSON. Your current layout has not changed.':error.message); }
-    event.target.value='';
-  }
   function remove() {
     if(!selected) return;
     commit(deleteItem(layout,selected.id)); setSelectedId(null); setTool('select');
@@ -123,10 +105,12 @@ function App() {
     <header className="header">
       <a className="brand" href="./" aria-label="Parking Flow home"><span className="brand-icon">P<span>↗</span></span><span>parking<span className="brand-light">flow</span><small>HOPE CITY / CAMPUS SIMULATOR</small></span></a>
       <div className="project-heading"><span className="eyebrow">YOUR CAMPUS</span><strong>{layout.name}</strong></div>
-      <blockquote className="header-verse"><cite>Colossians 3:23</cite><p>"Whatever you do, work at it with all your heart, as working for the Lord, not for human masters."</p></blockquote>
-      <div className="header-actions"><span className={`save-state ${saved.startsWith('Not')?'unsaved':''}`}><i/>{saved}</span><button className="button subtle" onClick={()=>inputRef.current.click()}>Import</button><button className="button dark" onClick={exportLayout}>Export layout <span>↗</span></button></div>
-      <input ref={inputRef} hidden type="file" accept=".json,application/json" aria-label="Import layout JSON" onChange={importLayout}/>
+      <span className={`save-state ${saved==='Local saving unavailable'?'unsaved':''}`}><i/>{saved}</span>
     </header>
+
+    <SimulationControls options={trafficOptions} setOptions={setTrafficOptions} stats={trafficStats}
+      running={running} onToggle={()=>setRunning(v=>!v)} speed={playbackSpeed} onSpeed={setPlaybackSpeed}
+      onReset={()=>{setRunning(false);setTrafficMode('continuous');setTrafficReset(v=>v+1);}}/>
 
     <div className="workspace">
       <aside className="sidebar" hidden={world}>
@@ -140,18 +124,16 @@ function App() {
             {item.type==='lot'&&<button className={`status ${item.open?'open':'closed'}`} aria-label={`${item.open?'Close':'Open'} ${item.name}`} onClick={()=>update(item.id,{open:!item.open})}><i/>{item.open?'Open':'Closed'}</button>}
           </div>)}
         </div>
-        <div className="sidebar-foot"><span className="tiny-label">LABELME · UPDATED TRACE</span><p>{tracedFeatures.length} source-pixel annotations: roof outlines, parking regions, Corporate Drive, roundabouts and shuttle pickup points.<br/><strong>These regions are not counted parking stalls. Capacities remain A 411 · B 487 · C 686 (1,584 total).</strong></p><button className="text-button" onClick={()=>setTraced(!traced)}>{traced?'View editable draft':'View updated trace'} <span>↗</span></button><button className="text-button" onClick={()=>setReference(!reference)}>{reference?'Hide source image':'Compare with source image'} <span>↗</span></button><button className="text-button" onClick={()=>setConfirmation({title:'Apply updated LabelMe map?',description:'Replaces the old generated map geometry with the updated source trace. Existing custom objects and lot operating settings remain. Export a backup first; Undo can restore this draft.',action:()=>{commit(tracedLayout(layout));setTraced(false);setSelectedId(null);setRunning(false);notify('Updated LabelMe geometry applied. Undo restores the previous draft.');}})}>Apply updated trace to editable map</button></div>
+        <div className="sidebar-foot"><span className="tiny-label">LABELME · UPDATED TRACE</span><p>{tracedFeatures.length} source-pixel annotations: roof outlines, parking regions, Corporate Drive, roundabouts and shuttle pickup points.<br/><strong>These regions are not counted parking stalls. Capacities remain A 411 · B 487 · C 686 (1,584 total).</strong></p><button className="text-button" onClick={()=>setTraced(!traced)}>{traced?'View editable draft':'View updated trace'} <span>↗</span></button><button className="text-button" onClick={()=>setReference(!reference)}>{reference?'Hide source image':'Compare with source image'} <span>↗</span></button><button className="text-button" onClick={()=>setConfirmation({title:'Apply updated LabelMe map?',description:'Replaces the old generated map geometry with the updated source trace. Existing custom objects and lot operating settings remain. Undo can restore this draft.',action:()=>{commit(tracedLayout(layout));setTraced(false);setSelectedId(null);setRunning(false);notify('Updated LabelMe geometry applied. Undo restores the previous draft.');}})}>Apply updated trace to editable map</button></div>
       </aside>
 
       <main className="map-area">
 
-        <div className="map-topline"><div><span className="map-dot"/><strong>{world?'Hope City / live world':'Campus canvas'}</strong><span className="map-top-tag">{world?'V3 · SAME SIMULATION':traced?'LABELME TRACE':'EDITABLE DRAFT'}</span></div><div className="presentation-switch" role="group" aria-label="Presentation mode">{[['world','3D World'],['trace','Source trace'],['draft','Layout editor']].map(([id,title])=><button key={id} aria-pressed={presentation===id} onClick={()=>changePresentation(id)}>{title}</button>)}</div></div>
         <Scene layout={layout} selectedId={selectedId} tool={world||traced?'select':tool} reference={reference} traced={traced} world={world} showLabels={showLabels||!world} showOccupancy={showOccupancy} cameraFocus={cameraFocus} cameraReset={cameraReset} running={running} playbackSpeed={playbackSpeed} seekRequest={seekRequest} onPlaybackState={updatePlayback} onReplayInvalidated={invalidateReplay} trafficRates={trafficRates} trafficReset={trafficReset} trafficMode={trafficMode} trafficOptions={trafficOptions} onTrafficStats={setTrafficStats} view={view} zoom={zoom} showRoutes={showRoutes} onPick={world?()=>{}:setSelectedId} onPlace={world?()=>{}:place}/>
         {view==='top'&&<div className="north"><span>Ｎ</span><div>↑</div></div>}
-        <div className="view-controls"><div className="segmented"><button aria-pressed={showRoutes} title="Vehicle Routes overlay: green candidate (geometric only), orange provisional, purple proposal, red open. Also shows the layout overlay (filled/dashed areas, diamonds, chevrons) coloured by confidence. Actual route sources: dashboard › Route sources" onClick={()=>setShowRoutes(v=>!v)}>Routes</button></div><div className="segmented"><button aria-pressed={view==='top'} onClick={()=>setView('top')}>Top</button><button aria-pressed={view==='3d'} onClick={()=>setView('3d')}>3D</button></div><div className="zoom-controls"><button aria-label="Zoom in" onClick={()=>setZoom(z=>Math.min(5,z+0.3))}>+</button><button aria-label="Zoom out" onClick={()=>setZoom(z=>Math.max(0.6,z-0.3))}>−</button><button aria-label="Reset camera" onClick={()=>{setZoom(1);setCameraFocus('campus');setCameraReset(v=>v+1);}}>⌖</button></div></div>
+        <div className="view-controls"><div className="segmented"><button aria-pressed={view==='top'} onClick={()=>setView('top')}>Top</button><button aria-pressed={view==='3d'} onClick={()=>setView('3d')}>3D</button></div><div className="zoom-controls"><button aria-label="Zoom in" onClick={()=>setZoom(z=>Math.min(5,z+0.3))}>+</button><button aria-label="Zoom out" onClick={()=>setZoom(z=>Math.max(0.6,z-0.3))}>−</button><button aria-label="Reset camera" onClick={()=>{setZoom(1);setCameraFocus('campus');setCameraReset(v=>v+1);}}>⌖</button></div></div>
         {world&&<>
-          <section className="world-hud" aria-label="Campus live status"><span className="world-kicker">SUNDAY OPERATIONS / {running?'LIVE':'PAUSED'}</span><div className="world-metrics"><div><strong>{openCapacity.toLocaleString()}</strong><span>spaces available</span></div><div><strong>{trafficStats.active}</strong><span>cars on road</span></div><div><strong>{trafficStats.shuttles?.length??5}</strong><span>shuttle fleet</span></div></div></section>
-          <div className="world-bottom"><div className="world-focus" role="group" aria-label="Camera focus">{[['campus','Campus'],['a','Alpha'],['b','Bravo'],['c','Charlie']].map(([id,title])=><button key={id} aria-pressed={cameraFocus===id} onClick={()=>{setCameraFocus(id);setZoom(id==='campus'?1:2.2);setCameraReset(v=>v+1);}}>{title}</button>)}</div><div className="world-options"><button aria-pressed={showLabels} onClick={()=>setShowLabels(v=>!v)}>Labels</button><button aria-pressed={showOccupancy} onClick={()=>setShowOccupancy(v=>!v)}>Occupancy</button><button aria-pressed={reference} onClick={()=>setReference(v=>!v)}>Satellite comparison</button><button aria-pressed={showPhoto} aria-controls="clear-photo" onClick={()=>setShowPhoto(v=>!v)}>Clear photo</button></div><small>{view==='3d'?'Drag to orbit · right-drag to pan · scroll / pinch to zoom':'Drag to pan · scroll / pinch to zoom'}<br/>Approved footprints · illustrative heights and staff placement · no new traffic rules</small></div>
+          <div className="world-bottom"><div className="world-focus" role="group" aria-label="Camera focus">{[['campus','Campus'],['a','Alpha'],['b','Bravo'],['c','Charlie']].map(([id,title])=><button key={id} aria-pressed={cameraFocus===id} onClick={()=>{setCameraFocus(id);setZoom(id==='campus'?1:2.2);setCameraReset(v=>v+1);}}>{title}</button>)}</div></div>
           {showPhoto&&<figure className="photo-reference" id="clear-photo"><figcaption><strong>Clear satellite photo · reference only</strong><span>Different extent and scale from the approved trace. Not aligned to this map.</span><button aria-label="Close clear photo" onClick={()=>setShowPhoto(false)}>×</button></figcaption><img src={clearPhotoUrl} alt="Clearer satellite photo of the Hope City campus, three upper-row buildings and surrounding lots" loading="lazy"/></figure>}
         </>}
         {!world&&<div className="map-caption"><span className="caption-rule"/><span>{traced?'IMAGE-PIXEL TRACE · NOT TRAFFIC RULES':'SCHEMATIC ONLY · NOT TO SCALE'}</span></div>}
@@ -162,13 +144,9 @@ function App() {
       </main>
 
       <aside className="traffic-dashboard" aria-label="Traffic control dashboard">
+        <details className="dashboard-details"><summary>Flow details & advanced settings</summary>
           <div className="traffic-controls" aria-label="Corporate Drive traffic controls">
-            <strong>Campus traffic · {trafficMode==='demo'?'10-car parking demo':'capacity-based routing'}</strong>
-            <div className="playback-bar">
-              <label>Playback speed<select aria-label="Playback speed" value={playbackSpeed} onChange={e=>setPlaybackSpeed(Number(e.target.value))}>{PLAYBACK_SPEEDS.map(speed=><option key={speed} value={speed}>{speed}×</option>)}</select></label>
-              <button className="button dark" onClick={()=>setRunning(!running)}>{running?'Pause traffic':'Start traffic'}</button>
-              <button onClick={()=>{setRunning(false);setTrafficReset(v=>v+1);setTrafficStats({active:0,entered:[0,0],exited:[0,0],waiting:[0,0]});}}>Reset traffic</button>
-            </div>
+            <section className="map-settings" aria-label="Map display settings"><strong>Map display</strong><div className="presentation-switch" role="group" aria-label="Presentation mode">{[['world','3D World'],['trace','Source trace'],['draft','Layout editor']].map(([id,title])=><button key={id} aria-pressed={presentation===id} onClick={()=>changePresentation(id)}>{title}</button>)}</div><div className="world-options"><button aria-pressed={showLabels} onClick={()=>setShowLabels(v=>!v)}>Labels</button><button aria-pressed={showOccupancy} onClick={()=>setShowOccupancy(v=>!v)}>Occupancy</button><button aria-pressed={reference} onClick={()=>setReference(v=>!v)}>Satellite comparison</button><button aria-pressed={showPhoto} aria-controls="clear-photo" onClick={()=>setShowPhoto(v=>!v)}>Clear photo</button></div><div className="segmented"><button aria-pressed={showRoutes} title="Vehicle Routes overlay: green candidate (geometric only), orange provisional, purple proposal, red open. Also shows the layout overlay (filled/dashed areas, diamonds, chevrons) coloured by confidence. Actual route sources: dashboard › Route sources" onClick={()=>setShowRoutes(v=>!v)}>Routes</button></div></section>
             <SundayControls options={trafficOptions} setOptions={setTrafficOptions} stats={trafficStats} onReset={()=>{setRunning(false);setTrafficMode('continuous');setTrafficReset(v=>v+1);}} onRun={()=>setRunning(true)}/>
             <small role="status" aria-label="Playback status">{playbackState.error?`Playback failed: ${playbackState.error}`:playbackState.seeking?`Restoring engine state · ${Math.floor(100*playbackState.completed/Math.max(.05,playbackState.target))}% · pause cancels`:playbackSpeed<0?playbackState.clock<=0?'At the beginning of this scenario.':'Rewinding recorded traffic states. Older history may need reconstruction.':'Forward playback · arrival rates are per simulated minute.'}</small>
             <div className="traffic-phase" role="group" aria-label="Traffic phase">
@@ -178,9 +156,9 @@ function App() {
             <small>{trafficStats.active} on road · {trafficStats.entered.reduce((a,b)=>a+b,0)} entered · {trafficStats.exited.reduce((a,b)=>a+b,0)} reached lot · {trafficStats.waiting.reduce((a,b)=>a+b,0)} waiting off-map</small>
             <small>Feeder arrivals normally fill A → B → C, with 10% continuing along Corporate to B, then C, even while A is open. {trafficOptions.service?.enabled&&trafficOptions.service.id==='final'?'At 1:15, both Equity approaches use B’s main entrance; C is fallback only.':'Both Equity approaches enter staffed Lot C. If C is unavailable, Equity cars wait outside campus.'}</small>
             <div className={`capacity-status ${trafficStats.atCapacity?'at-capacity':''}`} role="status"><strong>{trafficStats.atCapacity?'General parking at capacity · send arrivals away':'Parking allocation active'}</strong><small>{trafficStats.sentAway??0} sent away · no overflow parking configured. Authorized badge parking is separate.</small></div>
-            <small>{Object.values(trafficStats.departed??{}).reduce((a,b)=>a+b,0)} departed campus · {trafficStats.departing??0} exiting now. Cars become ready around their own service dismissal, including the final service. Lot C uses seven parking hubs; other lots use section staging points.</small>
+            <small>{Object.values(trafficStats.departed??{}).reduce((a,b)=>a+b,0)} departed campus · {trafficStats.departing??0} exiting now. Cars become ready around their own service dismissal, including the final service. Lots A, B, and C use parking hubs; black permit parking uses its section staging point.</small>
+            <small>Lot B exits: North splits between the north and west exits. South uses north; Banana uses west; Pocket uses north.</small>
             <RouteSourcesPanel/>
-            <div className="traffic-rates">{['a','b','c'].map(id=><label key={id}>Lot {id.toUpperCase()} initial parked<input type="number" min="0" max={{a:411,b:487,c:686}[id]} value={trafficOptions.initialOccupancy[id]} onChange={e=>{const value=Math.max(0,Math.min({a:411,b:487,c:686}[id],Number(e.target.value)||0));setTrafficOptions(o=>({...o,initialServiceCarry:undefined,initialOccupancy:{...o.initialOccupancy,[id]:value}}));setRunning(false);setTrafficReset(v=>v+1);}}/><span>{trafficStats.occupancy?.[id]??trafficOptions.initialOccupancy[id]} parked · {trafficStats.reserved?.[id]??0} inbound</span></label>)}</div>
             <small>Black Permit · badge arrivals fixed at 5% · {trafficStats.badgeParking??0} / 51 parked · {trafficStats.badgeReserved??0} inbound. Included in Lot A's total.</small>
             <small>{Object.values(trafficStats.assignments??{}).reduce((a,b)=>a+b,0)-Object.values(trafficStats.reserved??{}).reduce((a,b)=>a+b,0)} arrivals completed · parked markers show grouped arrivals, not individual traced stalls. Internal aisles and lane widths remain estimated.</small>
             {trafficMode==='demo'&&<button onClick={()=>{setTrafficMode('continuous');setTrafficReset(v=>v+1);setRunning(false);}}>Return to continuous arrivals</button>}
@@ -194,6 +172,11 @@ function App() {
                 <strong>Equity / Clay · three-way stop</strong>
                 <p>{trafficStats.equityClayStop.reason} · {trafficStats.equityClayStop.waiting} at stop lines · {trafficStats.equityClayStop.cleared} cleared</p>
                 <small>Two-way approaches. Stop before entering; release one movement after the intersection clears. Shuttle → departure → arrival priority.</small>
+              </section>}
+              {trafficStats.cEntrance&&<section className="traffic-control" aria-label="Lot C entrance shuttle priority">
+                <strong>Lot C entrance · shuttle turns</strong>
+                <p>{trafficStats.cEntrance.reason} · {trafficStats.cEntrance.held.length} cars held</p>
+                <small>Hold conflicting cars before a shuttle turns. Vehicles already in the turn and cars ahead of the bus keep clearing. Separated movements continue together.</small>
               </section>}
               {trafficStats.cRoundabout&&<section className="traffic-control" aria-label="Lot C roundabout marshal">
                 <strong>Lot C roundabout · four-way marshal</strong>
@@ -243,6 +226,7 @@ function App() {
               <small>Dispatch updates at home and the shared C roundabout, never mid-leg. Assigned buses count against demand; zero unmet demand holds at home. Breaks and occupied-road controls still apply. Estimates reset with the scenario/carry; actual passenger boarding and onboard counts are not modeled.</small>
             </section>
           </div>
+        </details>
       </aside>
 
       {selected&&<aside className="inspector" aria-label="Object inspector">
@@ -262,7 +246,7 @@ function App() {
         </div>
       </aside>}
     </div>
-    <footer className="footer"><span><strong>LAYOUT FIRST.</strong> Confidence follows.</span><span>{totals.marked} drawn spaces <b>·</b> *User-supplied capacities · 1,584 total <b>·</b> Draft v0.1</span><button onClick={()=>setConfirmation({title:'Reset to starter layout?',description:'This replaces your current layout with the provisional screenshot-based starter. Export a backup first, or use Undo after resetting.',action:()=>{commit(initialLayout());setSelectedId(null);setRunning(false);notify('Starter layout restored.');}})}>Reset draft</button></footer>
+    <footer className="footer"><span><strong>LAYOUT FIRST.</strong> Confidence follows.</span><span>{totals.marked} drawn spaces <b>·</b> *User-supplied capacities · 1,584 total <b>·</b> Draft v0.1</span><button onClick={()=>setConfirmation({title:'Reset to starter layout?',description:'This replaces your current layout with the provisional screenshot-based starter. Use Undo after resetting to restore the current layout.',action:()=>{commit(initialLayout());setSelectedId(null);setRunning(false);notify('Starter layout restored.');}})}>Reset draft</button><blockquote className="header-verse footer-verse"><cite>Colossians 3:23</cite><p>"Whatever you do, work at it with all your heart, as working for the Lord, not for human masters."</p></blockquote></footer>
     {message&&<div className="toast" role="status">{message}<button aria-label="Dismiss message" onClick={()=>setMessage('')}>×</button></div>}
     {confirmation&&<div className="modal-backdrop"><section className="modal" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-description"><h2 id="confirm-title">{confirmation.title}</h2><p id="confirm-description">{confirmation.description}</p><div><button className="button subtle" autoFocus onClick={()=>setConfirmation(null)}>Cancel</button><button className="button dark" onClick={()=>{confirmation.action();setConfirmation(null);}}>Replace layout</button></div></section></div>}
   </div>;

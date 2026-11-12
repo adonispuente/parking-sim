@@ -3,15 +3,23 @@ import { SUNDAY_SERVICES, serviceOptions, formatServiceClock } from './sundaySer
 import { PARKING_ZONES } from './parkingZones.js';
 import { serviceCarryOptions } from './serviceCarry.js';
 
-export default function SundayControls({options,setOptions,stats,onReset,onRun}) {
-  const config=options.service??{},status=stats.serviceStatus;
-  const change=patch=>setOptions(o=>({...o,service:{...o.service,...patch}}));
+export function ServiceSelect({options,setOptions,onReset}) {
+  const config=options.service??{};
   function preset(id) {
     const s=SUNDAY_SERVICES[id];
     setOptions(o=>({...o,phase:'arrival',service:{enabled:true,...serviceOptions(id)},initialOccupancy:{...s.initialOccupancy},initialZoneOccupancy:undefined,initialServiceCarry:undefined,
       shuttles:{...o.shuttles,activeCount:s.activeBuses,dispatchDuringDepartures:s.transition}}));
     onReset();
   }
+  return <label>Service time<select aria-label="Sunday service scenario" value={config.enabled?config.id:'manual'} onChange={e=>{
+      if(e.target.value==='manual'){setOptions(o=>({...o,service:{...o.service,enabled:false}}));onReset();}
+      else preset(e.target.value);
+    }}><option value="manual">Manual</option>{Object.values(SUNDAY_SERVICES).map(s=><option key={s.id} value={s.id}>{{nine:'9:00 AM',eleven:'11:00 AM',final:'1:15 PM'}[s.id]}</option>)}</select></label>;
+}
+
+export default function SundayControls({options,setOptions,stats,onReset,onRun}) {
+  const config=options.service??{},status=stats.serviceStatus;
+  const change=patch=>setOptions(o=>({...o,service:{...o.service,...patch}}));
   const nextService=config.id==='nine'?'eleven':config.id==='eleven'?'final':null;
   const carryReady=!!nextService&&!!stats.serviceCarry;
   function carryForward() {
@@ -19,22 +27,12 @@ export default function SundayControls({options,setOptions,stats,onReset,onRun})
     setOptions(o=>({...o,...patch}));
     onReset();
   }
-  return <section className="sunday-panel" aria-label="Sunday service simulation">
-    <strong>Sunday service flow</strong>
+  return <section className="sunday-panel" aria-label="Service settings and flow">
     <small className="service-parked" aria-label="Current parked cars">{['a','b','c'].map(lot=><span key={lot}>Lot {lot.toUpperCase()}: <b>{stats.occupancy?.[lot]??options.initialOccupancy?.[lot]??0}</b> parked</span>)}</small>
-    <small>Fixed services: 9:00 · 11:00 · 1:15. Scenario clock uses simulated time and playback speed.</small>
-    <label>Simulation schedule<select aria-label="Sunday service scenario" value={config.enabled?config.id:'manual'} onChange={e=>{
-      if(e.target.value==='manual'){setOptions(o=>({...o,service:{...o.service,enabled:false}}));onReset();}
-      else preset(e.target.value);
-    }}><option value="manual">Manual traffic controls</option>{Object.values(SUNDAY_SERVICES).map(s=><option key={s.id} value={s.id}>{s.label}</option>)}</select></label>
     {config.enabled&&<>
       <div className="service-clock" role="status"><strong>{status?.clock??formatServiceClock(config.beginMinute??SUNDAY_SERVICES[config.id].beginMinute)}</strong><span>{status?.phase??'Ready to start'}</span><small>{status?.issued??0} / {config.demand} arrivals issued · {status?.remaining??config.demand} scheduled</small></div>
       <small>Arrival timing: 75% arrive by service start; the rest come late, with about 95% by 45 minutes after service starts. Late-arrival spacing is provisional, not a measured distribution.</small>
       <small aria-label="Service dismissal times">Current service dismisses {formatServiceClock(status?.dismissalMinute??((SUNDAY_SERVICES[config.id]?.startMinute??540)+75))}.{status?.previousDismissalMinute!=null&&` Previous service dismisses ${formatServiceClock(status.previousDismissalMinute)}.`} Dismissal is 75 minutes after service start.</small>
-      <div className="gate-status" aria-label="Sunday arrival gate status">
-        <span>Lot A: {status?.gates?.a?.reason==='manual-closure'?'manually closed':status?.gates?.a?.reason==='until-dismissal'?`closed until dismissal (${formatServiceClock(status.gates.a.releaseMinute)})`:status?.gates?.a?.reason==='waiting-for-half'?'dismissed; waiting for ≤50%':'service gate open'}{status?.gates?.a&&` · ${status.gates.a.generalUsed} general parked/inbound`}</span>
-        <span>Lots B / C: capacity and manual closures only</span>
-      </div>
       {stats.shuttleBreak?.enabled&&<small role="status" aria-label="Service shuttle break">Shuttle break {formatServiceClock(stats.shuttleBreak.startMinute)}–{formatServiceClock(stats.shuttleBreak.endMinute)} · {stats.shuttleBreak.active?'finishing circuits, then holding at A home':(status?.minute??0)>=stats.shuttleBreak.endMinute?'complete · buses running':'scheduled'}. Buses never stop in the roadway for the break.</small>}
       <label>Arriving cars for this service<input aria-label="Service attendance cars" type="number" min="0" max="2500" value={config.demand} onChange={e=>change({demand:Math.max(0,Math.min(2500,Number(e.target.value)||0))})}/></label>
       <label>Equity share of arrivals (%) · minimum 10<input aria-label="Service Equity share" type="number" min="10" max="90" value={config.equityPercent??10} onChange={e=>change({equityPercent:Math.max(10,Math.min(90,Number(e.target.value)||10))})}/></label>
@@ -80,8 +78,8 @@ export function VolunteerControls({options,setOptions,stats,children}) {
     </div>
     {['a','b','c'].map(lot=><label key={lot}>Lot {lot.toUpperCase()} destination<select aria-label={`Lot ${lot.toUpperCase()} section direction`} value={options.zonePreferences?.[lot]??'auto'} onChange={e=>setOptions(o=>({...o,zonePreferences:{...o.zonePreferences,[lot]:e.target.value}}))}><option value="auto">Normal fill order</option>{PARKING_ZONES.filter(z=>z.lot===lot&&z.general).map(z=><option key={z.id} value={z.id}>{z.label}</option>)}</select></label>)}
     <small>Direction changes apply to new assignments. Full sections fall back to another eligible section in the same lot. All B arrivals traverse the south aisle first.</small>
-    <details><summary>Departure exit directions</summary><small>These are configurable volunteer policies, not new physical roads. Section-based B split is an illustrative default.</small>
-      <label>Lot B departures<select aria-label="Lot B departure routing" value={options.departurePolicy?.b??'split'} onChange={e=>setOptions(o=>({...o,departurePolicy:{...o.departurePolicy,b:e.target.value}}))}><option value="split">South / Banana → west; North / Pocket → Equity</option><option value="west">Main west exit → Corporate / feeder</option><option value="north">Northern exit → Equity</option></select></label>
+    <details><summary>Departure exit directions</summary><small>These are configurable volunteer policies, not new physical roads. B North splits between the two exits; B South uses the north exit.</small>
+      <label>Lot B departures<select aria-label="Lot B departure routing" value={options.departurePolicy?.b??'split'} onChange={e=>setOptions(o=>({...o,departurePolicy:{...o.departurePolicy,b:e.target.value}}))}><option value="split">North 50/50 · South → north · Banana → west · Pocket → north</option><option value="west">Main west exit → Corporate / feeder</option><option value="north">Northern exit → Equity</option></select></label>
       <label>Lot C departures<select aria-label="Lot C departure routing" value={options.departurePolicy?.c??'split'} onChange={e=>setOptions(o=>({...o,departurePolicy:{...o.departurePolicy,c:e.target.value}}))}><option value="split">Both exits · 50/50</option><option value="west">Median exit only (beside C entrance)</option><option value="east">Far-right northeast exit only</option></select></label>
       <small>C arrivals enter through the staffed entrance and park at one of seven hubs. Departures follow the setting above: by default about half use the median exit beside the entrance and half use the northeast exit. At the four-way above the roundabout, the marshal gives shuttles first priority, then exits; separated entering and exiting lanes move together. The far-right northeast exit remains exit-only.</small>
     </details>

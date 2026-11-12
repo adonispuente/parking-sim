@@ -66,19 +66,19 @@ test('badge parking stays available when general campus is full without inflatin
 test('departure releases count-only A/B/C simultaneously through proper exits and buses continue',()=>{
   const s=fleet({initialOccupancy:{a:3,b:3,c:3}});
   s.setPhase('departure');s.step(.1);
-  // Release is one car per occupied parking ZONE per tick (C has four sections, so
-  // its 3 cars can span two zones), never two from the same zone.
+  // Each occupied hub has its own launch anchor; section staging remains for permits.
   const lotCars=s.cars.filter(c=>['a','b','c'].includes(c.target)&&!c.fleetBus);
   const departing=lotCars.filter(c=>c.phase==='departing');
   for(const lot of ['a','b','c']) {
-    const zones=new Set(lotCars.filter(c=>c.target===lot).map(c=>c.zone));
+    const anchor=c=>c.abHubId??c.cHubId??c.zone;
+    const anchors=new Set(lotCars.filter(c=>c.target===lot).map(anchor));
     const out=departing.filter(c=>c.target===lot);
-    assert.ok(zones.size>=1,`${lot} has an occupied zone`);
-    assert.equal(out.length,zones.size,`${lot} releases one car per occupied zone`);
-    assert.equal(new Set(out.map(c=>c.zone)).size,out.length,`${lot} never releases two cars from one zone`);
+    assert.ok(anchors.size>=1,`${lot} has an occupied anchor`);
+    assert.equal(out.length,anchors.size,`${lot} releases one car per occupied anchor`);
+    assert.equal(new Set(out.map(anchor)).size,out.length,`${lot} never releases two cars from one anchor`);
   }
   assert.ok(departing.filter(c=>c.target==='a').every(c=>c.access==='a'));
-  assert.ok(departing.filter(c=>c.target==='b').every(c=>c.access==='bWest'));
+  assert.ok(departing.filter(c=>c.target==='b').every(c=>c.access==='bNorth'));
   assert.ok(departing.filter(c=>c.target==='c').every(c=>['cWest','cEast'].includes(c.access)));
   const cExits=new Set(departing.filter(c=>c.target==='c').map(c=>c.access));
   for(let i=0;i<5000;i++){s.step(.1);for(const c of s.cars)if(c.target==='c'&&c.phase==='departing'&&!c.fleetBus)cExits.add(c.access);}

@@ -1,7 +1,9 @@
 import { VEHICLE_ROUTE_MANIFEST as M } from './vehicleRouteManifest.js';
 import { boundRoutes, REGISTRATION, SOURCE_INTEGRITY, onMappedPavement } from './vehicleRegistration.js';
-import { avoidsObstacles, drivingPrefix, CONNECTOR_PROVENANCE } from './sourceRouting.js';
+import { drivingPrefix, CONNECTOR_PROVENANCE } from './sourceRouting.js';
 import { SOURCE_PAIR } from './clearImageSource.js';
+import { AB_HUB_SOURCE, AB_HUBS } from './abHubSource.js';
+import { AB_HUB_ROUTE_PROVENANCE } from './abHubRoutes.js';
 import { C_HUB_SOURCE, C_HUBS } from './cHubSource.js';
 import { C_HUB_ROUTE_PROVENANCE } from './cHubRoutes.js';
 export { fitAffine, applyAffine, REGISTRATION, registerPoint, SOURCE_INTEGRITY, onMappedPavement } from './vehicleRegistration.js';
@@ -26,6 +28,7 @@ export const connectorModes=()=>CONNECTOR_PROVENANCE.reduce((all,c)=>(all[c.mode
 export function catalogSummary(){return {sourcePair:SOURCE_PAIR,routes:routes.length,integrity:true,liveGuidanceEnabled:true,registration:{method:'identity',ok:true,maxResidualPx:0,shift:[0,0]},runtimeVersion:ROUTE_RUNTIME.version,runtime:ROUTE_RUNTIME.uses,
   derivedConnectors:CONNECTOR_PROVENANCE.length,connectorModes:connectorModes(),nonpavementConnectors:CONNECTOR_PROVENANCE.filter(c=>c.nonpavement).length};}
 export function routeDiagnostics(){return {
+  abHubs: { source: AB_HUB_SOURCE, count: AB_HUBS.length, routes: AB_HUB_ROUTE_PROVENANCE },
   cHubs: { source: C_HUB_SOURCE, count: C_HUBS.length, routes: C_HUB_ROUTE_PROVENANCE },
   source:{file:M.source.file,expected:'1374x1118',actual:'1374x1118',shapes:65,manifestRoutes:65,sourcePair:SOURCE_PAIR},
   integrity:SOURCE_INTEGRITY,liveGuidanceEnabled:true,registration:{...REGISTRATION,limitPx:0,residuals:[]},

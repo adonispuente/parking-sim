@@ -7,6 +7,8 @@ import { drivingPrefix, nearestIndex, distance, inPolygon, avoidsObstacles, join
 import { recordRouteUse } from './vehicleRouteCatalog.js';
 import { C_THROAT, C_STAGING_TARGET, B_NORTH_DIRECT_PATH } from './layoutOverlay.js';
 import { A_SOUTH_CENTRELINE, A_SOUTH_CENTRELINE_PROVENANCE } from './aSouthCentreline.js';
+import { aHubRoute, A_HUB_DEPARTURE_JOINS, AB_HUB_ROUTE_PROVENANCE } from './abHubRoutes.js';
+import { abHubById } from './abHubSource.js';
 import { cHubForCar } from './cHubSource.js';
 import { cHubArrival, cHubDeparture } from './cHubRoutes.js';
 const ZONE_SOURCE={aNorth:39,aSouth:38,aBadge:37,bSouth:40,bBanana:41,bPocket:42,bNorth:44,cFirstNorth:51,cFirstSouth:52,cNorth:51,cSouth:52};
@@ -304,6 +306,40 @@ function bLoopExit(access,zone,start,target) {
   }
   return null;
 }
+// Hub departures merge into B's existing forward circulation. The drawn north
+// exit lines run east across the westbound shuttle aisle, so adopting those as
+// independent through lanes would introduce opposing traffic at the pickup.
+function bHubForwardExit(hub,access,target) {
+  const station=B_EXIT_STATIONS[access],first=7,last=25;
+  if(!station)throw new Error(`Invalid B hub exit: ${access}`);
+  const candidates=[];
+  for(let i=first;i<=last;i++) {
+    const next=i===last?first:i+1,a=B_LOOP[i],b=B_LOOP[next],dx=b[0]-a[0],dy=b[1]-a[1];
+    const t=Math.max(0,Math.min(1,((hub.point[0]-a[0])*dx+(hub.point[1]-a[1])*dy)/(dx*dx+dy*dy||1)));
+    const point=[a[0]+dx*t,a[1]+dy*t];
+    candidates.push({i,next,point,gap:distance(hub.point,point)});
+  }
+  candidates.sort((a,b)=>a.gap-b.gap);
+  for(const candidate of candidates) {
+    let lead;try{lead=connect('b',hub.point,candidate.point);}catch{continue;}
+    const forward=B_LOOP[candidate.next],p=lead.at(-2),q=lead.at(-1);
+    if(p&&distance(p,q)>1&&distance(q,forward)>1&&
+      ((q[0]-p[0])*(forward[0]-q[0])+(q[1]-p[1])*(forward[1]-q[1]))/(distance(p,q)*distance(q,forward))<-.5)continue;
+    const loop=[candidate.point];let cursor=candidate.next;
+    for(let count=0;count<=last-first+1;count++) {
+      loop.push(B_LOOP[cursor]);
+      if(cursor===station.until)break;
+      cursor=cursor===last?first:cursor+1;
+    }
+    let tail;try{tail=connect('b',loop.at(-1),target);}catch{continue;}
+    const provenance={hub:hub.id,zone:hub.zone,access,phase:'departure',source:25,
+      sources:['EverythingClearImage #25','derived local hub/exit joins'],from:candidate.i,to:station.until,
+      mode:'hub-forward-loop',wrap:candidate.i>=station.until,provisional:true};
+    B_EXIT_PROVENANCE.push(provenance);AB_HUB_ROUTE_PROVENANCE.push(provenance);
+    return join(lead,loop,tail);
+  }
+  throw new Error(`No forward B circulation join for ${hub.id}`);
+}
 // Commander rule (2026-11-07): B North cars leave north by a direct path, not a
 // tour through B South. Parked cars are counts, not stalls: every departure
 // launches at its zone's single staging point, and bNorth's ([580.7,328.3],
@@ -351,6 +387,19 @@ function bForwardExit(zone,start,target) {
   }
   throw new Error(`Unavailable Lot B forward exit for ${zone}: no traced #${B_CIRCULATION_SOURCES.join('/#')} join`);
 }
+// Branch perpendicular to the nearest aisle segment. Selecting only a vertex
+// can overshoot a hub between vertices and reverse into the following queue.
+function parkAtHub(points,hub,from=0) {
+  let best=null;
+  for(let i=Math.max(1,from+1);i<points.length;i++) {
+    const a=points[i-1],b=points[i],dx=b[0]-a[0],dy=b[1]-a[1];
+    const t=Math.max(0,Math.min(1,((hub.point[0]-a[0])*dx+(hub.point[1]-a[1])*dy)/(dx*dx+dy*dy||1)));
+    const point=[a[0]+dx*t,a[1]+dy*t],gap=distance(point,hub.point);
+    if((!best||gap<best.gap)&&clearSegment(point,hub.point))best={i,point,gap};
+  }
+  if(!best)throw new Error(`No local arrival spur for ${hub.id}`);
+  return join(points.slice(0,best.i),[best.point],connect(hub.lot,best.point,hub.point));
+}
 export function zoneArrivalRoute(key,zone,hubId) {
   const id=`in:${key}:${zone}:${hubId??''}`;if(cache.has(id))return cache.get(id);
   const lot=ZONE_BY_ID[zone].lot,end=ZONE_STAGING[zone];let points;
@@ -389,8 +438,26 @@ export function zoneArrivalRoute(key,zone,hubId) {
     const road=VECTOR_ROUTES.arrival[key];
     points=join(road,connect(lot,road.at(-1),end));
   }
-  recordRouteUse(key,zone,{source:lot==='c'?`LotCHubs.json · ${hubId??cHubForCar(zone).id}; EverythingClearImage staffed approach`:'EverythingClearImage',routeId:ARRIVAL_SOURCE[zone]??(key.startsWith('e2')?10:key.startsWith('e')?9:8),
-    reason:lot==='c'?'hub aisle network; separate travel lanes and exact parking anchor':'traced driving prefix, row sweeps excluded; explicit obstacle-checked source-frame staging/staff joins'});
+  if(hubId && lot!=='c') {
+    if(abHubById(hubId).zone!==zone)throw new Error('A/B hub does not match section');
+    if(lot==='b') {
+      // Keep the existing forward B South circulation before parking. A shortest
+      // bidirectional graph walk here can reverse toward the entering queue.
+      // The South hub itself is on the first South aisle: park on that pass
+      // instead of visiting the old staging point and reversing back to it.
+      const hub=abHubById(hubId),checkpoint=zone==='bSouth'?0:nearestIndex(points,B_SOUTH_CHECKPOINT);
+      points=parkAtHub(points,hub,checkpoint);
+    } else if(zone==='aNorth') {
+      // Branch on the upper aisle before the old row-staging spur. Visiting
+      // that staging point first would reverse into a departing hub queue.
+      const k=nearestIndex(points,routeAt(1)[10]);
+      points=join(points.slice(0,k+1),aHubRoute(hubId));
+    } else {
+      points=parkAtHub(points,abHubById(hubId),nearestIndex(points,main));
+    }
+  }
+  recordRouteUse(key,zone,{source:hubId&&lot!=='c'?`ABHubs.json · ${hubId}; EverythingClearImage circulation`:lot==='c'?`LotCHubs.json · ${hubId??cHubForCar(zone).id}; EverythingClearImage staffed approach`:'EverythingClearImage',routeId:ARRIVAL_SOURCE[zone]??(key.startsWith('e2')?10:key.startsWith('e')?9:8),
+    reason:hubId&&lot!=='c'?'exact drawn parking anchor; derived aisle lanes and local parking joins':lot==='c'?'hub aisle network; separate travel lanes and exact parking anchor':'traced driving prefix, row sweeps excluded; explicit obstacle-checked source-frame staging/staff joins'});
   cache.set(id,points);return points;
 }
 // Lot A North departure approach (Commander 2026-11-10: the Main aisle "is wide
@@ -425,6 +492,13 @@ function aNorthDepartureApproach(start) {
 export function zoneDepartureRoute(access,zone,hubId) {
   const id=`out:${access}:${zone}:${hubId??''}`;if(cache.has(id))return cache.get(id);
   const lot=ZONE_BY_ID[zone].lot,start=ZONE_STAGING[zone];let result;
+  if(lot==='b'&&hubId) {
+    const hub=abHubById(hubId);
+    if(hub.zone!==zone)throw new Error('A/B hub does not match section');
+    const raw=VECTOR_ROUTES.departure[access];
+    result=join(bHubForwardExit(hub,access,raw[0]),raw);
+    cache.set(id,result);return result;
+  }
   if(access==='a'&&['aNorth','aSouth'].includes(zone)) {
     // Zone staging -> Main Position (separate approaches) -> shared exit tail,
     // on the exit side of the Main median (see medianSide).
@@ -452,6 +526,11 @@ export function zoneDepartureRoute(access,zone,hubId) {
     }
     result=join(lead,raw);
   }
+  if(lot==='a'&&hubId) {
+    if(abHubById(hubId).zone!==zone)throw new Error('A/B hub does not match section');
+    const anchor=A_HUB_DEPARTURE_JOINS[zone],k=nearestIndex(result,anchor);
+    result=join(aHubRoute(hubId,access),connect(lot,anchor,result[k]),result.slice(k));
+  }
   cache.set(id,result);return result;
 }
 export function redirectedArrivalRoute(current,key,zone,hubId) {
@@ -461,9 +540,9 @@ export function redirectedArrivalRoute(current,key,zone,hubId) {
   return join([current],streetPath(current,approach),obstacleConnector(approach,arrival[k],'redirect to source route'),arrival.slice(k));
 }
 // Join past the Corporate turn; never send a Feeder car back south to an origin.
-export function feederReliefRoute(current,key,zone) {
+export function feederReliefRoute(current,key,zone,hubId) {
   if(!['bWest','bNorth'].includes(key))throw new Error('Alpha relief requires Feeder-to-Bravo access');
-  const arrival=zoneArrivalRoute(key,zone);
+  const arrival=zoneArrivalRoute(key,zone,hubId);
   const turn=arrival.findIndex((p,i)=>i>0&&p[0]>=52);
   if(turn<0)throw new Error('Bravo route lacks a Corporate street approach');
   return join(streetPath(current,arrival[turn]),arrival.slice(turn));

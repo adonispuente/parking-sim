@@ -150,7 +150,7 @@ test('all seven C hubs clear 400 parked cars and 42 arrivals while five shuttles
     lotSettings: [{ id: 'a', open: false }, { id: 'b', open: false }], shuttles: { activeCount: 5 } });
   assert.equal(new Set(s.parkedVehicles.map(car => car.cHubId)).size, 7);
   s.waiting[1] = 42;
-  for (let i = 0; i < 24000 && s.departed.c < 442; i++) s.step(.1);
+  for (let i = 0; i < 24000 && (s.departed.c < 442 || s.shuttles.some(bus => bus.trips < 5)); i++) s.step(.1);
   assert.deepEqual(s.routingIssues, []);
   assert.equal(s.exited[1], 42);
   assert.equal(s.departed.c, 442);

@@ -1,4 +1,4 @@
-import { selectArrivalAccess } from './trafficPolicy.js';
+import { selectArrivalAccess, selectBDepartureAccess } from './trafficPolicy.js';
 import { attachShuttles } from './shuttles.js';
 import { advanceSharedTraffic } from './sharedTraffic.js';
 import { ZONE_BY_ID, GENERAL_CAPACITY, blankZones, distributeInitialOccupancy, lotTotals, chooseZone } from './parkingZones.js';
@@ -13,12 +13,15 @@ import { fromWorld } from './clearImageSource.js';
 import { attachNorthernCorporateControl } from './northernCorporateControl.js';
 import { attachWideAisles } from './wideAisles.js';
 import { C_HUBS, C_HUB_RELEASE_SLOTS, cHubForCar, cHubById, hubsForZone } from './cHubSource.js';
+import { attachCEntranceControl } from './cEntranceControl.js';
 import { attachCRoundaboutControl } from './cRoundaboutControl.js';
+
+import { AB_HUBS, abHubForCar, abHubById, abHubsForZone } from './abHubSource.js';
 
 const ids=['a','b','c'];
 // Parked metadata must not retain inbound lane/control flags. The departure
 // must be admitted afresh at Main/Corporate rather than inheriting aMergePassed.
-const parkedRecord=car=>Object.fromEntries(['id','source','target','zone','access','badge','badgePool','parkingIntent','cHubId',
+const parkedRecord=car=>Object.fromEntries(['id','source','target','zone','access','badge','badgePool','parkingIntent','cHubId','abHubId',
   'initialStaged','cohort','serviceId','dismissalMinute','readinessMinute','departureGroup','departureOrdinal','readyAt','parkedAt']
   .filter(key=>car[key]!==undefined).map(key=>[key,car[key]]));
 export function createZonedCampus(options, makeLane, legacyLanes) {
@@ -36,17 +39,22 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
     state.occupancy=lotTotals(state.zoneOccupancy);state.parked={...state.occupancy};
     state.reserved=lotTotals(state.zoneReserved);state.badgeParking=state.zoneOccupancy.aBadge;state.badgeReserved=state.zoneReserved.aBadge;
     state.cHubOccupancy=Object.fromEntries(C_HUBS.map(h=>[h.id,0]));
-    for(const car of state.parkedVehicles)if(car.cHubId)state.cHubOccupancy[car.cHubId]++;
+    state.abHubOccupancy=Object.fromEntries(AB_HUBS.map(h=>[h.id,0]));
+    for(const car of state.parkedVehicles) {
+      if(car.cHubId)state.cHubOccupancy[car.cHubId]++;
+      if(car.abHubId)state.abHubOccupancy[car.abHubId]++;
+    }
   };
   sync();attachLotAControl(state);attachFeederOfficer(state,options.feederOfficer);attachCorporateDriveOperators(state,options.corporateOperators);
   attachNorthernCorporateControl(state,options.northernControl);attachWideAisles(state);
   attachCRoundaboutControl(state,options.cRoundabout);
+  attachCEntranceControl(state,options.cEntrance);
   attachAlphaQueueRelief(state,options.alphaQueueRelief);let sequence=0,manualFeederCount=0;
   service?.tick(state,options.lotSettings);state.gateStatus={...(service?.gated??{a:false,b:false,c:false})};
   const ordinals={a:0,b:0,c:0};
   for(const [zone,count] of Object.entries(state.zoneOccupancy))for(let i=0;i<count;i++) {
     const target=ZONE_BY_ID[zone].lot,badge=zone==='aBadge';
-    state.parkedVehicles.push({id:sequence++,source:null,target,zone,...(target==='c'?{cHubId:cHubForCar(zone,i).id}:{}),access:badge?'badgeA':{a:'a',b:'bWest',c:'cWest'}[target],badge,badgePool:badge,
+    state.parkedVehicles.push({id:sequence++,source:null,target,zone,...(target==='c'?{cHubId:cHubForCar(zone,i).id}:{abHubId:abHubForCar(zone,i)?.id}),access:badge?'badgeA':{a:'a',b:'bWest',c:'cWest'}[target],badge,badgePool:badge,
       phase:'parked',initialStaged:true,cohort:'previous',...(service?service.departureMetadata(ordinals[target]++,target):{readyAt:0})});
   }
   if(carry) {
@@ -60,6 +68,10 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
         car.cHubId??=cHubForCar(car.zone,car.id).id;
         if(cHubById(car.cHubId).side!==(car.zone.endsWith('North')?'north':'south'))throw new Error('Carried Lot C hub does not match section');
       }
+      if(abHubsForZone(car.zone).length) {
+        car.abHubId??=abHubForCar(car.zone,car.id).id;
+        if(abHubById(car.abHubId).zone!==car.zone)throw new Error('Carried A/B hub does not match section');
+      }
       car.readyAt=(car.readinessMinute-service.preset.beginMinute)*60;
       car.cohort=car.serviceId===service.preset.id?'current':'previous';
     }
@@ -69,8 +81,9 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
   }
   sync();
   const arrivalHub=zone=>{
-    const hubs=hubsForZone(zone);
-    const count=hub=>(state.cHubOccupancy[hub.id]??0)+state.cars.filter(car=>car.phase==='arrival'&&car.cHubId===hub.id).length;
+    const hubs=zone.startsWith('c')?hubsForZone(zone):abHubsForZone(zone);
+    if(!hubs.length)return undefined;
+    const count=hub=>(state.cHubOccupancy[hub.id]??state.abHubOccupancy[hub.id]??0)+state.cars.filter(car=>car.phase==='arrival'&&(car.cHubId??car.abHubId)===hub.id).length;
     return hubs.reduce((best,hub)=>count(hub)<count(best)?hub:best).id;
   };
   const currentOrdinals={a:0,b:0,c:0};
@@ -130,7 +143,7 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
   };
   const departureAccess=car=>{
     if(car.badgePool)return 'badgeA';
-    if(car.target==='b')return state.departurePolicy.b==='north'||(state.departurePolicy.b==='split'&&['bNorth','bPocket'].includes(car.zone))?'bNorth':'bWest';
+    if(car.target==='b')return selectBDepartureAccess(car,state.departurePolicy.b);
     if(car.target==='c') {
       const c=state.departurePolicy.c;
       return c==='east'?'cEast':c==='west'?'cWest':(Math.abs(car.id|0)%2===0?'cWest':'cEast');
@@ -160,23 +173,39 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
     const cHubDepartures=new Map();
     for(const car of state.cars)if(car.phase==='departing'&&car.cHubId&&state.inWideAisle(car))
       cHubDepartures.set(car.cHubId,(cHubDepartures.get(car.cHubId)??0)+1);
+    const abHubDepartures=new Map(),abSectionDepartures=new Map();
+    for(const car of state.cars)if(car.phase==='departing'&&car.abHubId) {
+      const p=state.lanes[car.lane].path.getPointAt(Math.min(1,car.distance/state.lanes[car.lane].length));
+      if(!onStreet(fromWorld([p.x,p.z]))) {
+        abHubDepartures.set(car.abHubId,(abHubDepartures.get(car.abHubId)??0)+1);
+        abSectionDepartures.set(car.zone,(abSectionDepartures.get(car.zone)??0)+1);
+      }
+    }
     const attemptedDepartures=new Set();
     if(canDepart)for(let i=0;i<state.parkedVehicles.length;i++) {
       const parked=state.parkedVehicles[i];
       if(service&&parked.readyAt>state.clock)continue;
       if(parked.cHubId&&(cHubDepartures.get(parked.cHubId)??0)>=C_HUB_RELEASE_SLOTS)continue;
+      if(parked.abHubId&&(abHubDepartures.get(parked.abHubId)??0)>=2)continue;
+      // Hubs share section approaches. Keep excess cars parked so waiting
+      // queues do not fill adjoining aisle crossings.
+      if(parked.abHubId&&(abSectionDepartures.get(parked.zone)??0)>=2)continue;
       const normal=departureAccess(parked),key=state.northernDepartureAccess(parked,normal);
       if(!key)continue;
-      const request=`${key}:${parked.zone}:${parked.cHubId??''}`;let index;
+      const request=`${key}:${parked.zone}:${parked.cHubId??parked.abHubId??''}`;let index;
       // A route has one shared launch point. If its first eligible car is
       // blocked (or just launched), later cars cannot launch this substep either.
       if(attemptedDepartures.has(request))continue;
       attemptedDepartures.add(request);
-      try{index=getLane(key,parked.zone,true,parked.cHubId);}catch(error){logIssue(error);continue;}
+      try{index=getLane(key,parked.zone,true,parked.cHubId??parked.abHubId);}catch(error){logIssue(error);continue;}
       if(!startClear(index))continue;
       state.parkedVehicles.splice(i--,1);state.zoneOccupancy[parked.zone]--;sync();
       state.observeNorthernDeparture(parked,normal,key);
       if(parked.cHubId)cHubDepartures.set(parked.cHubId,(cHubDepartures.get(parked.cHubId)??0)+1);
+      if(parked.abHubId) {
+        abHubDepartures.set(parked.abHubId,(abHubDepartures.get(parked.abHubId)??0)+1);
+        abSectionDepartures.set(parked.zone,(abSectionDepartures.get(parked.zone)??0)+1);
+      }
       state.cars.push({...parked,lane:index,access:key,routeName:state.lanes[index].name,phase:'departing',distance:0,
         speed:2.6+seededFraction(parked.id)*.5,exitDirection:['a','badgeA','bWest'].includes(key)?'feeder-north':'equity-east'});
     }
@@ -210,9 +239,9 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
       const next=relief?{target:'b',zone:relief,badgePool:false,alphaDiverted:true}:choose(car.source,false,car.parkingIntent);
       if(!next){state.zoneReserved[car.zone]++;car.holdForGate=true;continue;}
       const selection=selectArrivalAccess({target:next.target,source:car.source,policy:options.accessPolicy});
-      const cHubId=next.target==='c'?arrivalHub(next.zone):undefined;
+      const assignedHub=arrivalHub(next.zone),cHubId=next.target==='c'?assignedHub:undefined,abHubId=next.target!=='c'?assignedHub:undefined;
       try {
-        const route=relief?feederReliefRoute(pixel,selection.route,next.zone):redirectedArrivalRoute(pixel,selection.route,next.zone,cHubId),index=state.lanes.length;
+        const route=relief?feederReliefRoute(pixel,selection.route,next.zone,assignedHub):redirectedArrivalRoute(pixel,selection.route,next.zone,assignedHub),index=state.lanes.length;
         const lane=makeLane(route,`Redirected · ${next.zone}`,{startPoint:pixel,phase:'arrival',source:car.source,access:selection.access});
         const start=lane.path.getPointAt(0);
         if(Math.hypot(start.x-p.x,start.z-p.z)>1e-6)throw new Error('Redirect changed vehicle position');
@@ -220,7 +249,7 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
           throw new Error('Redirected Lot A route misses Lot A Main Position');
         state.lanes.push(lane);
         const previous={target:car.target,zone:car.zone,access:car.access,routeName:car.routeName};
-        Object.assign(car,next,{cHubId,access:selection.access,lane:index,distance:0,holdForGate:false,routeName:state.lanes[index].name});
+        Object.assign(car,next,{cHubId,abHubId,access:selection.access,lane:index,distance:0,holdForGate:false,routeName:state.lanes[index].name});
         // A new lane must not inherit old-lane stop/pass state.
         for(const key of ['aMergePassed','controlStopDistance','holdForBatch','feederMergePassed','feederStopDistance','holdForOfficer','corridorStopDistance','holdForCorridor','corporatePassed','corporateJunctionStopDistance','holdForCorporateJunction','permitStopDistance','holdForPermit'])delete car[key];
         state.zoneReserved[next.zone]++;state.redirected++;
@@ -229,7 +258,7 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
         const history=state.routeHistory.find(record=>record.id===car.id);
         if(history) {
           (history.redirects??=[]).push({...previous,clock:state.clock,reason:relief?'Alpha queue backup':'lot unavailable'});
-          Object.assign(history,{target:car.target,zone:car.zone,cHubId:car.cHubId,access:car.access,arrivalRoute:car.routeName});
+          Object.assign(history,{target:car.target,zone:car.zone,cHubId:car.cHubId,abHubId:car.abHubId,access:car.access,arrivalRoute:car.routeName});
         }
       }catch(error){state.zoneReserved[car.zone]++;car.holdForGate=true;logIssue(error);}
       sync();
@@ -252,14 +281,14 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
         continue;
       }
       const selection=selectArrivalAccess({target:next.target,source,category:badge?'badge':'general',policy:options.accessPolicy});let index;
-      const cHubId=next.target==='c'?arrivalHub(next.zone):undefined;
-      try{index=getLane(selection.route,next.zone,false,cHubId);}catch(error){logIssue(error);continue;}
+      const assignedHub=arrivalHub(next.zone),cHubId=next.target==='c'?assignedHub:undefined,abHubId=next.target!=='c'?assignedHub:undefined;
+      try{index=getLane(selection.route,next.zone,false,assignedHub);}catch(error){logIssue(error);continue;}
       if(!startClear(index))continue;
-      const car={id:sequence++,lane:index,routeName:state.lanes[index].name,phase:'arrival',distance:0,source,...next,cHubId,access:selection.access,badge,
+      const car={id:sequence++,lane:index,routeName:state.lanes[index].name,phase:'arrival',distance:0,source,...next,cHubId,abHubId,access:selection.access,badge,
         parkingIntent,cohort:'current',speed:2.5+seededFraction(sequence)*.65};
       state.zoneReserved[next.zone]++;state.assignments[next.target]++;state.cars.push(car);
       if(next.alphaDiverted)state.alphaQueueRelief.assigned++;
-      state.routeHistory.push({id:car.id,source,target:car.target,zone:car.zone,cHubId,access:car.access,arrivalRoute:car.routeName,badge,badgePool:car.badgePool,parkingIntent});
+      state.routeHistory.push({id:car.id,source,target:car.target,zone:car.zone,cHubId,abHubId,access:car.access,arrivalRoute:car.routeName,badge,badgePool:car.badgePool,parkingIntent});
       state.waiting[source]--;state.entered[source]++;state.arrivalQueues[source].shift();state.pendingCategory[source]=null;state.pendingIntent[source]=null;
       if(source===0&&!request&&!badge)manualFeederCount++;
       sync();
@@ -269,6 +298,7 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
     state.prepareCorporateDriveOperators();
     state.prepareNorthernCorporateControl();
     state.prepareCRoundaboutControl();
+    state.prepareCEntranceControl();
     advanceSharedTraffic(state,dt);
     state.observeLotAControl();
     state.observeFeederOfficer();

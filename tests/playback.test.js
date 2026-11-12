@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import { advancePlayback } from '../src/playback.js';
 import { createTenCarDemo } from '../src/traffic.js';
 
-test('playback advances 1–30× time with bounded updates and forwards settings', () => {
+test('playback advances 1–40× time with bounded updates and forwards settings', () => {
   const rates = [18,18,0], lots = [];
-  for (const speed of [1,2,3,4,5,10,20,30]) {
+  for (const speed of [1,2,3,4,5,10,20,30,40]) {
     let elapsed = 0;
     const simulation = { step(dt, actualRates, actualLots) {
       assert.ok(dt > 0 && dt <= 0.05);

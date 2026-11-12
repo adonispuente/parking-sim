@@ -1,7 +1,7 @@
 // Scale simulation time, not rendering/camera time. Bound catch-up after a hidden tab
 // and subdivide accelerated frames to preserve the traffic engine's small updates.
 export function advancePlayback(simulation, realDelta, speed, rates, lots) {
-  const multiplier = Math.max(1, Math.min(30, Number(speed) || 1));
+  const multiplier = Math.max(1, Math.min(40, Number(speed) || 1));
   const elapsed = Number.isFinite(realDelta) ? Math.max(0, Math.min(0.1, realDelta)) : 0;
   const duration = elapsed * multiplier;
   const steps = Math.ceil(duration / 0.05);
@@ -9,7 +9,7 @@ export function advancePlayback(simulation, realDelta, speed, rates, lots) {
 }
 
 // UI playback reconstructs private gate/service/shuttle state from its origin.
-export const PLAYBACK_SPEEDS = Object.freeze([-30, -20, -10, -5, 5, 10, 20, 30]);
+export const PLAYBACK_SPEEDS = Object.freeze([-30, -20, -10, -5, 5, 10, 20, 30, 40]);
 export const PLAYBACK_STEP = .05;
 const copy = value => structuredClone(value);
 const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));

@@ -163,7 +163,3 @@ const feeder = layoutFeature('oneway:feeder-north');
 export const FEEDER_ONE_WAY = Object.freeze({ xBelow: bounds(feeder.points).xMax, tolerance: Number(feeder.fields.tolerance_px) });
 export const feederSegmentOk = (a, b) => !(a[0] < FEEDER_ONE_WAY.xBelow && b[0] < FEEDER_ONE_WAY.xBelow && b[1] > a[1] + FEEDER_ONE_WAY.tolerance);
 export const feederGridStepOk = (a, dy) => !(a[0] < FEEDER_ONE_WAY.xBelow && dy > 0);
-
-export const OVERLAY_PROVENANCE = Object.freeze(LAYOUT.features.filter(f => f.kind !== 'meta').map(f => Object.freeze({
-  id: f.id, kind: f.kind, evidence: f.fields.evidence, confidence: f.fields.confidence,
-  runtime: RUNTIME_FEATURES.includes(f.id), note: f.fields.note ?? '' })));

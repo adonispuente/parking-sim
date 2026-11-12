@@ -6,7 +6,7 @@ const FIELDS = [
   'serviceStatus', 'serviceCarry', 'shuttleBreak', 'gateStatus', 'routingIssues',
   'aDepartureControl', 'feederOfficer', 'corporateExitJunction', 'northernRadio',
   'blackPermitControl', 'equityClayStop', 'priorityWaiting',
-  'shuttleDispatchMode', 'shuttles', 'shuttleDemand', 'cRoundabout', 'cHubOccupancy',
+  'shuttleDispatchMode', 'shuttles', 'shuttleDemand', 'cRoundabout', 'cEntrance', 'cHubOccupancy', 'abHubOccupancy',
 ];
 export function captureTrafficFrame(state) {
   return structuredClone(Object.fromEntries(FIELDS.filter(key => state[key] !== undefined).map(key => [key, state[key]])));

@@ -8,9 +8,6 @@ export const WORLD_PAVEMENT_MATERIAL = Object.freeze({
 
 // Illustrative grass, not a measured species, height or surveyed median.
 export const WORLD_MEDIAN_GRASS_COLOR = '#6f8758';
-export const SURFACE_MATERIALS = Object.freeze(Object.fromEntries(
-  ['clear-41', 'clear-42', 'clear-44'].map(id => [id, WORLD_PAVEMENT_MATERIAL]),
-));
 
 export function worldSurfaceMaterial(_id) {
   return WORLD_PAVEMENT_MATERIAL;

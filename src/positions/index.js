@@ -78,10 +78,10 @@ const DEFINITIONS = {
   cEntrance: {
     title: 'Lot C staffed entrance',
     duty: 'Receives ordinary Lot C arrivals and keeps entering and exiting cars apart; coordinates with B exit and C exit.',
-    implemented: 'Route checkpoint and radio member: ordinary C arrivals must pass this point before the lot interior.',
+    implemented: 'Entrance marshal reserves approaching shuttle turns, holds conflicting car queues before the turn area, and lets occupied or separated movements clear.',
     intended: ['Per-person admission quota (not modeled)'],
-    provisional: [],
-    controllers: ['src/parkingRoutes.js', 'src/vectorRoutes.js', 'src/northernCorporateControl.js'],
+    provisional: ['Estimated turn area around #63', '14-unit shuttle lookahead; body-length buffer plus 1.25-unit gap'],
+    controllers: ['src/parkingRoutes.js', 'src/vectorRoutes.js', 'src/northernCorporateControl.js', 'src/cEntranceControl.js'],
   },
   cExit: {
     title: 'Lot C exit',

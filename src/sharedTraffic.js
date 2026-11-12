@@ -19,7 +19,7 @@ const pose = (state, car, distance = car.distance) => {
 const clamp = value => Math.max(0, Math.min(1, value));
 // Independent staffed positions compose their limits; one must never clear
 // another position's stop by overwriting the same property.
-const stopDistance = car => Math.min(car.cRoundaboutStopDistance??Infinity,car.northernStopDistance??Infinity,car.controlStopDistance??Infinity,car.feederStopDistance??Infinity,car.corridorStopDistance??Infinity,car.corporateJunctionStopDistance??Infinity,car.permitStopDistance??Infinity,car.equityStopDistance??Infinity);
+const stopDistance = car => Math.min(car.cEntranceStopDistance??Infinity,car.cRoundaboutStopDistance??Infinity,car.northernStopDistance??Infinity,car.controlStopDistance??Infinity,car.feederStopDistance??Infinity,car.corridorStopDistance??Infinity,car.corporateJunctionStopDistance??Infinity,car.permitStopDistance??Infinity,car.equityStopDistance??Infinity);
 
 function nearestSegments(a, b, c, d) {
   const ux = b.x - a.x, uz = b.z - a.z, vx = d.x - c.x, vz = d.z - c.z;
@@ -174,7 +174,7 @@ export function advanceSharedTraffic(state, dt) {
     // A held/queued vehicle cannot reserve a crossing it cannot approach yet.
     // But its body still occupies any conflict area it has already reached.
     if (winnerDistance > halfLength(winner) + .6 &&
-      (winner.holdForCRoundabout || winner.holdForNorthern || winner.holdForGate || winner.holdForBatch || winner.holdForOfficer || winner.holdForCorridor || winner.holdForCorporateJunction || winner.holdForPermit || winner.holdForEquityStop || (winner.speed ?? 2.8) === 0 ||
+      (winner.holdForCEntrance || winner.holdForCRoundabout || winner.holdForNorthern || winner.holdForGate || winner.holdForBatch || winner.holdForOfficer || winner.holdForCorridor || winner.holdForCorporateJunction || winner.holdForPermit || winner.holdForEquityStop || (winner.speed ?? 2.8) === 0 ||
         proposed.get(winner.id) <= winner.distance + 1e-8)) continue;
     const loserDistance = loser === car ? hit.a : hit.b;
     const gap = halfLength(loser) + halfLength(winner) + BODY_GAP;
@@ -200,7 +200,7 @@ export function advanceSharedTraffic(state, dt) {
   };
   // Wide lot aisles (Lot C, ~5 car widths): when a vehicle and the one it waits on are
   // both inside, the blocked vehicle may steer around instead of needing a clear centerline.
-  const wideAisle=car=>{const other=byId.get(car.yieldingTo);return !!(state.inWideAisle&&other&&state.inWideAisle(car)&&state.inWideAisle(other));};
+  const wideAisle=car=>{const other=byId.get(car.yieldingTo);return !!(other&&(state.canPullAroundInWideAisle?state.canPullAroundInWideAisle(car,other):state.inWideAisle&&state.inWideAisle(car)&&state.inWideAisle(other)));};
   for(let pass=0;pass<state.cars.length;pass++) {
     const visited=new Set();let released=false;
     for(const start of state.cars) {
@@ -209,7 +209,7 @@ export function advanceSharedTraffic(state, dt) {
       while(current&&!visited.has(current.id)) {
         if(indices.has(current.id)) {
           const cycle=chain.slice(indices.get(current.id));
-          const candidate=cycle.filter(car=>car.yieldReason!=='safe-following'&&!car.holdForCRoundabout&&!car.holdForNorthern&&!car.holdForGate&&!car.holdForBatch&&!car.holdForOfficer&&!car.holdForCorridor&&!car.holdForCorporateJunction&&!car.holdForPermit&&!car.holdForEquityStop&&
+          const candidate=cycle.filter(car=>car.yieldReason!=='safe-following'&&!car.holdForCEntrance&&!car.holdForCRoundabout&&!car.holdForNorthern&&!car.holdForGate&&!car.holdForBatch&&!car.holdForOfficer&&!car.holdForCorridor&&!car.holdForCorporateJunction&&!car.holdForPermit&&!car.holdForEquityStop&&
             (wideAisle(car)||nearby(car).every(other=>other===car||sweepClear(car,other))))
             .sort(compareTrafficPriority)[0];
           if(candidate) {
