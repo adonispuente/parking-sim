@@ -5,7 +5,7 @@ import { busesPassThrough } from './vehicleInteractions.js';
 // Values are scene units / simulation seconds, not assumed surveyed meters.
 const LOOKAHEAD = 6;
 const BODY_GAP = 1.25;
-const CONFLICT_WIDTH = .9;
+export const CONFLICT_WIDTH = .9;
 const halfLength = car => (car.bodyLength ?? 1.35) / 2;
 const pointAt = (state, car, distance) => {
   const lane = state.lanes[car.lane];
@@ -17,6 +17,9 @@ const pose = (state, car, distance = car.distance) => {
   return { point: lane.path.getPointAt(t), tangent: lane.path.getTangentAt(t) };
 };
 const clamp = value => Math.max(0, Math.min(1, value));
+// Independent staffed positions compose their limits; one must never clear
+// another position's stop by overwriting the same property.
+const stopDistance = car => Math.min(car.northernStopDistance??Infinity,car.controlStopDistance??Infinity,car.feederStopDistance??Infinity,car.corridorStopDistance??Infinity,car.corporateJunctionStopDistance??Infinity,car.permitStopDistance??Infinity,car.equityStopDistance??Infinity);
 
 function nearestSegments(a, b, c, d) {
   const ux = b.x - a.x, uz = b.z - a.z, vx = d.x - c.x, vz = d.z - c.z;
@@ -46,7 +49,13 @@ function nearestSegments(a, b, c, d) {
 function routeWindow(state, car) {
   const lane = state.lanes[car.lane];
   const start = Math.max(0, car.distance - halfLength(car) - .6);
-  const end = Math.min(lane.length, car.distance + LOOKAHEAD);
+  // A car capped by a staffed stop cannot travel past it, so it must not
+  // reserve crossings beyond its stop line. Its body (stop + half length) is
+  // still claimed. Without this, a South car held at Lot A Main "occupied" the
+  // admitted North car's exit through its lookahead and the gate deadlocked.
+  const stop = stopDistance(car);
+  const capped = Number.isFinite(stop) ? Math.max(car.distance, stop) + halfLength(car) : Infinity;
+  const end = Math.min(lane.length, car.distance + LOOKAHEAD, capped);
   const count = Math.max(1, Math.ceil((end - start) / 1.5));
   return Array.from({ length: count + 1 }, (_, i) => {
     const distance = start + (end - start) * i / count;
@@ -107,7 +116,7 @@ export function advanceSharedTraffic(state, dt) {
   };
   for (const car of state.cars) {
     car.yieldingTo = null; car.yieldReason = null;
-    proposed.set(car.id, Math.max(car.distance,Math.min(car.controlStopDistance??Infinity,car.distance + (car.speed ?? 2.8) * dt)));
+    proposed.set(car.id, Math.max(car.distance,Math.min(stopDistance(car),car.distance + (car.speed ?? 2.8) * dt)));
   }
   // Physical queue order always outranks operational preference: never drive
   // through a slower lead car or ask it to yield backwards to the bus behind it.
@@ -165,7 +174,7 @@ export function advanceSharedTraffic(state, dt) {
     // A held/queued vehicle cannot reserve a crossing it cannot approach yet.
     // But its body still occupies any conflict area it has already reached.
     if (winnerDistance > halfLength(winner) + .6 &&
-      (winner.holdForGate || winner.holdForBatch || (winner.speed ?? 2.8) === 0 ||
+      (winner.holdForNorthern || winner.holdForGate || winner.holdForBatch || winner.holdForOfficer || winner.holdForCorridor || winner.holdForCorporateJunction || winner.holdForPermit || winner.holdForEquityStop || (winner.speed ?? 2.8) === 0 ||
         proposed.get(winner.id) <= winner.distance + 1e-8)) continue;
     const loserDistance = loser === car ? hit.a : hit.b;
     const gap = halfLength(loser) + halfLength(winner) + BODY_GAP;
@@ -189,6 +198,9 @@ export function advanceSharedTraffic(state, dt) {
     for(let i=1;i<a.length;i++)for(let j=1;j<b.length;j++)if(nearestSegments(a[i-1],a[i],b[j-1],b[j]).gap<clearance)return false;
     return true;
   };
+  // Wide lot aisles (Lot C, ~5 car widths): when a vehicle and the one it waits on are
+  // both inside, the blocked vehicle may steer around instead of needing a clear centerline.
+  const wideAisle=car=>{const other=byId.get(car.yieldingTo);return !!(state.inWideAisle&&other&&state.inWideAisle(car)&&state.inWideAisle(other));};
   for(let pass=0;pass<state.cars.length;pass++) {
     const visited=new Set();let released=false;
     for(const start of state.cars) {
@@ -197,14 +209,14 @@ export function advanceSharedTraffic(state, dt) {
       while(current&&!visited.has(current.id)) {
         if(indices.has(current.id)) {
           const cycle=chain.slice(indices.get(current.id));
-          const candidate=cycle.filter(car=>car.yieldReason!=='safe-following'&&!car.holdForGate&&!car.holdForBatch&&
-            nearby(car).every(other=>other===car||sweepClear(car,other)))
+          const candidate=cycle.filter(car=>car.yieldReason!=='safe-following'&&!car.holdForNorthern&&!car.holdForGate&&!car.holdForBatch&&!car.holdForOfficer&&!car.holdForCorridor&&!car.holdForCorporateJunction&&!car.holdForPermit&&!car.holdForEquityStop&&
+            (wideAisle(car)||nearby(car).every(other=>other===car||sweepClear(car,other))))
             .sort(compareTrafficPriority)[0];
           if(candidate) {
             const entries=constraints.get(candidate.id)??[];
             const index=entries.findIndex(item=>item.other.id===candidate.yieldingTo&&item.reason===candidate.yieldReason);
             if(index>=0)entries.splice(index,1);
-            proposed.set(candidate.id,Math.max(candidate.distance,Math.min(candidate.controlStopDistance??Infinity,candidate.distance+(candidate.speed??2.8)*dt)));
+            proposed.set(candidate.id,Math.max(candidate.distance,Math.min(stopDistance(candidate),candidate.distance+(candidate.speed??2.8)*dt)));
             candidate.yieldingTo=null;candidate.yieldReason=null;
             for(const item of entries)if(item.next<proposed.get(candidate.id)-1e-8){
               proposed.set(candidate.id,item.next);candidate.yieldingTo=item.other.id;candidate.yieldReason=item.reason;
@@ -224,9 +236,15 @@ export function advanceSharedTraffic(state, dt) {
   const summary = { shuttle: 0, departure: 0, arrival: 0 };
   for (const car of state.cars) {
     if (car.holdForGate) { proposed.set(car.id, car.distance); car.yieldReason = 'closed-gate'; }
-    if(car.controlStopDistance!==undefined) {
-      const capped=Math.max(car.distance,Math.min(car.controlStopDistance,proposed.get(car.id)));
+    if(Number.isFinite(stopDistance(car))) {
+      const capped=Math.max(car.distance,Math.min(stopDistance(car),proposed.get(car.id)));
       if(capped<car.distance+(car.speed??2.8)*dt-1e-8&&car.holdForBatch)car.yieldReason='lot-a-main-five-car-batch';
+      if(capped<car.distance+(car.speed??2.8)*dt-1e-8&&car.holdForOfficer)car.yieldReason='feeder-officer-merge';
+      if(capped<car.distance+(car.speed??2.8)*dt-1e-8&&car.holdForCorridor)car.yieldReason='corporate-drive-valve';
+      if(capped<car.distance+(car.speed??2.8)*dt-1e-8&&car.holdForCorporateJunction)car.yieldReason='corporate-feeder-officer';
+      if(capped<car.distance+(car.speed??2.8)*dt-1e-8&&car.holdForPermit)car.yieldReason='black-permit-shuttle-release';
+      if(capped<car.distance+(car.speed??2.8)*dt-1e-8&&car.holdForEquityStop)car.yieldReason='equity-clay-stop';
+      if(capped<car.distance+(car.speed??2.8)*dt-1e-8&&car.holdForNorthern)car.yieldReason='charlie-exit-radio-shuttle-release';
       proposed.set(car.id,capped);
     }
     const distance = proposed.get(car.id);

@@ -3,7 +3,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { WORLD } from './model.js';
 import { createCampusTraffic, createTenCarDemo } from './traffic.js';
-import { advancePlayback } from './playback.js';
+import { createSeekablePlayback } from './playback.js';
+import { captureTrafficFrame } from './playbackFrames.js';
 import { SHUTTLE_STOPS } from './shuttleRoutes.js';
 import { PARKING_ZONES } from './parkingZones.js';
 import { ZONE_STAGING } from './parkingRoutes.js';
@@ -11,8 +12,24 @@ import { makeOccupancyFillPieces } from './occupancyFill.js';
 import { C_ZONE_PIECES } from './cParkingGeometry.js';
 import { VECTOR_ROUTES } from './vectorRoutes.js';
 import { A_DEPARTURE_MERGE } from './lotAControl.js';
-import referenceUrl from '../images/HopeCityLayout.png';
+import referenceUrl from '../images/Clear Image.png';
+import { STAFF_POSITIONS } from './clearImageSource.js';
 import { tracedFeatures, traceWorldPoint } from './tracedMap.js';
+import { VEHICLE_ROUTE_CATALOG, catalogSummary, routeDiagnostics, subscribeRouteRuntime } from './vehicleRouteCatalog.js';
+import { createVehicleVisual, createVolunteerVisual } from './worldActors.js';
+import { worldSurfaceMaterial } from './presentationMaterials.js';
+import { createPresentationPavement } from './presentationPavement.js';
+import { createPresentationLots, REPLACED_WORLD_SURFACES } from './presentationLots.js';
+import { createBuildingModel } from './buildingModels.js';
+import { MAIN_POSITION_RESOLUTION, FEEDER_OFFICER_POSITION } from './positions/index.js';
+import { roadAnchoredRoute } from './roadAnchoredRoutes.js';
+import { EQUITY_CLAY_STOP_POSITION } from './equityClayStop.js';
+import { overlayDisplay, overlaySummary, CONFIDENCE_COLORS, PROBLEM_COLOR } from './layoutOverlayView.js';
+import { exitTraceOverlay, EXIT_TRACE_COLOR } from './exitPathOverlayView.js';
+
+// M3 S3: read-only layout overlay (images/layout-overlay.json), built once per load.
+const LAYOUT_VIEW = overlayDisplay();
+const EXIT_TRACE_VIEW = exitTraceOverlay();
 
 function release(group) {
   group.traverse(object => {
@@ -44,6 +61,7 @@ function label(parent, text, x, y, z, color = '#e9f0e9', size = 13) {
   draw(text);
   const map = new THREE.CanvasTexture(canvas); map.userData.generated = true;
   const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map, depthTest: false }));
+  sprite.userData.isLabel = true;
   sprite.position.set(x, y, z); sprite.scale.set(size, size / 8, 1); sprite.renderOrder = 10;
   sprite.userData.setText=value=>{draw(value);map.needsUpdate=true;};
   parent.add(sprite);
@@ -56,12 +74,16 @@ function line(parent, points, color, y = 0.3) {
   parent.add(mesh);
 }
 
-function drawItem(item, selected) {
+function drawItem(item, selected, world = false) {
   const group = new THREE.Group();
   group.position.set(item.x, 0, item.z); group.rotation.y = -item.rotation * Math.PI / 180;
   group.userData.id = item.id;
   const { width: w, depth: d } = item;
+  if (world && item.type === 'surface' && REPLACED_WORLD_SURFACES.includes(item.id)) {
+    return group; // World-only replacement preserves NoMedians gaps; diagnostic source stays unchanged.
+  }
   if (item.type === 'lot') {
+    if (world) return group; // Region bounds are not rectangular pavement.
     if (item.points) {
       line(group, [...item.points,item.points[0]], item.open ? item.color : '#87928e', .24);
     } else {
@@ -73,8 +95,10 @@ function drawItem(item, selected) {
     const shape = new THREE.Shape(item.points.map(([x,z]) => new THREE.Vector2(x,-z)));
     const geometry = new THREE.ShapeGeometry(shape);
     geometry.rotateX(-Math.PI/2);
-    const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({color:item.color, roughness:1, side:THREE.DoubleSide}));
+    const presented = world ? worldSurfaceMaterial(item.id) : null;
+    const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({color:presented?.color ?? (world?(/blocked off/i.test(item.name)?'#68715d':'#606a69'):item.color), roughness:presented?.roughness ?? 1, side:THREE.DoubleSide}));
     mesh.position.y = item.elevation;
+    mesh.receiveShadow = true;
     group.add(mesh);
   } else if (item.type === 'building' && item.masses) {
     item.masses.forEach(mass => {
@@ -87,11 +111,24 @@ function drawItem(item, selected) {
     });
     label(group, 'Lot A · roof heights estimated', 0, 4, -item.depth/2-2, '#f8f5df', 16);
   } else if (item.type === 'building' && item.points) {
+    // World view: source-grounded roof masses on the exact approved footprint;
+    // falls back to the generic slab if the footprint no longer matches a profile.
+    const model = world ? createBuildingModel(item) : null;
+    if (model) {
+      group.add(model);
+      label(group, item.name, 0, 4, 0, '#f8f5df', 14);
+      return group;
+    }
     const shape = new THREE.Shape(item.points.map(([x,z]) => new THREE.Vector2(x,-z)));
     const geometry = new THREE.ExtrudeGeometry(shape, { depth: 2.4, bevelEnabled: false });
     geometry.rotateX(-Math.PI/2);
-    const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: '#a3b4ac', roughness: .9 }));
+    const mesh = new THREE.Mesh(geometry, [
+      new THREE.MeshStandardMaterial({ color: world?'#eee9d8':'#a3b4ac', roughness: .88 }),
+      new THREE.MeshStandardMaterial({ color: world?'#b7b9aa':'#a3b4ac', roughness: .95 }),
+    ]);
+    mesh.castShadow = true; mesh.receiveShadow = true;
     mesh.position.y = .2; group.add(mesh);
+    if (world) line(group, [...item.points,item.points[0]], '#faf4e2', 2.62);
     label(group, item.name, 0, 4, 0, '#f8f5df', 14);
   } else if (item.type === 'building') {
     box(group, w, 2.4, d, '#708d8c', 0, 1.3);
@@ -109,7 +146,7 @@ function drawItem(item, selected) {
     });
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3)); geometry.setIndex(indices); geometry.computeVertexNormals();
-    group.add(new THREE.Mesh(geometry,new THREE.MeshStandardMaterial({color:item.access?'#67777a':'#46585e',side:THREE.DoubleSide})));
+    group.add(new THREE.Mesh(geometry,new THREE.MeshStandardMaterial({color:world?worldSurfaceMaterial(item.id).color:(item.access?'#67777a':'#46585e'),side:THREE.DoubleSide})));
     // Edge lines describe pavement, not permitted travel directions.
     [-1,1].forEach(side => line(group,samples.map((p,index) => {
       const t=samples[Math.min(index+1,samples.length-1)].clone().sub(samples[Math.max(0,index-1)]).normalize();
@@ -117,7 +154,7 @@ function drawItem(item, selected) {
     }), '#a2aaa1', (item.elevation ?? .07)+.02));
     if(item.id.startsWith('shuttle-') && item.id.endsWith('-loop')) label(group,item.name,0,1.2,0,'#ffe3a1',13);
   } else if (item.type === 'road') {
-    box(group, w, 0.07, d, '#52676a', 0, 0.05);
+    box(group, w, 0.07, d, world?worldSurfaceMaterial(item.id).color:'#52676a', 0, 0.05);
     for (let x = -w/2 + 1; x < w/2; x += 3) box(group, 1.3, 0.03, 0.1, '#b0b9a8', x, 0.11);
   } else if (item.type === 'spaces') {
     const length = item.count * w;
@@ -129,6 +166,11 @@ function drawItem(item, selected) {
     for (let x = -w/2 + 0.5; x < w/2; x += 1) box(group, 0.35, 0.94, d + 0.04, '#fff0cf', x, 0.85);
     box(group, 0.4, 0.5, 1.1, '#243e39', -w/3, 0.25); box(group, 0.4, 0.5, 1.1, '#243e39', w/3, 0.25);
   } else if (item.type === 'position') {
+    if (world) {
+      group.add(createVolunteerVisual());
+      label(group, item.role, 0, 3.8, 0, '#f8d58d', 13);
+      return group;
+    }
     const ring = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 0.16, 24), new THREE.MeshStandardMaterial({ color: '#f2c36b' }));
     ring.position.y = 0.25; group.add(ring);
     box(group, 0.6, 1.4, 0.5, '#fcf1d7', 0, 1);
@@ -144,40 +186,60 @@ function drawItem(item, selected) {
   return group;
 }
 
-export default function Scene({ layout, selectedId, tool, reference, traced = false, running, playbackSpeed = 1, trafficRates, trafficReset, trafficMode, trafficOptions, onTrafficStats, view, zoom, onPick, onPlace }) {
+export default function Scene({ layout, selectedId, tool, reference, traced = false, world = false, showLabels = true, showOccupancy = true, cameraFocus = 'campus', cameraReset = 0, running, playbackSpeed = 5, seekRequest, onPlaybackState, onReplayInvalidated, trafficRates, trafficReset, trafficMode, trafficOptions, onTrafficStats, view, zoom, showRoutes = false, onPick, onPlace }) {
   const mount = useRef(null), engine = useRef(null), latest = useRef({});
+  const consumedSeek = useRef(null);
   const [error, setError] = useState('');
-  latest.current = { tool, onPick, onPlace, running, playbackSpeed, trafficRates, onTrafficStats, layout, phase:trafficOptions?.phase??'arrival', shuttles:trafficOptions?.shuttles, zonePreferences:trafficOptions?.zonePreferences, departurePolicy:trafficOptions?.departurePolicy };
+  const replayInputs = {
+    rates: trafficRates ?? [18,18,0],
+    lots: layout.items.filter(i=>i.type==='lot').map(i=>({id:i.id,open:i.open})),
+    phase: trafficOptions?.phase ?? 'arrival', shuttles: trafficOptions?.shuttles ?? {},
+    zonePreferences: trafficOptions?.zonePreferences ?? {}, departurePolicy: trafficOptions?.departurePolicy ?? {},
+  };
+  const inputKey = JSON.stringify(replayInputs);
+  latest.current = { tool, onPick, onPlace, running, playbackSpeed, onTrafficStats, onPlaybackState, onReplayInvalidated, replayInputs };
 
   useEffect(() => {
     const host = mount.current;
     let renderer;
     try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false }); }
     catch { setError('3D rendering is unavailable in this browser. Enable WebGL or use a recent Safari/Chrome browser. Your layout controls and JSON exports still work.'); return; }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor('#143d35'); renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setClearColor('#b8c7bb'); renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.autoUpdate = false;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.15;
     renderer.localClippingEnabled=true;
     renderer.domElement.setAttribute('aria-label', 'Interactive church site. Select an object, or choose a tool and tap the map to place it.');
     renderer.domElement.setAttribute('role', 'img');
     host.appendChild(renderer.domElement);
     const scene = new THREE.Scene();
-    scene.add(new THREE.HemisphereLight('#ffffff', '#386755', 2.6));
-    const sun = new THREE.DirectionalLight('#fff4d8', 2); sun.position.set(-40, 90, 30); scene.add(sun);
+    scene.add(new THREE.HemisphereLight('#e8f1ff', '#63785a', 2));
+    const sun = new THREE.DirectionalLight('#fff1d4', 2.8); sun.position.set(-20, 80, -25);
+    sun.target.position.set(WORLD.width/2,0,WORLD.height/2);
+    sun.castShadow=true; sun.shadow.mapSize.set(2048,2048);
+    Object.assign(sun.shadow.camera,{left:-90,right:90,top:90,bottom:-90,near:1,far:220});
+    sun.shadow.bias=-.001; sun.shadow.normalBias=.12;
+    scene.add(sun,sun.target);
     const camera = new THREE.OrthographicCamera(-60, 60, 50, -50, 0.1, 500);
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableRotate = false; controls.enableDamping = true;
     controls.minZoom = 0.6; controls.maxZoom = 5;
+    controls.minPolarAngle = .15; controls.maxPolarAngle = Math.PI/2.35;
     controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
     controls.touches.ONE = THREE.TOUCH.PAN; controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
-    const ground = new THREE.Mesh(new THREE.PlaneGeometry(WORLD.width, WORLD.height), new THREE.MeshStandardMaterial({ color: '#205346' }));
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(WORLD.width, WORLD.height), new THREE.MeshStandardMaterial({ color: '#87977a', roughness:1 }));
     ground.rotation.x = -Math.PI/2; ground.position.set(WORLD.width/2, -0.08, WORLD.height/2); scene.add(ground);
+    ground.receiveShadow=true;
+    const base=box(scene,WORLD.width,1.5,WORLD.height,'#566c5b',WORLD.width/2,-.86,WORLD.height/2);
     const texture = new THREE.TextureLoader().load(referenceUrl, () => { texture.colorSpace = THREE.SRGBColorSpace; }, undefined, () => setError('The reference image could not load. The schematic editor is still available.'));
     const source = new THREE.Mesh(new THREE.PlaneGeometry(WORLD.width, WORLD.height), new THREE.MeshBasicMaterial({ map: texture }));
     source.rotation.x = -Math.PI/2; source.position.set(WORLD.width/2, 0.01, WORLD.height/2); source.visible = false; scene.add(source);
     const context = new THREE.Group(); scene.add(context);
     const traces = new THREE.Group(); scene.add(traces);
-    const traceColors = { building: '#ffda76', road: '#60d5e7', roundabout: '#ffa55b', pickup: '#ff86bd', 'parking-area': '#c4f174' };
+    const traceColors = { building: '#ffda76', road: '#60d5e7', route:'#9b8b80', position:'#ffe08a', 'allocation-mask':'#e5d16b', roundabout: '#ffa55b', pickup: '#ff86bd', 'parking-area': '#c4f174' };
     tracedFeatures.forEach(feature => {
+      if(feature.canonicalIndex!==feature.index)return;
       const color = traceColors[feature.category];
       let points = feature.points;
       if (feature.shapeType === 'circle') {
@@ -189,7 +251,7 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
         const marker = new THREE.Mesh(new THREE.SphereGeometry(.38, 12, 8), new THREE.MeshBasicMaterial({ color, depthTest: false }));
         marker.position.set(points[0][0], .55, points[0][1]); traces.add(marker);
       } else {
-        line(traces, [...points, points[0]], color, .52);
+        line(traces, feature.shapeType==='polygon'?[...points,points[0]]:points, color, .52);
       }
       const center = feature.shapeType === 'circle' || feature.shapeType === 'point' ? points[0] :
         [points.reduce((v,p) => v + p[0], 0) / points.length, points.reduce((v,p) => v + p[1], 0) / points.length];
@@ -265,26 +327,97 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
     };
     const observer=new ResizeObserver(resize); observer.observe(host); resize();
     const simulation=createCampusTraffic();
-    for(const [id,name,pixel] of [
-      ['a-batch','LOT A MAIN POSITION · 5 CAR BATCHES',A_DEPARTURE_MERGE],
-      ['c-entrance','C · ENTRANCE CONTROL',VECTOR_ROUTES.arrival.cWest.at(-1)],
-      ['b-exit','B · EXIT CONTROL',VECTOR_ROUTES.departure.bWest[0]],
-      ['b-north-exit','B · NORTH EXIT CONTROL',VECTOR_ROUTES.departure.bNorth[0]],
-      ['c-exit-1','C · EXIT 1 CONTROL',VECTOR_ROUTES.departure.cWest[0]],
-      ['c-exit-2','C · EXIT 2 CONTROL',VECTOR_ROUTES.departure.cEast[0]],
-    ]) {
+    // Optional vehicle-route overlay: green candidate (geometric only, not field-
+    // confirmed), orange provisional, purple proposal, red open/no-return or unbound.
+    // Labels are static, so they state ELIGIBILITY only ("eligible" / "guidance OFF").
+    // What the simulation actually built is in the dashboard "Route sources" panel and
+    // canvas[data-route-catalog], both refreshed on every runtime change.
+    const routeOverlay=new THREE.Group();routeOverlay.visible=false;scene.add(routeOverlay);
+    const routeColors={source:'#7cf09a',guidance:'#ffb347',candidate:'#7cf09a',provisional:'#ffb347',proposal:'#c58cff',unbound:'#ff5d5d'};
+    const eligibility=new Map(routeDiagnostics().zones.map(z=>[z.routeId,z.eligible]));
+    for(const route of VEHICLE_ROUTE_CATALOG.routes) {
+      if(route.shapeType!=='linestrip')continue;
+      if(!route.points.length)continue;
+      const open=route.diagnostics.some(d=>['open-end','no-return'].includes(d.code));
+      const color=open?'#ff5d5d':routeColors[route.status]??'#ffffff';
+      const pts=route.points.map(traceWorldPoint);
+      if(route.shapeType==='point') {
+        const marker=new THREE.Mesh(new THREE.SphereGeometry(.5,12,8),new THREE.MeshBasicMaterial({color,depthTest:false}));
+        marker.position.set(pts[0][0],.7,pts[0][1]);routeOverlay.add(marker);
+      } else {
+        // Dim registered evidence; bright cyan is a road-anchored comparison,
+        // not a claim that a new runtime route or swept-clearance check is live.
+        line(routeOverlay,pts,'#9b8b80',.61);
+
+      }
+      const runtimeNote=route.runtime?' · source evidence':'';
+      label(routeOverlay,`${route.id} · ${route.status}${runtimeNote}`,pts.at(-1)[0],1.3,pts.at(-1)[1],color,9);
+    }
+    // M3 S3 layout overlay: a child of routeOverlay, so the existing Routes toggle shows/hides it
+    // and release(scene) disposes it. Display only; routing reads layoutOverlay.js directly.
+    // Distinct grammar from route lines: translucent fills, dashed rule outlines, chevrons.
+    const layoutGroup=new THREE.Group();layoutGroup.name='layout-overlay';routeOverlay.add(layoutGroup);
+    const LY=.66;
+    const overlayLine=(pts,color,dashed=false)=>{
+      const geometry=new THREE.BufferGeometry().setFromPoints(pts.map(([x,z])=>new THREE.Vector3(x,LY,z)));
+      const material=dashed?new THREE.LineDashedMaterial({color,dashSize:1.1,gapSize:.7,depthTest:false}):new THREE.LineBasicMaterial({color,depthTest:false});
+      const mesh=new THREE.Line(geometry,material);if(dashed)mesh.computeLineDistances();mesh.renderOrder=6;layoutGroup.add(mesh);
+    };
+    for(const f of LAYOUT_VIEW.features) {
+      if(f.ring) {
+        const ring=f.ring.map(traceWorldPoint);
+        // Shape is drawn in XY then laid flat: rotation.x=-PI/2 maps shape y=-z back to world z.
+        const shape=new THREE.Shape(ring.map(([x,z])=>new THREE.Vector2(x,-z)));
+        const fill=new THREE.Mesh(new THREE.ShapeGeometry(shape),new THREE.MeshBasicMaterial({color:f.color,transparent:true,opacity:.16,side:THREE.DoubleSide,depthWrite:false}));
+        fill.rotation.x=-Math.PI/2;fill.position.y=LY-.01;fill.renderOrder=5;layoutGroup.add(fill);
+        overlayLine([...ring,ring[0]],f.color,f.dashed);
+      }
+      if(f.path) overlayLine(f.path.map(traceWorldPoint),f.color,f.dashed);
+      if(f.point) {
+        // Diamond, not a circle: shuttle stops already use pink rings.
+        const [x,z]=traceWorldPoint(f.point);
+        const marker=new THREE.Mesh(new THREE.RingGeometry(.45,.8,4),new THREE.MeshBasicMaterial({color:f.color,side:THREE.DoubleSide,depthTest:false}));
+        marker.rotation.x=-Math.PI/2;marker.position.set(x,LY,z);marker.renderOrder=6;layoutGroup.add(marker);
+      }
+      for(const chevronPts of f.arrows) overlayLine(chevronPts.map(traceWorldPoint),f.color);
+      const [lx,lz]=traceWorldPoint(f.labelAt);
+      // Larger than route tags (9) so the runtime/advisory status and meaning stay readable.
+      label(layoutGroup,f.label,lx,1.7,lz-1.4,f.color,15);
+      label(layoutGroup,f.meaning,lx,1.6,lz+.6,f.color,12);
+    }
+    // Drawn exit traces (images/ExitPathsAndC.json): a child of routeOverlay, so the
+    // existing Routes toggle shows/hides it and release(scene) disposes it. Display only;
+    // exact drawn points, no direction implied, no roundabout-as-road shapes.
+    const exitGroup=new THREE.Group(); exitGroup.name='exit-trace-overlay'; routeOverlay.add(exitGroup);
+    for(const l of EXIT_TRACE_VIEW.lines) {
+      const geometry=new THREE.BufferGeometry().setFromPoints(l.worldPoints.map(([x,z])=>new THREE.Vector3(x,.63,z)));
+      const mesh=new THREE.Line(geometry,new THREE.LineBasicMaterial({color:EXIT_TRACE_COLOR,depthTest:false}));
+      mesh.renderOrder=7; mesh.userData.exitTraceId=l.id; exitGroup.add(mesh);
+      label(exitGroup,l.tag,l.labelAt[0],1.2,l.labelAt[1],EXIT_TRACE_COLOR,7);
+    }
+    // Init-time inventory only; the live count is dataset.exitTraceLive, read on every toggle.
+    renderer.domElement.dataset.exitTraceOverlay=JSON.stringify({file:EXIT_TRACE_VIEW.file,total:EXIT_TRACE_VIEW.total,counts:EXIT_TRACE_VIEW.counts,activated:EXIT_TRACE_VIEW.activated,initLines:exitGroup.children.filter(o=>o.isLine).length});
+    renderer.domElement.dataset.layoutOverlay=JSON.stringify(overlaySummary(LAYOUT_VIEW));
+    renderer.domElement.dataset.routeCatalog=JSON.stringify(catalogSummary());
+    const stopRouteRuntime=subscribeRouteRuntime(()=>{renderer.domElement.dataset.routeCatalog=JSON.stringify(catalogSummary());});
+    for(const {id,label:name,point:pixel} of STAFF_POSITIONS) {
       const [x,z]=traceWorldPoint(pixel);
-      staffing.add(drawItem({id:`${id}-volunteer`,type:'position',x:x-1.5,z,width:1,depth:1,rotation:0,role:name}));
+      staffing.add(drawItem({id:`${id}-volunteer`,type:'position',x,z,width:1,depth:1,rotation:0,role:name},false,true));
       label(staffing,name,x,4,z-3,'#ffe08a',17);
     }
-    engine.current={renderer,scene,camera,controls,objects,traffic,parkedMarkers,parkedByZone,staffing,source,context,traces,simulation,carMeshes:new Map(),zoneFills};
+    const [stopX,stopZ]=traceWorldPoint(EQUITY_CLAY_STOP_POSITION);
+    label(staffing,'Equity / Clay · 3-way STOP',stopX,4,stopZ,'#ffb6a5',17);
+    engine.current={renderer,scene,camera,controls,objects,traffic,parkedMarkers,parkedByZone,staffing,shuttleStops,occupancyFills,ground,base,source,context,traces,routeOverlay,simulation,carMeshes:new Map(),zoneFills};
     let frame, previousTime, lastReport=0;
     const animate = time => {
       frame=requestAnimationFrame(animate); controls.update();
       const dt=previousTime===undefined?0:(time-previousTime)/1000; previousTime=time;
       const e=engine.current;
-      if(e) {e.simulation.setPhase(latest.current.phase);e.simulation.setShuttleConfig?.(latest.current.shuttles??{});e.simulation.setZonePreferences?.(latest.current.zonePreferences??{});e.simulation.setDeparturePolicy?.(latest.current.departurePolicy??{});}
-      if(e && latest.current.running) advancePlayback(e.simulation,dt,latest.current.playbackSpeed,latest.current.trafficRates ?? [18,18,0],latest.current.layout.items.filter(i=>i.type==='lot'));
+      if(e?.playback && latest.current.running) {
+        const work=e.playback.advance(dt,latest.current.playbackSpeed);
+        work?.catch(error=>latest.current.onPlaybackState?.({error:error.message,seeking:false}));
+        e.simulation=e.playback.simulation;
+      }
       if(e) {
         for(const fill of e.zoneFills) {
           const occupied=e.simulation.zoneOccupancy[fill.zone.id]??0;
@@ -306,16 +439,7 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
         for(const car of displayed) {
           let mesh=e.carMeshes.get(car.id);
           if(!mesh) {
-            mesh=new THREE.Group();
-            if(car.fleetBus) {
-              box(mesh,.88,.7,2.9,'#c985e5');box(mesh,.74,.25,2.4,'#f8efff',0,.47,0);
-              box(mesh,.7,.25,.12,'#344859',0,.27,1.46);
-              label(mesh,`BUS ${car.busNumber}`,0,2,0,'#ffffff',7);
-            } else {
-              box(mesh,.65,.35,1.35,car.badge?'#ffda76':car.source===0?'#70d5bd':'#60d5e7');
-              box(mesh,.52,.22,.62,'#e2ece8',0,.26,-.1);
-              box(mesh,.5,.1,.1,'#ffffff',0,.05,.64);
-            }
+            mesh=createVehicleVisual(car);
             e.traffic.add(mesh); e.carMeshes.set(car.id,mesh);
           }
           if(car.stationary){const [x,z]=traceWorldPoint(car.stationary);mesh.position.set(x,.6,z);continue;}
@@ -324,7 +448,15 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
           mesh.position.copy(pos); mesh.rotation.y=Math.atan2(tangent.x,tangent.z);
         }
         if(time-lastReport>500) {
-          latest.current.onTrafficStats?.({active:e.simulation.cars.filter(c=>!c.fleetBus).length,entered:[...e.simulation.entered],exited:[...e.simulation.exited],waiting:[...e.simulation.waiting],occupancy:{...e.simulation.occupancy},reserved:{...e.simulation.reserved},assignments:{...e.simulation.assignments},parked:{...e.simulation.parked},overflow:e.simulation.overflow,sentAway:e.simulation.sentAway,atCapacity:e.simulation.atCapacity,departed:{...e.simulation.departed},departing:e.simulation.cars.filter(car=>car.phase==='departing').length,badgeParking:e.simulation.badgeParking,badgeReserved:e.simulation.badgeReserved,zoneOccupancy:{...e.simulation.zoneOccupancy},zoneReserved:{...e.simulation.zoneReserved},serviceStatus:e.simulation.serviceStatus,shuttleBreak:e.simulation.shuttleBreak,gateStatus:e.simulation.gateStatus,routingIssues:e.simulation.routingIssues,aDepartureControl:e.simulation.aDepartureControl?{...e.simulation.aDepartureControl,waiting:{...e.simulation.aDepartureControl.waiting},totalPassed:{...e.simulation.aDepartureControl.totalPassed}}:null,priorityWaiting:{...e.simulation.priorityWaiting},shuttleDispatch:e.simulation.shuttleDispatchMode,shuttles:(e.simulation.shuttles??[]).map(bus=>{const moving=e.simulation.cars.find(c=>c.id===bus.id);return {...bus,dwellRemaining:moving?0:Math.max(0,bus.readyAt-e.simulation.clock),trafficWaiting:moving?.trafficWaiting??false,yieldReason:moving?.yieldReason??null};})});
+          renderer.domElement.dataset.simulationSeconds=String(e.simulation.clock);
+          renderer.domElement.dataset.seeking=String(e.playback?.seeking??false);
+          renderer.domElement.dataset.trafficFrame=JSON.stringify(e.simulation.cars.slice(0,12).map(car=>({id:car.id,lane:car.lane,distance:car.distance})));
+          renderer.domElement.dataset.replayHistory=JSON.stringify(e.playback?.historyInfo??{});
+          latest.current.onPlaybackState?.({...e.playback?.progress,clock:e.playback?.clock??e.simulation.clock,seeking:e.playback?.seeking??false});
+          renderer.domElement.dataset.drawCalls=String(renderer.info.render.calls);
+          renderer.domElement.dataset.positionResolution=JSON.stringify(MAIN_POSITION_RESOLUTION);
+          renderer.domElement.dataset.feederOfficer=JSON.stringify(e.simulation.feederOfficer??null);
+          latest.current.onTrafficStats?.({active:e.simulation.cars.filter(c=>!c.fleetBus).length,entered:[...e.simulation.entered],exited:[...e.simulation.exited],waiting:[...e.simulation.waiting],occupancy:{...e.simulation.occupancy},reserved:{...e.simulation.reserved},assignments:{...e.simulation.assignments},parked:{...e.simulation.parked},overflow:e.simulation.overflow,sentAway:e.simulation.sentAway,atCapacity:e.simulation.atCapacity,departed:{...e.simulation.departed},departing:e.simulation.cars.filter(car=>car.phase==='departing').length,badgeParking:e.simulation.badgeParking,badgeReserved:e.simulation.badgeReserved,zoneOccupancy:{...e.simulation.zoneOccupancy},zoneReserved:{...e.simulation.zoneReserved},serviceStatus:e.simulation.serviceStatus,serviceCarry:e.simulation.serviceCarry,shuttleBreak:e.simulation.shuttleBreak,gateStatus:e.simulation.gateStatus,routingIssues:e.simulation.routingIssues,aDepartureControl:e.simulation.aDepartureControl?{...e.simulation.aDepartureControl,waiting:{...e.simulation.aDepartureControl.waiting},totalPassed:{...e.simulation.aDepartureControl.totalPassed}}:null,feederOfficer:e.simulation.feederOfficer?{...e.simulation.feederOfficer}:null,corporateExitJunction:e.simulation.corporateExitJunction?{...e.simulation.corporateExitJunction}:null,northernRadio:e.simulation.northernRadio?structuredClone(e.simulation.northernRadio):null,blackPermitControl:e.simulation.blackPermitControl?{...e.simulation.blackPermitControl}:null,equityClayStop:e.simulation.equityClayStop?{...e.simulation.equityClayStop}:null,priorityWaiting:{...e.simulation.priorityWaiting},shuttleDispatch:e.simulation.shuttleDispatchMode,shuttleDemand:e.simulation.shuttleDemand?structuredClone(e.simulation.shuttleDemand):null,shuttles:(e.simulation.shuttles??[]).map(bus=>{const moving=e.simulation.cars.find(c=>c.id===bus.id);return {...bus,dwellRemaining:moving?0:Math.max(0,bus.readyAt-e.simulation.clock),trafficWaiting:moving?.trafficWaiting??false,yieldReason:moving?.yieldReason??null};})});
           lastReport=time;
         }
       }
@@ -332,8 +464,9 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
     };
     frame=requestAnimationFrame(animate);
     return () => {
-      cancelAnimationFrame(frame); observer.disconnect(); controls.dispose();
+      cancelAnimationFrame(frame); observer.disconnect(); controls.dispose(); stopRouteRuntime();
       renderer.domElement.removeEventListener('pointerdown',pointerDown); renderer.domElement.removeEventListener('pointerup',pointerUp);
+      engine.current?.playback?.cancel();
       release(scene); texture.dispose(); renderer.dispose(); renderer.domElement.remove(); engine.current=null;
     };
   }, []);
@@ -341,30 +474,122 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
   useEffect(() => {
     const e=engine.current; if(!e) return;
     release(e.objects);
-    layout.items.forEach(item => e.objects.add(drawItem(item,item.id===selectedId)));
-  },[layout,selectedId]);
+    layout.items.filter(item=>!world||!item.id.startsWith('staff-')).forEach(item => e.objects.add(drawItem(item,item.id===selectedId,world)));
+    if(world) e.objects.add(createPresentationPavement()); // M4: S5 patches visible without Routes; display only.
+    if(world) e.objects.add(createPresentationLots()); // Approved even-odd coverage, never simulation pavement.
+    e.renderer.shadowMap.needsUpdate=true;
+  },[layout,selectedId,world]);
 
   useEffect(()=>{
     const e=engine.current; if(!e) return;
-    release(e.traffic); e.carMeshes.clear(); e.simulation=trafficMode==='demo'?createTenCarDemo(trafficOptions):createCampusTraffic(trafficOptions);
+    e.playback?.cancel();
+    const origin=structuredClone(trafficOptions);
+    const factory=()=>trafficMode==='demo'?createTenCarDemo(structuredClone(origin)):createCampusTraffic(structuredClone(origin));
+    e.playback=createSeekablePlayback(factory,latest.current.replayInputs,{captureFrame:captureTrafficFrame});
+    release(e.traffic); e.carMeshes.clear(); e.simulation=e.playback.simulation;
+    latest.current.onPlaybackState?.({clock:0,seeking:false,target:0,completed:0,error:''});
     // Counts are refreshed from the new simulation on the next animation frame;
     // keep the existing section-marker resources alive across service resets.
   },[trafficReset,trafficMode]);
+
+  useEffect(()=>{
+    const e=engine.current;
+    if(!e?.playback || !e.playback.setInputs(replayInputs))return;
+    e.simulation=e.playback.simulation;
+    release(e.traffic);e.carMeshes.clear();
+    latest.current.onPlaybackState?.({clock:0,seeking:false,target:0,completed:0,error:''});
+    latest.current.onReplayInvalidated?.();
+  },[inputKey]);
+
+  useEffect(()=>{engine.current?.playback?.cancel();},[running,playbackSpeed]);
+
+  useEffect(()=>{
+    const e=engine.current;
+    if(!e?.playback || !seekRequest || consumedSeek.current===seekRequest)return;
+    consumedSeek.current=seekRequest;
+    let active=true;
+    const controller=e.playback;
+    controller.seek(seekRequest.seconds,progress=>{
+      if(active)latest.current.onPlaybackState?.({...progress,error:''});
+    }).then(applied=>{
+      if(!active||!applied||engine.current!==e||e.playback!==controller)return;
+      e.simulation=controller.simulation;
+      release(e.traffic);e.carMeshes.clear();
+      latest.current.onPlaybackState?.({clock:controller.clock,seeking:false,error:''});
+    }).catch(error=>{
+      if(active)latest.current.onPlaybackState?.({seeking:false,error:error.message});
+    });
+    return ()=>{active=false;controller.cancel();};
+  },[seekRequest,trafficReset,trafficMode,inputKey]);
 
   useEffect(() => {
     const e=engine.current; if(!e) return;
     e.source.visible=reference || traced; e.context.visible=!reference && !traced;
     e.traces.visible=traced;
-    e.objects.visible=!traced;
+    e.objects.visible=!traced && !(world && reference);
+    e.base.visible=world;
+    e.renderer.setClearColor(world?'#b8c7bb':'#143d35');
     e.traffic.visible=true;
-  },[reference,traced]);
+    e.controls.enableRotate=world && view!=='top';
+    e.controls.minPolarAngle=view==='top'?0:.15;
+    e.controls.mouseButtons.LEFT=world && view!=='top'?THREE.MOUSE.ROTATE:THREE.MOUSE.PAN;
+    e.controls.touches.ONE=world && view!=='top'?THREE.TOUCH.ROTATE:THREE.TOUCH.PAN;
+    e.renderer.shadowMap.needsUpdate=true;
+  },[reference,traced,world,view]);
+  useEffect(()=>{
+    const e=engine.current;if(!e)return;
+    for(const root of [e.objects,e.staffing,e.shuttleStops,e.parkedMarkers])root.traverse(o=>{
+      if(o.userData.isLabel)o.visible=showLabels;
+    });
+    e.occupancyFills.visible=showOccupancy;
+    e.parkedMarkers.visible=showOccupancy;
+  },[showLabels,showOccupancy,world,layout,selectedId]);
   useEffect(() => {
     const e=engine.current; if(!e) return;
-    e.controls.target.set(56.8,0,45.9);
-    if(view==='top') { e.camera.position.set(56.8,130,45.91); e.camera.up.set(0,0,-1); }
-    else { e.camera.up.set(0,1,0); e.camera.position.set(66.8,120,130); }
+    const focus=layout.items.find(i=>i.id===`lot-${cameraFocus}`);
+    const x=focus?.x??WORLD.width/2,z=focus?.z??WORLD.height/2;
+    e.controls.target.set(x,0,z);
+    if(view==='top') { e.camera.position.set(x,130,z+.01); e.camera.up.set(0,0,-1); }
+    else { e.camera.up.set(0,1,0); e.camera.position.set(x+16,92,z+88); }
     e.camera.lookAt(e.controls.target); e.controls.update();
-  },[view]);
+  },[view,cameraFocus,cameraReset]);
+  useEffect(() => {
+    const e=engine.current;
+    if(!e||!showRoutes||e.routeOverlay.userData.anchorsBuilt)return;
+    // Path joins can require A*. Build comparison overlays only when requested,
+    // once per scene, not during initial service startup or every animation frame.
+    for(const route of VEHICLE_ROUTE_CATALOG.routes) {
+      if(route.shapeType!=='linestrip')continue;
+      const anchored=roadAnchoredRoute(route.id);
+      if(anchored.applied)line(e.routeOverlay,anchored.points.map(traceWorldPoint),'#57e0ed',.65);
+    }
+    e.routeOverlay.userData.anchorsBuilt=true;
+  },[showRoutes]);
   useEffect(() => { const e=engine.current; if(e) { e.camera.zoom=zoom; e.camera.updateProjectionMatrix(); } },[zoom]);
-  return <div className={`scene ${tool!=='select'?'placing':''}`} ref={mount}>{error && <div className="webgl-error" role="alert">{error}</div>}</div>;
+  useEffect(() => {
+    const e=engine.current; if(!e) return;
+    e.routeOverlay.visible=showRoutes;
+    e.renderer.domElement.dataset.routeOverlay=String(showRoutes);
+    e.renderer.domElement.dataset.routeCatalog=JSON.stringify(catalogSummary());
+    let exitLines=0; e.routeOverlay.traverse(o=>{ if(o.isLine&&o.userData.exitTraceId) exitLines++; });
+    e.renderer.domElement.dataset.exitTraceLive=JSON.stringify({routes:showRoutes,groupVisible:e.routeOverlay.visible,lines:exitLines});
+  },[showRoutes]);
+  const swatch=(color,text,dashed=false)=><li key={text}><span className={`swatch${dashed?' dashed':''}`} style={{borderColor:color,background:dashed?'transparent':color}}/>{text}</li>;
+  return <div className={`scene ${tool!=='select'?'placing':''}`} ref={mount}>{error && <div className="webgl-error" role="alert">{error}</div>}
+    {showRoutes&&<aside className="layout-legend" aria-label="Layout overlay legend" data-layout-legend>
+      <strong>Layout overlay</strong>
+      <small>{LAYOUT_VIEW.file} · {LAYOUT_VIEW.features.length} features · {LAYOUT_VIEW.ok?'check OK':`${LAYOUT_VIEW.problems.length} problem${LAYOUT_VIEW.problems.length===1?'':'s'}`}</small>
+      <ul>
+        {swatch(CONFIDENCE_COLORS.confirmed,'confirmed')}
+        {swatch(CONFIDENCE_COLORS.estimated,'estimated')}
+        {swatch(CONFIDENCE_COLORS.unknown,'unknown')}
+        {swatch(PROBLEM_COLOR,'problem (npm run layout:check)')}
+        {swatch('#4d5a55','dashed = rule area, not a road',true)}
+      </ul>
+      <strong>Drawn exit traces</strong>
+      <small>{EXIT_TRACE_VIEW.file} · {EXIT_TRACE_VIEW.total} drawn · A{EXIT_TRACE_VIEW.counts.a} B{EXIT_TRACE_VIEW.counts.b} C{EXIT_TRACE_VIEW.counts.c} · {EXIT_TRACE_VIEW.activated.length} in traffic use</small>
+      <ul>{swatch(EXIT_TRACE_COLOR,'drawn exit geometry; traffic use listed above')}</ul>
+      <small>runtime = changes traffic · advisory = drawn only. Chevrons = travel direction. Route lines keep their colours.</small>
+    </aside>}
+  </div>;
 }

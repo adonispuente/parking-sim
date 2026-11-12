@@ -1,0 +1,97 @@
+start=2026-11-07T15:42:11Z
+COMMAND: shasum -a 256 -c research/spartan-feeder-f1-inputs-before.sha256
+src/alphaQueueRelief.js: OK
+src/buildingModels.js: OK
+src/campus.js: OK
+src/campusAnnotations.js: OK
+src/campusSimulation.js: OK
+src/clearImageSource.js: OK
+src/corporateDriveOperators.js: OK
+src/cParkingGeometry.js: OK
+src/eastCampus.js: OK
+src/feederOfficer.js: OK
+src/lanePath.js: OK
+src/lotA.js: OK
+src/lotAControl.js: OK
+src/lotAParking.js: OK
+src/main.jsx: OK
+src/model.js: OK
+src/occupancyFill.js: OK
+src/parkingAvailability.js: OK
+src/parkingRoutes.js: OK
+src/parkingZones.js: OK
+src/pavementRouting.js: OK
+src/playback.js: OK
+src/roadAnchoredRoutes.js: OK
+src/RouteSourcesPanel.jsx: OK
+src/Scene.jsx: OK
+src/sharedTraffic.js: OK
+src/shuttleRoutes.js: OK
+src/shuttles.js: OK
+src/sourceRouting.js: OK
+src/styles.css: OK
+src/SundayControls.jsx: OK
+src/sundayServices.js: OK
+src/tracedMap.js: OK
+src/traffic.js: OK
+src/trafficPolicy.js: OK
+src/trafficPositions.js: OK
+src/trafficPriority.js: OK
+src/vectorRoutes.js: OK
+src/vehicleInteractions.js: OK
+src/vehicleRegistration.js: OK
+src/vehicleRouteCatalog.js: OK
+src/vehicleRouteManifest.js: OK
+src/worldActors.js: OK
+tests/alpha-queue-relief.test.js: OK
+tests/arrival-controls.test.js: OK
+tests/b-entrance-median.test.js: OK
+tests/bus-passage.test.js: OK
+tests/campus.test.js: OK
+tests/clear-image-runtime.test.js: OK
+tests/corporate-drive-operators.test.js: OK
+tests/eleven-performance.test.js: OK
+tests/equity-routing.test.js: OK
+tests/feeder-middle-outbound.test.js: OK
+tests/feeder-officer.test.js: OK
+tests/lot-a-batch-control.test.js: OK
+tests/lot-a-envelope.test.js: OK
+tests/lot-a-main-held-departure.test.js: OK
+tests/lot-a-main-median.test.js: OK
+tests/lot-a-main-position.test.js: OK
+tests/lot-a-parking.test.js: OK
+tests/lot-a-south-held-chord.test.js: OK
+tests/lot-a.test.js: OK
+tests/model.test.js: OK
+tests/playback.test.js: OK
+tests/revised-main-connectors.test.js: OK
+tests/route-layout-alignment.test.js: OK
+tests/seekable-playback.test.js: OK
+tests/service-arrival-policy.test.js: OK
+tests/service-shuttle-break.test.js: OK
+tests/service-timing.test.js: OK
+tests/shuttle-staggering.test.js: OK
+tests/shuttles.test.js: OK
+tests/sunday-services.test.js: OK
+tests/sunday-shuttle-circuits.test.js: OK
+tests/traffic-priority.test.js: OK
+tests/two-way-lanes.test.js: OK
+tests/vehicle-routes.test.js: OK
+images/Clear Image.json: OK
+images/EverythingClearImage.json: OK
+images/HopeCityLayout.json: OK
+images/HopeCityLayoutCUpdated.json: OK
+images/HopeCityLayoutFirstHalfincluded.json: OK
+images/HopeCityLayoutVectors.json: OK
+images/Lot A revision.json: OK
+images/Vehicle Routes.json: OK
+research/spartan-continuation-traffic.mjs: OK
+research/claudy-eleven-all-stalls-probe.mjs: OK
+package.json: OK
+package-lock.json: OK
+manifest_exit=0
+COMMAND: shasum -a 256 research/spartan-asouth-production-review.test.mjs research/spartan-continuation-map-diff.json
+e2c5f263ba539dca651e587c38f4390431d88cb70d9335bc88cd9c7a3833006e  research/spartan-asouth-production-review.test.mjs
+cb5782fe6532c00bbd66a0b832f4560008d31e21ab4285a422950b7c2c2ca8d3  research/spartan-continuation-map-diff.json
+supplement_exit=0
+end=2026-11-07T15:42:11Z

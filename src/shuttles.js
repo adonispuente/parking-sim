@@ -1,5 +1,6 @@
 import { buildShuttleCircuits, SHUTTLE_STOPS } from './shuttleRoutes.js';
 import { busesPassThrough } from './vehicleInteractions.js';
+import { createShuttleDemand } from './shuttleDemand.js';
 
 const stopPoints=Object.fromEntries(SHUTTLE_STOPS.map(stop=>[stop.id,stop.point]));
 const countOf=value=>Math.max(0,Math.min(5,Math.trunc(Number(value) || 0)));
@@ -43,12 +44,19 @@ export function attachShuttles(state, makeLane, options={}) {
     }),
   ]));
   state.shuttleConfig={enabled:true,activeCount:5,bFullPercent:100,dwellSeconds:12,
-    cDirection:'auto',dispatchDuringDepartures:true,
+    cDirection:'auto',dispatchDuringDepartures:true,dispatchMode:'fixed',
     serviceBreakEnabled:true,serviceBreakAfterMinutes:45,serviceBreakMinutes:10,...options};
   state.shuttles=Array.from({length:5},(_,i)=>({id:`shuttle-${i+1}`,number:i+1,
     phase:'home',readyAt:i*20+(i===0?0:Math.floor(visitRandom({number:i+1,visits:0,trips:0},'initial')*7)),trips:0,visits:0,stop:null,circuit:null,leg:0,
     dwellStop:'home',stationary:stopPoints.home}));
   state.setShuttleConfig=config=>{Object.assign(state.shuttleConfig,config);};
+  const tripSeconds=Object.fromEntries(Object.entries(laneIds).map(([id,lanes])=>[
+    id,lanes.reduce((sum,index)=>sum+state.lanes[index].length/2.5,0)+135,
+  ]));
+  const demand=createShuttleDemand(state,tripSeconds);
+  state.observeShuttleParking=car=>demand.register(car,true);
+  demand.update();demand.publish();
+  const demandMode=()=>state.shuttleConfig.dispatchMode==='demand';
   let rotation=0;
   let nextHomeLaunch=0;
   const cDirection=()=>{
@@ -62,6 +70,7 @@ export function attachShuttles(state, makeLane, options={}) {
     return rotation++%2?'south':'north';
   };
   state.shuttleDispatch=live=>{
+    if(demandMode())return 'demand-responsive';
     const b=live.find(lot=>lot.id==='b');
     const full=state.occupancy.b >= b.capacity*Math.max(1,Math.min(100,Number(state.shuttleConfig.bFullPercent)||100))/100;
     // Cars cannot enter a full B, but riders still need a B pickup during dismissal.
@@ -87,6 +96,7 @@ export function attachShuttles(state, makeLane, options={}) {
     return true;
   };
   state.prepareShuttles=live=>{
+    demand.update();
     const mode=state.shuttleDispatch(live);state.shuttleDispatchMode=mode;
     const serviceBreak=serviceShuttleBreak(state);state.shuttleBreak=serviceBreak;
     const active=state.shuttleConfig.enabled?countOf(state.shuttleConfig.activeCount):0;
@@ -102,21 +112,34 @@ export function attachShuttles(state, makeLane, options={}) {
       if(retiring||!state.shuttleConfig.enabled||serviceBreak.active) {
         // Finish remote legs above, then hold safely at home. Never halt a bus
         // in moving traffic or teleport it home when the break begins.
+        if(bus.leg===0){bus.circuit=null;bus.demandAssignment=null;}
         bus.phase=serviceBreak.active?'service-break':'home';
         bus.dwellStop='home';bus.stationary=stopPoints.home;continue;
       }
       if(state.clock<bus.readyAt)continue;
       if(state.clock<nextHomeLaunch)continue;
       if(bus.circuit) {launch(bus);continue;}
+      if(demandMode()) {
+        const requested=state.shuttleConfig.cDirection;
+        const allowed=requested==='north'?['b','cNorth']:requested==='south'?['b','cSouth']:undefined;
+        const decision=demand.choose(allowed);
+        demand.reserve(bus,decision);
+        if(!decision.area){bus.phase='demand-hold';bus.dwellStop='home';bus.stationary=stopPoints.home;continue;}
+        bus.circuit=decision.area;bus.stop=decision.area==='b'?'bSouth':decision.area;
+        bus.leg=0;launch(bus);continue;
+      }
       const bAssignment=mode!=='all-c'&&bus.number<=(mode==='two-b-one-c'?2:4);
       bus.circuit=bAssignment?'b':`c${cDirection()==='north'?'North':'South'}`;
+      demand.reserve(bus,{area:bus.circuit,reason:'Fixed-split comparison assignment'});
       bus.stop=bAssignment?'bSouth':bus.circuit;
       bus.leg=0;launch(bus);
     }
+    demand.publish();
   };
   state.completeShuttle=car=>{
     const bus=state.shuttles.find(item=>item.id===car.id);
     const leg=circuits[bus.circuit][bus.leg];
+    demand.pickup(bus,leg.stop);
     bus.visits+=leg.stop==='home'?0:1;
     bus.stop=leg.stop==='home'?null:leg.stop;
     bus.dwellStop=leg.stop;bus.stationary=stopPoints[leg.stop];
@@ -124,11 +147,23 @@ export function attachShuttles(state, makeLane, options={}) {
     bus.readyAt=state.clock+bus.lastDwellSeconds;
     // C's volunteer makes the branch choice at the roundabout, not back at A.
     // Both C circuits share this first leg; changing branch here is continuous.
-    if(leg.stop==='cRoundabout')bus.circuit=`c${cDirection()==='north'?'North':'South'}`;
+    if(leg.stop==='cRoundabout') {
+      if(demandMode()) {
+        const requested=state.shuttleConfig.cDirection;
+        const allowed=requested==='north'?['cNorth']:requested==='south'?['cSouth']:['cNorth','cSouth'];
+        const decision=demand.choose(allowed,bus);
+        // With no new uncovered demand retain the reserved branch, not a new road.
+        if(decision.area){demand.reserve(bus,decision);bus.circuit=decision.area;}
+      } else {
+        bus.circuit=`c${cDirection()==='north'?'North':'South'}`;
+        demand.reserve(bus,{area:bus.circuit,reason:'Fixed-mode C branch selection'});
+      }
+    }
     bus.leg++;
     if(bus.leg===circuits[bus.circuit].length) {
-      bus.phase='home-dwell';bus.trips++;bus.circuit=null;bus.leg=0;bus.stop=null;
+      bus.phase='home-dwell';bus.trips++;bus.circuit=null;bus.leg=0;bus.stop=null;bus.demandAssignment=null;
     } else bus.phase='remote-dwell';
+    demand.publish();
   };
   state.shuttleLaneIds=laneIds;
 }

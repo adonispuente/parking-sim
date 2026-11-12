@@ -1,64 +1,45 @@
-import annotation, { TRACE_SOURCE } from './campusAnnotations.js';
-const IMAGE_SIZE = { width:735, height:566 };
-
-if (annotation.imageWidth !== IMAGE_SIZE.width || annotation.imageHeight !== IMAGE_SIZE.height) {
-  throw new Error('LabelMe trace does not match the satellite image dimensions.');
-}
-
-export { TRACE_SOURCE };
-export const traceWorldPoint = ([x, y]) => [x * 113.6 / IMAGE_SIZE.width, y * 113.6 / IMAGE_SIZE.width];
-
-function category(label) {
-  if (/building/i.test(label)) return 'building';
-  if (/corporate drive|feeder road|equity drive/i.test(label)) return 'road';
-  if (/round\s?about/i.test(label)) return 'roundabout';
-  if (/shuttle pickup/i.test(label)) return 'pickup';
+import source, { SOURCE_FILE, SOURCE_PAIR, toWorld, STAFF_POSITIONS, POSITION_ALIASES } from './clearImageSource.js';
+export const TRACE_SOURCE = SOURCE_FILE;
+export const traceWorldPoint = toWorld;
+function category(shape,index) {
+  if(shape.shape_type==='linestrip')return 'route';
+  if(/building/i.test(shape.label))return 'building';
+  if(index>=54&&index<=56)return 'road';
+  if(/first half/i.test(shape.label))return 'allocation-mask';
+  if(/shuttle/i.test(shape.label))return 'pickup';
+  if(shape.shape_type==='point')return 'position';
   return 'parking-area';
 }
-
-export const tracedFeatures = annotation.shapes.map((shape, index) => {
-  const label = shape.label;
-  const lot = /^Lot ([ABC])\b/i.exec(label)?.[1]?.toLowerCase() ?? null;
-  const points = shape.points.map(traceWorldPoint);
-  return { id: `trace-${String(index + 1).padStart(2, '0')}`, label,
-    category: category(label), lotId: lot ? `lot-${lot}` : null,
-    shapeType: shape.shape_type, points, pixelPoints: shape.points,
-    source: TRACE_SOURCE };
-});
-
-// Source-derived geometry only. Parking regions are surfaces, never fabricated stalls.
-export function tracedLayout(base) {
-  const oldGenerated = i => i.id.startsWith('east-') || i.id.startsWith('a-') ||
-    i.id.startsWith('shuttle-') || ['church','center-building','east-building','road-spine','road-west','road-east','road-south','drive-a-north','drive-b-east','row-a','row-b','row-c','barrier-c'].includes(i.id);
-  const items = base.items.filter(i => !oldGenerated(i) && !i.id.startsWith('trace-') && !(i.type === 'spaces' && i.traceSource))
-    .map(i => i.type==='lot' && ['lot-a','lot-b','lot-c'].includes(i.id) ?
-      {...i,capacity:{'lot-a':411,'lot-b':487,'lot-c':686}[i.id]} : i);
-  for (const feature of tracedFeatures) {
-    if (feature.shapeType === 'point') continue;
-    const coords = feature.shapeType === 'circle' ? (() => {
-      const [[cx,cy],[edgeX,edgeY]] = feature.points;
-      const radius = Math.hypot(edgeX-cx,edgeY-cy);
-      return Array.from({length:48},(_,i) => [cx+radius*Math.cos(i*Math.PI/24),cy+radius*Math.sin(i*Math.PI/24)]);
-    })() : feature.points;
-    const xs=coords.map(p=>p[0]), ys=coords.map(p=>p[1]);
-    const x=(Math.min(...xs)+Math.max(...xs))/2, z=(Math.min(...ys)+Math.max(...ys))/2;
-    const type=feature.category==='building'?'building':'surface';
-    items.push({id:feature.id,type,name:feature.label,x,z,
-      width:Math.max(.4,Math.max(...xs)-Math.min(...xs)),depth:Math.max(.4,Math.max(...ys)-Math.min(...ys)),rotation:0,
-      points:coords.map(([px,py])=>[px-x,py-z]),lotId:feature.lotId ?? '',
-      ...(type==='surface'?{color:feature.category==='road'?'#46585e':feature.category==='roundabout'?'#bdad8c':'#727b7b',elevation:feature.category==='road'?.11:.15}:{})});
+export const tracedFeatures = source.shapes.map((shape,index)=>({
+  id:`clear-${index}`,index,label:shape.label,category:category(shape,index),
+  lotId:/^Lot ([ABC])\b/i.test(shape.label)?`lot-${/^Lot ([ABC])\b/i.exec(shape.label)[1].toLowerCase()}`:null,
+  shapeType:shape.shape_type,points:shape.points.map(toWorld),pixelPoints:shape.points,source:SOURCE_FILE,
+  canonicalIndex:POSITION_ALIASES[index]??index,
+}));
+export function tracedLayout(base={items:[]}) {
+  // Coordinates are source-owned: do not retain ANY old/custom spatial object.
+  // Only safe lot operating settings survive a source-pair migration.
+  const items=['a','b','c'].map((id,i)=>{
+    const previous=base.items?.find(item=>item.id===`lot-${id}`);
+    const regions=tracedFeatures.filter(f=>f.lotId===`lot-${id}`&&f.category==='parking-area');
+    const xs=regions.flatMap(f=>f.points.map(p=>p[0])),zs=regions.flatMap(f=>f.points.map(p=>p[1]));
+    return {id:`lot-${id}`,type:'lot',name:`${id.toUpperCase()} · Campus parking`,capacity:[411,487,686][i],
+      open:previous?.open!==false,color:['#d2f481','#83cbd5','#bba8ed'][i],
+      x:(Math.min(...xs)+Math.max(...xs))/2,z:(Math.min(...zs)+Math.max(...zs))/2,
+      width:Math.max(...xs)-Math.min(...xs),depth:Math.max(...zs)-Math.min(...zs),rotation:0};
+  });
+  for(const f of tracedFeatures) {
+    if(f.shapeType!=='polygon'||f.category==='allocation-mask')continue;
+    const xs=f.points.map(p=>p[0]),zs=f.points.map(p=>p[1]);
+    const x=(Math.min(...xs)+Math.max(...xs))/2,z=(Math.min(...zs)+Math.max(...zs))/2;
+    const type=f.category==='building'?'building':'surface';
+    items.push({id:f.id,type,name:f.label,x,z,width:Math.max(...xs)-Math.min(...xs),depth:Math.max(...zs)-Math.min(...zs),rotation:0,
+      points:f.points.map(([px,pz])=>[px-x,pz-z]),lotId:f.lotId??'',sourceIndex:f.index,
+      ...(type==='surface'?{color:f.category==='road'?'#46585e':'#727b7b',elevation:f.category==='road'?.11:.15}:{})});
   }
-  // Operational capacity remains separate from drawn regions; bound the lot labels to those regions.
-  for (const lot of items.filter(i => i.type==='lot')) {
-    const regions=tracedFeatures.filter(f=>f.lotId===lot.id && f.category==='parking-area');
-    if (!regions.length) continue;
-    const xs=regions.flatMap(f=>f.points.map(p=>p[0])),ys=regions.flatMap(f=>f.points.map(p=>p[1]));
-    lot.x=(Math.min(...xs)+Math.max(...xs))/2;
-    lot.z=(Math.min(...ys)+Math.max(...ys))/2;
-    lot.width=Math.max(.4,Math.max(...xs)-Math.min(...xs));
-    lot.depth=Math.max(.4,Math.max(...ys)-Math.min(...ys));
-    lot.rotation=0;
-    delete lot.points;
+  for(const station of STAFF_POSITIONS) {
+    const [x,z]=toWorld(station.point);
+    items.push({id:`staff-${station.id}`,type:'position',name:station.label,role:station.label,assignee:'',notes:`${SOURCE_FILE} #${station.index}; source position, not inferred policy.`,x,z,width:1,depth:1,rotation:0,sourceIndex:station.index});
   }
-  return {...base,name:'Hope City · updated C first-half trace',tracedMapRevision:3,items};
+  return {version:1,name:'Hope City · Clear Image campus',sourcePair:SOURCE_PAIR,tracedMapRevision:4,items};
 }

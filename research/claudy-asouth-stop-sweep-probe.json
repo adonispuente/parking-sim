@@ -1,0 +1,5730 @@
+{
+ "arrivals": [
+  "Arrival · a · aNorth",
+  "Arrival · a · aSouth",
+  "Arrival · badgeA · aNorth",
+  "Arrival · badgeA · aSouth",
+  "Arrival · bWest · aNorth",
+  "Arrival · bWest · aSouth",
+  "Arrival · bNorth · aNorth",
+  "Arrival · bNorth · aSouth",
+  "Arrival · cWest · aNorth",
+  "Arrival · cWest · aSouth",
+  "Arrival · cEast · aNorth",
+  "Arrival · cEast · aSouth",
+  "Arrival · eCWest · aNorth",
+  "Arrival · eCWest · aSouth",
+  "Arrival · e2CWest · aNorth",
+  "Arrival · e2CWest · aSouth",
+  "Arrival · eCEast · aNorth",
+  "Arrival · eCEast · aSouth",
+  "Arrival · eB · aNorth",
+  "Arrival · eB · aSouth",
+  "Arrival · eBMain · aNorth",
+  "Arrival · eBMain · aSouth",
+  "Arrival · e2BMain · aNorth",
+  "Arrival · e2BMain · aSouth",
+  "Arrival · eA · aNorth",
+  "Arrival · eA · aSouth"
+ ],
+ "currentArrivalBack": [
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7,
+  1.7
+ ],
+ "rows": [
+  {
+   "held": "Arrival · a · aNorth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.517,
+     "depD": 3.21,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.907,
+     "depD": 5.57,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.061,
+     "depD": 2.81,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.194,
+     "depD": 5.89,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.253,
+     "depD": 5.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.305,
+     "depD": 3.19,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.39,
+     "depD": 4.85,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.449,
+     "depD": 7.95,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · a · aNorth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.192,
+     "depD": 3.99,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.909,
+     "depD": 5.53,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.96,
+     "depD": 4.51,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.977,
+     "depD": 3.99,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.985,
+     "depD": 3.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.993,
+     "depD": 3.99,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.011,
+     "depD": 3.99,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.06,
+     "depD": 3.99,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · a · aSouth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.516,
+     "depD": 4.95,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.882,
+     "depD": 5.57,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.038,
+     "depD": 5.69,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.176,
+     "depD": 7.31,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.237,
+     "depD": 7.41,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.292,
+     "depD": 3.15,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.381,
+     "depD": 6.27,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.446,
+     "depD": 5.01,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · a · aSouth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.17,
+     "depD": 3.99,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.883,
+     "depD": 4.07,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.952,
+     "depD": 4.53,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.971,
+     "depD": 3.99,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.979,
+     "depD": 3.99,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.986,
+     "depD": 3.99,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.003,
+     "depD": 3.99,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.045,
+     "depD": 3.99,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · badgeA · aNorth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.517,
+     "depD": 3.21,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.907,
+     "depD": 5.57,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.061,
+     "depD": 2.81,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.194,
+     "depD": 5.89,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.253,
+     "depD": 5.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.305,
+     "depD": 3.19,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.39,
+     "depD": 4.85,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.449,
+     "depD": 7.95,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · badgeA · aNorth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.192,
+     "depD": 3.99,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.909,
+     "depD": 5.53,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.96,
+     "depD": 4.51,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.977,
+     "depD": 3.99,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.985,
+     "depD": 3.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.993,
+     "depD": 3.99,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.011,
+     "depD": 3.99,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.06,
+     "depD": 3.99,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · badgeA · aSouth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.516,
+     "depD": 4.95,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.882,
+     "depD": 5.57,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.038,
+     "depD": 5.69,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.176,
+     "depD": 7.31,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.237,
+     "depD": 7.41,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.292,
+     "depD": 3.15,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.381,
+     "depD": 6.27,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.446,
+     "depD": 5.01,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · badgeA · aSouth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.17,
+     "depD": 3.99,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.883,
+     "depD": 4.07,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.952,
+     "depD": 4.53,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.971,
+     "depD": 3.99,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.979,
+     "depD": 3.99,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.986,
+     "depD": 3.99,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.003,
+     "depD": 3.99,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.045,
+     "depD": 3.99,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · bWest · aNorth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.517,
+     "depD": 3.21,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.907,
+     "depD": 5.57,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.061,
+     "depD": 2.81,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.194,
+     "depD": 5.89,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.253,
+     "depD": 5.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.305,
+     "depD": 3.19,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.39,
+     "depD": 4.85,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.449,
+     "depD": 7.95,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · bWest · aNorth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.192,
+     "depD": 3.99,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.909,
+     "depD": 5.53,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.96,
+     "depD": 4.51,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.977,
+     "depD": 3.99,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.985,
+     "depD": 3.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.993,
+     "depD": 3.99,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.011,
+     "depD": 3.99,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.06,
+     "depD": 3.99,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · bWest · aSouth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.516,
+     "depD": 4.95,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.882,
+     "depD": 5.57,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.038,
+     "depD": 5.69,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.176,
+     "depD": 7.31,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.237,
+     "depD": 7.41,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.292,
+     "depD": 3.15,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.381,
+     "depD": 6.27,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.446,
+     "depD": 5.01,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · bWest · aSouth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.17,
+     "depD": 3.99,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.883,
+     "depD": 4.07,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.952,
+     "depD": 4.53,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.971,
+     "depD": 3.99,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.979,
+     "depD": 3.99,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.986,
+     "depD": 3.99,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.003,
+     "depD": 3.99,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.045,
+     "depD": 3.99,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · bNorth · aNorth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.517,
+     "depD": 3.21,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.907,
+     "depD": 5.57,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.061,
+     "depD": 2.81,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.194,
+     "depD": 5.89,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.253,
+     "depD": 5.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.305,
+     "depD": 3.19,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.39,
+     "depD": 4.85,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.449,
+     "depD": 7.95,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · bNorth · aNorth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.192,
+     "depD": 3.99,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.909,
+     "depD": 5.53,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.96,
+     "depD": 4.51,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.977,
+     "depD": 3.99,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.985,
+     "depD": 3.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.993,
+     "depD": 3.99,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.011,
+     "depD": 3.99,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.06,
+     "depD": 3.99,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · bNorth · aSouth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.516,
+     "depD": 4.95,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.882,
+     "depD": 5.57,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.038,
+     "depD": 5.69,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.176,
+     "depD": 7.31,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.237,
+     "depD": 7.41,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.292,
+     "depD": 3.15,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.381,
+     "depD": 6.27,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.446,
+     "depD": 5.01,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · bNorth · aSouth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.17,
+     "depD": 3.99,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.883,
+     "depD": 4.07,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.952,
+     "depD": 4.53,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.971,
+     "depD": 3.99,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.979,
+     "depD": 3.99,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.986,
+     "depD": 3.99,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.003,
+     "depD": 3.99,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.045,
+     "depD": 3.99,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · cWest · aNorth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.517,
+     "depD": 3.21,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.907,
+     "depD": 5.57,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.061,
+     "depD": 2.81,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.194,
+     "depD": 5.89,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.253,
+     "depD": 5.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.305,
+     "depD": 3.19,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.39,
+     "depD": 4.85,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.449,
+     "depD": 7.95,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · cWest · aNorth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.192,
+     "depD": 3.99,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.909,
+     "depD": 5.53,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.96,
+     "depD": 4.51,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.977,
+     "depD": 3.99,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.985,
+     "depD": 3.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.993,
+     "depD": 3.99,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.011,
+     "depD": 3.99,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.06,
+     "depD": 3.99,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · cWest · aSouth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.516,
+     "depD": 4.95,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.882,
+     "depD": 5.57,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.038,
+     "depD": 5.69,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.176,
+     "depD": 7.31,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.237,
+     "depD": 7.41,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.292,
+     "depD": 3.15,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.381,
+     "depD": 6.27,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.446,
+     "depD": 5.01,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · cWest · aSouth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.17,
+     "depD": 3.99,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.883,
+     "depD": 4.07,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.952,
+     "depD": 4.53,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.971,
+     "depD": 3.99,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.979,
+     "depD": 3.99,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.986,
+     "depD": 3.99,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.003,
+     "depD": 3.99,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.045,
+     "depD": 3.99,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · cEast · aNorth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.517,
+     "depD": 3.21,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.907,
+     "depD": 5.57,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.061,
+     "depD": 2.81,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.194,
+     "depD": 5.89,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.253,
+     "depD": 5.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.305,
+     "depD": 3.19,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.39,
+     "depD": 4.85,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.449,
+     "depD": 7.95,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · cEast · aNorth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.192,
+     "depD": 3.99,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.909,
+     "depD": 5.53,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.96,
+     "depD": 4.51,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.977,
+     "depD": 3.99,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.985,
+     "depD": 3.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.993,
+     "depD": 3.99,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.011,
+     "depD": 3.99,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.06,
+     "depD": 3.99,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · cEast · aSouth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.516,
+     "depD": 4.95,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.882,
+     "depD": 5.57,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.038,
+     "depD": 5.69,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.176,
+     "depD": 7.31,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.237,
+     "depD": 7.41,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.292,
+     "depD": 3.15,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.381,
+     "depD": 6.27,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.446,
+     "depD": 5.01,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · cEast · aSouth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.17,
+     "depD": 3.99,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.883,
+     "depD": 4.07,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.952,
+     "depD": 4.53,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.971,
+     "depD": 3.99,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.979,
+     "depD": 3.99,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.986,
+     "depD": 3.99,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.003,
+     "depD": 3.99,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.045,
+     "depD": 3.99,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eCWest · aNorth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.517,
+     "depD": 3.21,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.907,
+     "depD": 5.57,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.061,
+     "depD": 2.81,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.194,
+     "depD": 5.89,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.253,
+     "depD": 5.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.305,
+     "depD": 3.19,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.39,
+     "depD": 4.85,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.449,
+     "depD": 7.95,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eCWest · aNorth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.192,
+     "depD": 3.99,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.909,
+     "depD": 5.53,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.96,
+     "depD": 4.51,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.977,
+     "depD": 3.99,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.985,
+     "depD": 3.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.993,
+     "depD": 3.99,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.011,
+     "depD": 3.99,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.06,
+     "depD": 3.99,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eCWest · aSouth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.516,
+     "depD": 4.95,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.882,
+     "depD": 5.57,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.038,
+     "depD": 5.69,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.176,
+     "depD": 7.31,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.237,
+     "depD": 7.41,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.292,
+     "depD": 3.15,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.381,
+     "depD": 6.27,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.446,
+     "depD": 5.01,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eCWest · aSouth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.17,
+     "depD": 3.99,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.883,
+     "depD": 4.07,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.952,
+     "depD": 4.53,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.971,
+     "depD": 3.99,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.979,
+     "depD": 3.99,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.986,
+     "depD": 3.99,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.003,
+     "depD": 3.99,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.045,
+     "depD": 3.99,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · e2CWest · aNorth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.517,
+     "depD": 3.21,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.907,
+     "depD": 5.57,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.061,
+     "depD": 2.81,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.194,
+     "depD": 5.89,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.253,
+     "depD": 5.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.305,
+     "depD": 3.19,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.39,
+     "depD": 4.85,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.449,
+     "depD": 7.95,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · e2CWest · aNorth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.192,
+     "depD": 3.99,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.909,
+     "depD": 5.53,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.96,
+     "depD": 4.51,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.977,
+     "depD": 3.99,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.985,
+     "depD": 3.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.993,
+     "depD": 3.99,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.011,
+     "depD": 3.99,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.06,
+     "depD": 3.99,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · e2CWest · aSouth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.516,
+     "depD": 4.95,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.882,
+     "depD": 5.57,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.038,
+     "depD": 5.69,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.176,
+     "depD": 7.31,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.237,
+     "depD": 7.41,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.292,
+     "depD": 3.15,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.381,
+     "depD": 6.27,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.446,
+     "depD": 5.01,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · e2CWest · aSouth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.17,
+     "depD": 3.99,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.883,
+     "depD": 4.07,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.952,
+     "depD": 4.53,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.971,
+     "depD": 3.99,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.979,
+     "depD": 3.99,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.986,
+     "depD": 3.99,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.003,
+     "depD": 3.99,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.045,
+     "depD": 3.99,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eCEast · aNorth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.517,
+     "depD": 3.21,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.907,
+     "depD": 5.57,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.061,
+     "depD": 2.81,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.194,
+     "depD": 5.89,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.253,
+     "depD": 5.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.305,
+     "depD": 3.19,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.39,
+     "depD": 4.85,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.449,
+     "depD": 7.95,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eCEast · aNorth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.192,
+     "depD": 3.99,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.909,
+     "depD": 5.53,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.96,
+     "depD": 4.51,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.977,
+     "depD": 3.99,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.985,
+     "depD": 3.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.993,
+     "depD": 3.99,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.011,
+     "depD": 3.99,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.06,
+     "depD": 3.99,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eCEast · aSouth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.516,
+     "depD": 4.95,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.882,
+     "depD": 5.57,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.038,
+     "depD": 5.69,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.176,
+     "depD": 7.31,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.237,
+     "depD": 7.41,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.292,
+     "depD": 3.15,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.381,
+     "depD": 6.27,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.446,
+     "depD": 5.01,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eCEast · aSouth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.17,
+     "depD": 3.99,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.883,
+     "depD": 4.07,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.952,
+     "depD": 4.53,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.971,
+     "depD": 3.99,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.979,
+     "depD": 3.99,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.986,
+     "depD": 3.99,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.003,
+     "depD": 3.99,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.045,
+     "depD": 3.99,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eB · aNorth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.517,
+     "depD": 3.21,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.907,
+     "depD": 5.57,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.061,
+     "depD": 2.81,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.194,
+     "depD": 5.89,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.253,
+     "depD": 5.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.305,
+     "depD": 3.19,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.39,
+     "depD": 4.85,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.449,
+     "depD": 7.95,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eB · aNorth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.192,
+     "depD": 3.99,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.909,
+     "depD": 5.53,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.96,
+     "depD": 4.51,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.977,
+     "depD": 3.99,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.985,
+     "depD": 3.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.993,
+     "depD": 3.99,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.011,
+     "depD": 3.99,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.06,
+     "depD": 3.99,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eB · aSouth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.516,
+     "depD": 4.95,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.882,
+     "depD": 5.57,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.038,
+     "depD": 5.69,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.176,
+     "depD": 7.31,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.237,
+     "depD": 7.41,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.292,
+     "depD": 3.15,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.381,
+     "depD": 6.27,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.446,
+     "depD": 5.01,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eB · aSouth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.17,
+     "depD": 3.99,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.883,
+     "depD": 4.07,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.952,
+     "depD": 4.53,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.971,
+     "depD": 3.99,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.979,
+     "depD": 3.99,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.986,
+     "depD": 3.99,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.003,
+     "depD": 3.99,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.045,
+     "depD": 3.99,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eBMain · aNorth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.517,
+     "depD": 3.21,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.907,
+     "depD": 5.57,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.061,
+     "depD": 2.81,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.194,
+     "depD": 5.89,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.253,
+     "depD": 5.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.305,
+     "depD": 3.19,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.39,
+     "depD": 4.85,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.449,
+     "depD": 7.95,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eBMain · aNorth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.192,
+     "depD": 3.99,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.909,
+     "depD": 5.53,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.96,
+     "depD": 4.51,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.977,
+     "depD": 3.99,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.985,
+     "depD": 3.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.993,
+     "depD": 3.99,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.011,
+     "depD": 3.99,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.06,
+     "depD": 3.99,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eBMain · aSouth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.516,
+     "depD": 4.95,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.882,
+     "depD": 5.57,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.038,
+     "depD": 5.69,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.176,
+     "depD": 7.31,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.237,
+     "depD": 7.41,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.292,
+     "depD": 3.15,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.381,
+     "depD": 6.27,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.446,
+     "depD": 5.01,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eBMain · aSouth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.17,
+     "depD": 3.99,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.883,
+     "depD": 4.07,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.952,
+     "depD": 4.53,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.971,
+     "depD": 3.99,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.979,
+     "depD": 3.99,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.986,
+     "depD": 3.99,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.003,
+     "depD": 3.99,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.045,
+     "depD": 3.99,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · e2BMain · aNorth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.517,
+     "depD": 3.21,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.907,
+     "depD": 5.57,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.061,
+     "depD": 2.81,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.194,
+     "depD": 5.89,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.253,
+     "depD": 5.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.305,
+     "depD": 3.19,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.39,
+     "depD": 4.85,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.449,
+     "depD": 7.95,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · e2BMain · aNorth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.192,
+     "depD": 3.99,
+     "heldPx": [
+      191,
+      83
+     ],
+     "stopPx": [
+      183.5,
+      80
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.909,
+     "depD": 5.53,
+     "heldPx": [
+      205.6,
+      88.8
+     ],
+     "stopPx": [
+      198,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.96,
+     "depD": 4.51,
+     "heldPx": [
+      203.3,
+      87.9
+     ],
+     "stopPx": [
+      195.8,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.977,
+     "depD": 3.99,
+     "heldPx": [
+      201.1,
+      87
+     ],
+     "stopPx": [
+      193.5,
+      84
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.985,
+     "depD": 3.99,
+     "heldPx": [
+      200,
+      86.6
+     ],
+     "stopPx": [
+      192.4,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.993,
+     "depD": 3.99,
+     "heldPx": [
+      198.9,
+      86.2
+     ],
+     "stopPx": [
+      191.3,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.011,
+     "depD": 3.99,
+     "heldPx": [
+      196.6,
+      85.3
+     ],
+     "stopPx": [
+      189.1,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.06,
+     "depD": 3.99,
+     "heldPx": [
+      194.4,
+      84.4
+     ],
+     "stopPx": [
+      186.8,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · e2BMain · aSouth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.516,
+     "depD": 4.95,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.882,
+     "depD": 5.57,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.038,
+     "depD": 5.69,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.176,
+     "depD": 7.31,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.237,
+     "depD": 7.41,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.292,
+     "depD": 3.15,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.381,
+     "depD": 6.27,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.446,
+     "depD": 5.01,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · e2BMain · aSouth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.17,
+     "depD": 3.99,
+     "heldPx": [
+      191.4,
+      83.2
+     ],
+     "stopPx": [
+      183.8,
+      80.3
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.883,
+     "depD": 4.07,
+     "heldPx": [
+      205.9,
+      89
+     ],
+     "stopPx": [
+      198.4,
+      86
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.952,
+     "depD": 4.53,
+     "heldPx": [
+      203.7,
+      88.1
+     ],
+     "stopPx": [
+      196.1,
+      85.1
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.971,
+     "depD": 3.99,
+     "heldPx": [
+      201.4,
+      87.2
+     ],
+     "stopPx": [
+      193.9,
+      84.2
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.979,
+     "depD": 3.99,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.986,
+     "depD": 3.99,
+     "heldPx": [
+      199.2,
+      86.4
+     ],
+     "stopPx": [
+      191.6,
+      83.4
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.003,
+     "depD": 3.99,
+     "heldPx": [
+      197,
+      85.5
+     ],
+     "stopPx": [
+      189.4,
+      82.5
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.045,
+     "depD": 3.99,
+     "heldPx": [
+      194.7,
+      84.6
+     ],
+     "stopPx": [
+      187.2,
+      81.6
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eA · aNorth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.538,
+     "depD": 8.27,
+     "heldPx": [
+      190.3,
+      82.8
+     ],
+     "stopPx": [
+      182.7,
+      79.8
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.953,
+     "depD": 5.57,
+     "heldPx": [
+      204.9,
+      88.6
+     ],
+     "stopPx": [
+      197.2,
+      85.6
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.111,
+     "depD": 5.77,
+     "heldPx": [
+      202.5,
+      87.7
+     ],
+     "stopPx": [
+      195,
+      84.7
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.238,
+     "depD": 7.41,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.292,
+     "depD": 3.15,
+     "heldPx": [
+      199.2,
+      86.3
+     ],
+     "stopPx": [
+      191.7,
+      83.4
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.34,
+     "depD": 4.71,
+     "heldPx": [
+      198.1,
+      85.9
+     ],
+     "stopPx": [
+      190.5,
+      82.9
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.416,
+     "depD": 6.37,
+     "heldPx": [
+      195.8,
+      85
+     ],
+     "stopPx": [
+      188.3,
+      82
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.47,
+     "depD": 3.25,
+     "heldPx": [
+      193.6,
+      84.1
+     ],
+     "stopPx": [
+      186.1,
+      81.2
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eA · aNorth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.225,
+     "depD": 3.99,
+     "heldPx": [
+      190.3,
+      82.8
+     ],
+     "stopPx": [
+      182.7,
+      79.8
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.933,
+     "depD": 4.65,
+     "heldPx": [
+      204.9,
+      88.6
+     ],
+     "stopPx": [
+      197.2,
+      85.6
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.963,
+     "depD": 3.99,
+     "heldPx": [
+      202.5,
+      87.7
+     ],
+     "stopPx": [
+      195,
+      84.7
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.979,
+     "depD": 3.99,
+     "heldPx": [
+      200.3,
+      86.8
+     ],
+     "stopPx": [
+      192.8,
+      83.8
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.986,
+     "depD": 3.99,
+     "heldPx": [
+      199.2,
+      86.3
+     ],
+     "stopPx": [
+      191.7,
+      83.4
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.994,
+     "depD": 3.99,
+     "heldPx": [
+      198.1,
+      85.9
+     ],
+     "stopPx": [
+      190.5,
+      82.9
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.019,
+     "depD": 3.99,
+     "heldPx": [
+      195.8,
+      85
+     ],
+     "stopPx": [
+      188.3,
+      82
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.079,
+     "depD": 3.99,
+     "heldPx": [
+      193.6,
+      84.1
+     ],
+     "stopPx": [
+      186.1,
+      81.2
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eA · aSouth",
+   "admitted": "Departure · a · aNorth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.526,
+     "depD": 6.79,
+     "heldPx": [
+      190.9,
+      83.1
+     ],
+     "stopPx": [
+      183.3,
+      80.1
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.913,
+     "depD": 5.57,
+     "heldPx": [
+      205.5,
+      88.8
+     ],
+     "stopPx": [
+      197.9,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 1.067,
+     "depD": 2.81,
+     "heldPx": [
+      203.2,
+      87.9
+     ],
+     "stopPx": [
+      195.7,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 1.202,
+     "depD": 7.35,
+     "heldPx": [
+      201,
+      87.1
+     ],
+     "stopPx": [
+      193.4,
+      84.1
+     ]
+    },
+    "2.2": {
+     "minChordGap": 1.26,
+     "depD": 3.09,
+     "heldPx": [
+      199.9,
+      86.6
+     ],
+     "stopPx": [
+      192.3,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 1.313,
+     "depD": 4.65,
+     "heldPx": [
+      198.7,
+      86.2
+     ],
+     "stopPx": [
+      191.2,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.397,
+     "depD": 7.77,
+     "heldPx": [
+      196.5,
+      85.3
+     ],
+     "stopPx": [
+      188.9,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.456,
+     "depD": 5.05,
+     "heldPx": [
+      194.2,
+      84.4
+     ],
+     "stopPx": [
+      186.7,
+      81.4
+     ]
+    }
+   }
+  },
+  {
+   "held": "Arrival · eA · aSouth",
+   "admitted": "Departure · a · aSouth",
+   "byBack": {
+    "3": {
+     "minChordGap": 1.194,
+     "depD": 3.99,
+     "heldPx": [
+      190.9,
+      83.1
+     ],
+     "stopPx": [
+      183.3,
+      80.1
+     ]
+    },
+    "1.7": {
+     "minChordGap": 0.915,
+     "depD": 5.53,
+     "heldPx": [
+      205.5,
+      88.8
+     ],
+     "stopPx": [
+      197.9,
+      85.8
+     ]
+    },
+    "1.9": {
+     "minChordGap": 0.957,
+     "depD": 4.49,
+     "heldPx": [
+      203.2,
+      87.9
+     ],
+     "stopPx": [
+      195.7,
+      84.9
+     ]
+    },
+    "2.1": {
+     "minChordGap": 0.974,
+     "depD": 3.99,
+     "heldPx": [
+      201,
+      87.1
+     ],
+     "stopPx": [
+      193.4,
+      84.1
+     ]
+    },
+    "2.2": {
+     "minChordGap": 0.982,
+     "depD": 3.99,
+     "heldPx": [
+      199.9,
+      86.6
+     ],
+     "stopPx": [
+      192.3,
+      83.6
+     ]
+    },
+    "2.3": {
+     "minChordGap": 0.99,
+     "depD": 3.99,
+     "heldPx": [
+      198.7,
+      86.2
+     ],
+     "stopPx": [
+      191.2,
+      83.2
+     ]
+    },
+    "2.5": {
+     "minChordGap": 1.008,
+     "depD": 3.99,
+     "heldPx": [
+      196.5,
+      85.3
+     ],
+     "stopPx": [
+      188.9,
+      82.3
+     ]
+    },
+    "2.7": {
+     "minChordGap": 1.058,
+     "depD": 3.99,
+     "heldPx": [
+      194.2,
+      84.4
+     ],
+     "stopPx": [
+      186.7,
+      81.4
+     ]
+    }
+   }
+  }
+ ],
+ "reverse": [
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · a · aNorth",
+   "minChordGap": 1.158,
+   "arrD": 101.53
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · a · aSouth",
+   "minChordGap": 2.284,
+   "arrD": 101.28
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · badgeA · aNorth",
+   "minChordGap": 1.158,
+   "arrD": 101.53
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · badgeA · aSouth",
+   "minChordGap": 2.284,
+   "arrD": 101.28
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · bWest · aNorth",
+   "minChordGap": 1.158,
+   "arrD": 101.53
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · bWest · aSouth",
+   "minChordGap": 2.284,
+   "arrD": 101.28
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · bNorth · aNorth",
+   "minChordGap": 1.158,
+   "arrD": 101.53
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · bNorth · aSouth",
+   "minChordGap": 2.284,
+   "arrD": 101.28
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · cWest · aNorth",
+   "minChordGap": 1.158,
+   "arrD": 101.53
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · cWest · aSouth",
+   "minChordGap": 2.284,
+   "arrD": 101.28
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · cEast · aNorth",
+   "minChordGap": 1.158,
+   "arrD": 101.53
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · cEast · aSouth",
+   "minChordGap": 2.284,
+   "arrD": 101.28
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · eCWest · aNorth",
+   "minChordGap": 1.158,
+   "arrD": 101.53
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · eCWest · aSouth",
+   "minChordGap": 2.284,
+   "arrD": 101.28
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · e2CWest · aNorth",
+   "minChordGap": 1.158,
+   "arrD": 101.53
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · e2CWest · aSouth",
+   "minChordGap": 2.284,
+   "arrD": 101.28
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · eCEast · aNorth",
+   "minChordGap": 1.158,
+   "arrD": 101.53
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · eCEast · aSouth",
+   "minChordGap": 2.284,
+   "arrD": 101.28
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · eB · aNorth",
+   "minChordGap": 1.158,
+   "arrD": 101.53
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · eB · aSouth",
+   "minChordGap": 2.284,
+   "arrD": 101.28
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · eBMain · aNorth",
+   "minChordGap": 1.158,
+   "arrD": 101.53
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · eBMain · aSouth",
+   "minChordGap": 2.284,
+   "arrD": 101.28
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · e2BMain · aNorth",
+   "minChordGap": 1.158,
+   "arrD": 101.53
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · e2BMain · aSouth",
+   "minChordGap": 2.284,
+   "arrD": 101.28
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · eA · aNorth",
+   "minChordGap": 1.158,
+   "arrD": 368.77
+  },
+  {
+   "held": "Departure · a · aNorth",
+   "appliedBack": 3,
+   "admitted": "Arrival · eA · aSouth",
+   "minChordGap": 2.285,
+   "arrD": 371.62
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · a · aNorth",
+   "minChordGap": 0.91,
+   "arrD": 101.75
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · a · aSouth",
+   "minChordGap": 0,
+   "arrD": 101.22
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · badgeA · aNorth",
+   "minChordGap": 0.91,
+   "arrD": 101.75
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · badgeA · aSouth",
+   "minChordGap": 0,
+   "arrD": 101.22
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · bWest · aNorth",
+   "minChordGap": 0.91,
+   "arrD": 101.75
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · bWest · aSouth",
+   "minChordGap": 0,
+   "arrD": 101.22
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · bNorth · aNorth",
+   "minChordGap": 0.91,
+   "arrD": 101.75
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · bNorth · aSouth",
+   "minChordGap": 0,
+   "arrD": 101.22
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · cWest · aNorth",
+   "minChordGap": 0.91,
+   "arrD": 101.75
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · cWest · aSouth",
+   "minChordGap": 0,
+   "arrD": 101.22
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · cEast · aNorth",
+   "minChordGap": 0.91,
+   "arrD": 101.75
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · cEast · aSouth",
+   "minChordGap": 0,
+   "arrD": 101.22
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · eCWest · aNorth",
+   "minChordGap": 0.91,
+   "arrD": 101.75
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · eCWest · aSouth",
+   "minChordGap": 0,
+   "arrD": 101.22
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · e2CWest · aNorth",
+   "minChordGap": 0.91,
+   "arrD": 101.75
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · e2CWest · aSouth",
+   "minChordGap": 0,
+   "arrD": 101.22
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · eCEast · aNorth",
+   "minChordGap": 0.91,
+   "arrD": 101.75
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · eCEast · aSouth",
+   "minChordGap": 0,
+   "arrD": 101.22
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · eB · aNorth",
+   "minChordGap": 0.91,
+   "arrD": 101.75
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · eB · aSouth",
+   "minChordGap": 0,
+   "arrD": 101.22
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · eBMain · aNorth",
+   "minChordGap": 0.91,
+   "arrD": 101.75
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · eBMain · aSouth",
+   "minChordGap": 0,
+   "arrD": 101.22
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · e2BMain · aNorth",
+   "minChordGap": 0.91,
+   "arrD": 101.75
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · e2BMain · aSouth",
+   "minChordGap": 0,
+   "arrD": 101.22
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · eA · aNorth",
+   "minChordGap": 0.91,
+   "arrD": 370.55
+  },
+  {
+   "held": "Departure · a · aSouth",
+   "appliedBack": 1.7,
+   "admitted": "Arrival · eA · aSouth",
+   "minChordGap": 0,
+   "arrD": 368.66
+  }
+ ]
+}

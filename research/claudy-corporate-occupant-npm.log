@@ -1,0 +1,1177 @@
+
+> parking-flow@0.1.0 test
+> node --test tests/*.test.js
+
+✔ six/two hysteresis retains diversion through middle band and can be disabled (0.827959ms)
+✔ only pre-Main general cars count; road decision excludes cars past #59 (0.129708ms)
+✔ Bravo diversion route starts at pose and never reverses along Feeder (10.620834ms)
+✔ on-road redirect conserves built pose, ID, cohort and reservations and updates history (81.277167ms)
+✔ new general requests choose Bravo while closed or full Bravo falls back to Alpha (20.172666ms)
+✔ permit arrival is not diverted when Alpha is backed up (30.340333ms)
+✔ arrival demo parks all ten and retains them well beyond the former dwell timer (248.526125ms)
+✔ explicit departure phase releases retained cars without resetting or teleporting (156.1655ms)
+✔ each Equity origin assigns C via its staffed entrance even when A has room (54.573333ms)
+✔ feeder spills into B then C while Equity never enters through a C exit (47.20525ms)
+✔ full campus sends all new arrivals away without queues or overflow parking (7.994ms)
+✔ C full alone holds Equity upstream instead of inventing a fallback (2.389208ms)
+✔ capacity reservations prevent overbooking and remaining arrivals are sent away (45.714875ms)
+✔ bWest -> bSouth: entrance-side mouth, no reversal, passes #61 (0.857834ms)
+✔ bWest -> bBanana: entrance-side mouth, no reversal, passes #61 (0.188542ms)
+✔ bWest -> bPocket: entrance-side mouth, no reversal, passes #61 (0.120667ms)
+✔ bWest -> bNorth: entrance-side mouth, no reversal, passes #61 (0.141167ms)
+✔ bNorth -> bSouth: entrance-side mouth, no reversal, passes #61 (0.05ms)
+✔ bNorth -> bBanana: entrance-side mouth, no reversal, passes #61 (0.040709ms)
+✔ bNorth -> bPocket: entrance-side mouth, no reversal, passes #61 (0.048375ms)
+✔ bNorth -> bNorth: entrance-side mouth, no reversal, passes #61 (0.042875ms)
+✔ opposing fleet buses pass through the same connector (reversed=false) (1.886459ms)
+✔ opposing fleet buses pass through the same connector (reversed=true) (0.482375ms)
+✔ same-lane fleet buses pass through a stopped bus (0.274375ms)
+✔ fleet bus still stops behind an ordinary stopped car (0.187ms)
+✔ ordinary car still stops behind a fleet bus (15.025792ms)
+✔ second shuttle launch ignores bus at its start while retaining 15s HOME spacing (900.09875ms)
+✔ shuttle launch stays blocked by ordinary car at its start (3.938791ms)
+✖ latest map preserves satellite aspect and has three polygon roofs (1.612667ms)
+✖ curved spine joins both frontage streets in image coordinates (0.153042ms)
+✖ invalid trace coordinates and widths are rejected (0.149708ms)
+✔ opposing directions on Corporate get separate right-hand lanes (2.054042ms)
+✔ same direction on a street stays one physical queue (1.307791ms)
+✔ lot points (Main Position) are never offset (0.610916ms)
+✔ A departures through Main do not double back into the opposing held queue (25.367625ms)
+✔ connectors prefer traced pavement; fallbacks are flagged (113.698666ms)
+✔ mixed A departure drains both North and South through Main (90.829792ms)
+✔ B departures never run against traced B arrival or shuttle circulation (72.891625ms)
+✔ A arrivals cross Lot A Main exactly once (1.468625ms)
+✔ three separate operators, #60 and #61 own opposite ends, #59 records passage only (9.323625ms)
+✔ departure inside the stretch holds an opposing arrival at its stop line (1.115875ms)
+✔ shuttle waiting at #60 outranks a departure waiting at #61 (2.206958ms)
+✔ departure waiting at #61 outranks an arrival waiting at #60 (0.851875ms)
+✔ arrival vs shuttle stays on existing local bus priority (no valve) (0.929334ms)
+✔ same-direction follower is admitted behind a departure already in the stretch (0.933542ms)
+✔ #59 never holds traffic; disabled operators hold nothing (0.552625ms)
+✔ two-way: opposing lanes wider than conflictGap get no valve, passage still counted (0.795708ms)
+✔ every operator counts vehicles passing its point exactly once (1.734709ms)
+✔ end operator releases its head car when an admitted own-direction occupant waits on it (2.374375ms)
+✔ exit priority unchanged when the own-direction occupant is not waiting on the head car (0.732875ms)
+✔ release never admits into opposing traffic (8.728625ms)
+✔ indexed lane sampling preserves Three points and tangents including segment boundaries (10.791208ms)
+✔ failed route construction is attempted once per scenario, not once per ready car per tick (117.837708ms)
+✔ B north/pocket departures connect to the labeled north exit (17.16675ms)
+✔ C departure routes start at exits, never retrace the shuttle entrance turnaround (57.47925ms)
+✖ 11am departures clear C entrance and all five shuttles complete repeated trips (1544.552042ms)
+✖ two labeled Equity entrances are distinct inbound origins (5.72425ms)
+✖ both Equity C routes follow pavement then the staffed west entrance, not an exit (4.380333ms)
+✔ officer admits only one ready car, counts clearance, does not overwrite Main Position (6.145917ms)
+✔ occupied feeder merge clears before an A exit is admitted (0.096166ms)
+✔ priority bus holds conflicting A exit but does not trap its physical feeder leader (0.073167ms)
+✔ feeder traffic stays free without waiting Lot A departures; passed traffic is not phantom demand (0.059333ms)
+✔ officer can be disabled without removing physical roads (0.050834ms)
+✔ Lot A Main Position alternates actual five-car passages, then drains partial batches (112.615209ms)
+✔ an empty North does not strand South (43.57ms)
+✖ badge cars turn east/right inside permit entrance, stay clear of A pickup and roofs (4.086167ms)
+✖ photo boundary contains entire east apron and matches pavement coordinates (1.131666ms)
+✖ revision one boundary migration retains building, custom rows and lot state (0.307042ms)
+✔ aNorth departure is held at the measured setback; mainStopBack itself unchanged (0.866625ms)
+✔ arrival stops are unchanged (approach aMain ignores the departure table) (2.72075ms)
+✔ held aNorth departure body clears every admitted arrival path past Main (1.3725ms)
+✔ the old 1.7 hold reproduces the measured lock geometry (guards the diagnosis) (0.239791ms)
+✔ five-car policy and Main anchor unchanged; every general A route passes exactly through Main (1.210334ms)
+✔ held arrival body clears every A departure lane on built lanes (92.565959ms)
+✔ queued arrivals behind the held car clear every A departure lane (88.886458ms)
+✔ held departure body clears every A arrival APPROACH (median side) on built lanes (4937.118125ms)
+⚠ held departure body clears the FULL A arrival lane (incl. post-Main aisle) (4700.798459ms) # remaining aSouth shared-aisle conflict; aNorth repaired by MAIN_DEPARTURE_HOLD_BACK
+✔ arrivals keep right of travel (entrance side), departures right of travel (exit side) (0.2755ms)
+✔ median offsets avoid obstacles and every step-down is recorded (44.79125ms)
+✔ no median offset was silently reduced (0.103ms)
+✔ one position controls all three ready approaches and counts only clearance (1.510875ms)
+✔ five cleared cars switch equally ranked ready roads (0.283875ms)
+✔ priority waits for occupied vehicle, then serves shuttle before departure before arrival (0.097042ms)
+✔ a distant North queue does not starve a ready inbound approach (0.049ms)
+✔ unadmitted vehicle already in Main Position clears before a new approach (0.0565ms)
+✔ all general A arrival/departure routes traverse the same position; badge stays separate (74.152958ms)
+✔ real general arrivals clear the staffed main approach and stay parked (81.988584ms)
+✖ parking trace renders serializable surfaces and all three parking banks (6.485792ms)
+✖ migration preserves non-A geometry and only applies once (0.276042ms)
+✔ east apron shares the entire main hall east boundary (0.110083ms)
+✔ surface imports reject malformed elevations, colors, and missing polygons (0.87875ms)
+✔ Lot A has three separate finite roof masses and serializes (2.605167ms)
+✖ applying Lot A preserves every other object and project name (0.304084ms)
+✖ malformed mass coordinates and heights are rejected (0.197167ms)
+✖ saved-layout update clears current positions only once and preserves other items (4.953958ms)
+✖ starter layout round-trips and has three provisional lots (2.693959ms)
+✖ closing a lot reduces capacity and removes its demonstration route (0.205208ms)
+✔ all placement tools create valid serializable objects (5.036875ms)
+✖ deleting a lot unassigns its parking rows rather than leaving dangling references (0.231625ms)
+✖ invalid imports are rejected without mutating input (0.997958ms)
+✔ roles, assignees, geometry and notes survive export/import (0.661334ms)
+✔ playback advances 1–20× time with bounded updates and forwards settings (11.804167ms)
+✔ playback bounds long frame catch-up and rejects invalid frame durations (0.105709ms)
+✔ 5× playback completes the ten-car demo and preserves parking until departure (477.060334ms)
+✔ revised traces connect to fixed Main without a grid detour and disclose residual (1.939792ms)
+✔ station adjustment cannot become an unbounded shortcut (0.156459ms)
+✔ revised inbound approach continues forward to Main rather than looping south and back (33.046375ms)
+✔ A departure begins at the labeled exit throat, not the old arrival-end turnaround (0.981459ms)
+✖ resolved Main Position has one shared coordinate and all general approaches attach (3.7675ms)
+✖ road anchoring preserves physical road/entrance; proposals and missing shuttle returns are not invented (43.807166ms)
+✔ controlled A paths avoid roof/blocked centerlines (69.221292ms)
+✔ Lot A mixed North/South departures drain through both staffed controls (75.197208ms)
+✔ UI speed contract is exactly 5, 10, 20, initially 5 (1.939083ms)
+✔ fixed live ticks and rewind-forward replay preserve private state exactly (0.551042ms)
+✔ live input changes invalidate history; caller mutation cannot change frozen inputs (0.172042ms)
+✔ latest seek wins; cancellation never publishes partial reconstructed state (0.132458ms)
+✔ seek validates targets and chunk-yields with progress (0.444292ms)
+✔ zero-time reconstruction applies live controls without advancing the clock (0.144458ms)
+✔ speed and frame partition change pace, not the sequence of traffic ticks (0.502167ms)
+✔ cancellation during chunking discards partial work and preserves visible state (0.215291ms)
+✔ real demo replay restores queues, reservations, cars and parked records (321.883166ms)
+✔ real service replay preserves seeded shuttles, schedule and controller state (657.863583ms)
+✔ eleven transition replay preserves departure IDs, gates and initial occupancy (1255.359167ms)
+✔ final transition replay preserves departure IDs, gates and initial occupancy (1350.240375ms)
+✔ 1:15 Equity uses B then C only as fallback; older services and manual keep staffed C (1.254625ms)
+✔ both Equity origins reach B through labeled main entrance on street pavement (9.423792ms)
+✔ all service breaks use actual service +45 to +55, not scenario elapsed45 (0.726459ms)
+✔ home buses hold during service break and resume when it ends (876.097209ms)
+✔ break never removes a moving bus; a remote bus can finish its circuit (12.223834ms)
+✔ nine: 95% arrival target is 45 minutes after actual service start (1.145667ms)
+✔ eleven: 95% arrival target is 45 minutes after actual service start (1.0415ms)
+✔ final: 95% arrival target is 45 minutes after actual service start (0.189541ms)
+✔ large early transition override cannot consume the reserved 5% tail (0.132541ms)
+✔ nine demand 101: 75% on time at service start, the rest late (0.183167ms)
+✔ nine demand 950: 75% on time at service start, the rest late (0.523291ms)
+✔ nine demand 1224: 75% on time at service start, the rest late (2.097208ms)
+✔ nine demand 300: 75% on time at service start, the rest late (0.124625ms)
+✔ eleven demand 101: 75% on time at service start, the rest late (0.0935ms)
+✔ eleven demand 950: 75% on time at service start, the rest late (0.177208ms)
+✔ eleven demand 1224: 75% on time at service start, the rest late (0.184208ms)
+✔ eleven demand 300: 75% on time at service start, the rest late (0.079667ms)
+✔ final demand 101: 75% on time at service start, the rest late (0.051875ms)
+✔ final demand 950: 75% on time at service start, the rest late (0.143375ms)
+✔ final demand 1224: 75% on time at service start, the rest late (0.465041ms)
+✔ final demand 300: 75% on time at service start, the rest late (0.083666ms)
+✔ initial releases are spread over the first 90 seconds and HOME starts obey a 15s headway (755.462792ms)
+✔ a blocked HOME launch retries without losing its ready time or circuit (0.938583ms)
+✔ default pickup dwell is fresh, bounded and reproducible for each bus visit (2.354458ms)
+✔ legacy explicit dwell override remains exact, including zero (1.576959ms)
+✔ remote legs finish during a break and a retired bus then holds at home (0.650958ms)
+✔ all shuttle loops begin/end at exact labeled pickups and avoid roofs/blocked zones (511.827916ms)
+✖ five persistent buses loop with four to B and one cycling all C stops (138.069667ms)
+✖ B full switches to C after current trip completes at home, with no midroute jump (111.929041ms)
+✖ fleet keeps completing trips in traffic in both allocation modes (1936.921334ms)
+✖ badge parking stays available when general campus is full without inflating 1584 (14.157208ms)
+✖ departure releases count-only A/B/C simultaneously through proper exits and buses continue (198.325166ms)
+✔ shared following works for different routes and respects the longer bus body (0.164708ms)
+✔ open capacity decreases for parking/reservations, excludes closed lots and recovers on departure (33.055333ms)
+✖ confirmed section capacities total1584; badge51 stays inside A411 (2.890083ms)
+✔ transition gate excludes badges, latches at50%, and partial B stays open (1.162916ms)
+✔ scheduled old-cohort departures vary, keep lingerers and do not release new-service arrivals (861.575542ms)
+✔ early transition arrivals use C while A/B held; partly empty B remains reachable (55.083458ms)
+✔ all general-zone routes avoid roof/blocked polygons and B routes visit south before north (59.561917ms)
+✔ badge arrivals cannot exceed their51 slots or claim general spaces (96.884292ms)
+✔ parallel curves cannot mutually deadlock with each vehicle believing the other ahead (0.279125ms)
+✔ occupancy fill cutoff is west-first and respects filled polygon area (0.516625ms)
+✖ three full Sunday scenario runs finish their demands, retain new cohorts and clear previous cohorts (42977.2ms)
+✔ ordered B and C circuits include every pickup and home without crossing annotated obstacles (489.941709ms)
+✔ three active buses serve 2B/1C, retiring buses return home, and departure dispatch retains B (338.093916ms)
+✔ Corporate opposing bus centers clear on west, north and vertical cross sections (23.2895ms)
+✔ strict class priority: a bus has at least20 car value, then departures, then arrivals (0.70775ms)
+✔ shuttle wins an unoccupied crossing regardless of insertion order (reversed=false) (1.006125ms)
+✔ departure has priority over arriving cars (reversed=false) (1.090375ms)
+✔ shuttle wins an unoccupied crossing regardless of insertion order (reversed=true) (0.172125ms)
+✔ departure has priority over arriving cars (reversed=true) (0.112333ms)
+✔ a queue of twenty arrivals cannot outvote one approaching shuttle (0.407458ms)
+✔ a vehicle already crossing clears before the priority bus enters (0.119917ms)
+✔ priority bus follows the slower lead car without overlap or reverse-yield deadlock (0.6675ms)
+✔ opposing separated lanes keep moving without a false shuttle conflict (0.12625ms)
+✔ equally ranked cars resolve crossing ties identically after array reorder (5.787542ms)
+✔ a held shuttle does not reserve an empty crossing it cannot approach (0.138875ms)
+✔ lower-priority traffic resumes once the shuttle clears the crossing (2.168ms)
+✔ merging arrival yields before taking the shuttle lane (1.169792ms)
+✔ Corporate Drive west stretch: opposing lanes clear bus/bus width (5.052959ms)
+✔ Equity Drive: opposing lanes clear bus/bus width where paved room allows (2.252625ms)
+✔ Feeder Road keeps the original 6 px offset (0.872834ms)
+✔ catalog binds every unified-source shape once (1.116083ms)
+✔ identity registration in the 1374x1118 frame; no affine/legacy size (0.177417ms)
+✔ Main Position is the canonical source point #57 used by the controller (0.046416ms)
+✔ B arrivals use the B entrance, visit B South, avoid roofs and record runtime use (5.645292ms)
+✖ connector provenance is disclosed per mode; untraced joins are not called surveyed (17.887833ms)
+ℹ tests 191
+ℹ suites 0
+ℹ pass 162
+ℹ fail 28
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 1
+ℹ duration_ms 46062.653292
+
+✖ failing tests:
+
+test at tests/campus.test.js:6:1
+✖ latest map preserves satellite aspect and has three polygon roofs (1.612667ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 1.2289803220035778
+  - 1.2322206095791002
+       ^
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/campus.test.js:8:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1.2289803220035778,
+    expected: 1.2322206095791002,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/campus.test.js:11:1
+✖ curved spine joins both frontage streets in image coordinates (0.153042ms)
+  TypeError: Cannot read properties of undefined (reading 'points')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/campus.test.js:14:26)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+
+test at tests/campus.test.js:19:1
+✖ invalid trace coordinates and widths are rejected (0.149708ms)
+  TypeError: Cannot read properties of undefined (reading 'points')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/campus.test.js:21:44)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+
+test at tests/eleven-performance.test.js:59:1
+✖ 11am departures clear C entrance and all five shuttles complete repeated trips (1544.552042ms)
+  AssertionError [ERR_ASSERTION]: C bus must not remain stuck at entrance
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/eleven-performance.test.js:65:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/equity-routing.test.js:18:1
+✖ two labeled Equity entrances are distinct inbound origins (5.72425ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(inPolygon(west[0],ring('Equity Entrance')))
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/equity-routing.test.js:20:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/equity-routing.test.js:30:1
+✖ both Equity C routes follow pavement then the staffed west entrance, not an exit (4.380333ms)
+  AssertionError [ERR_ASSERTION]: eCWest traverses Equity Drive
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/equity-routing.test.js:39:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/lot-a-batch-control.test.js:31:1
+✖ badge cars turn east/right inside permit entrance, stay clear of A pickup and roofs (4.086167ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(internal.some(p=>p[0]===190&&p[1]===250))
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-batch-control.test.js:36:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/lot-a-envelope.test.js:14:1
+✖ photo boundary contains entire east apron and matches pavement coordinates (1.131666ms)
+  TypeError: Cannot read properties of undefined (reading 'points')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-envelope.test.js:19:40)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17)
+
+test at tests/lot-a-envelope.test.js:29:1
+✖ revision one boundary migration retains building, custom rows and lot state (0.307042ms)
+  TypeError: Cannot set properties of undefined (setting 'count')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-envelope.test.js:33:60)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+
+test at tests/lot-a-main-median.test.js:120:1
+⚠ held departure body clears the FULL A arrival lane (incl. post-Main aisle) (4700.798459ms) # remaining aSouth shared-aisle conflict; aNorth repaired by MAIN_DEPARTURE_HOLD_BACK
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   'out:aSouth held 12.4px before Main is 2.10px from a:aSouth',
+  +   'out:aSouth held 12.4px before Main is 2.10px from badgeA:aSouth',
+  +   'out:aSouth held 12.4px before Main is 2.10px from bWest:aSouth',
+  +   'out:aSouth held 12.4px before Main is 2.10px from bNorth:aSouth',
+  +   'out:aSouth held 12.4px before Main is 2.10px from cWest:aSouth',
+  +   'out:aSouth held 12.4px before Main is 2.10px from cEast:aSouth',
+  +   'out:aSouth held 12.4px before Main is 2.10px from eCWest:aSouth',
+  +   'out:aSouth held 12.4px before Main is 2.10px from e2CWest:aSouth',
+  +   'out:aSouth held 12.4px before Main is 2.10px from eCEast:aSouth',
+  +   'out:aSouth held 12.4px before Main is 2.10px from eB:aSouth',
+  +   'out:aSouth held 12.4px before Main is 2.10px from eBMain:aSouth',
+  +   'out:aSouth held 12.4px before Main is 2.10px from e2BMain:aSouth',
+  +   'out:aSouth held 12.4px before Main is 2.10px from eA:aSouth',
+  +   'out:aSouth held 12.9px before Main is 1.79px from a:aSouth',
+  +   'out:aSouth held 12.9px before Main is 1.79px from badgeA:aSouth',
+  +   'out:aSouth held 12.9px before Main is 1.79px from bWest:aSouth',
+  +   'out:aSouth held 12.9px before Main is 1.79px from bNorth:aSouth',
+  +   'out:aSouth held 12.9px before Main is 1.79px from cWest:aSouth',
+  +   'out:aSouth held 12.9px before Main is 1.79px from cEast:aSouth',
+  +   'out:aSouth held 12.9px before Main is 1.79px from eCWest:aSouth',
+  +   'out:aSouth held 12.9px before Main is 1.79px from e2CWest:aSouth',
+  +   'out:aSouth held 12.9px before Main is 1.79px from eCEast:aSouth',
+  +   'out:aSouth held 12.9px before Main is 1.79px from eB:aSouth',
+  +   'out:aSouth held 12.9px before Main is 1.79px from eBMain:aSouth',
+  +   'out:aSouth held 12.9px before Main is 1.79px from e2BMain:aSouth',
+  +   'out:aSouth held 12.9px before Main is 1.79px from eA:aSouth',
+  +   'out:aSouth held 13.4px before Main is 1.29px from a:aSouth',
+  +   'out:aSouth held 13.4px before Main is 1.29px from badgeA:aSouth',
+  +   'out:aSouth held 13.4px before Main is 1.29px from bWest:aSouth',
+  +   'out:aSouth held 13.4px before Main is 1.29px from bNorth:aSouth',
+  +   'out:aSouth held 13.4px before Main is 1.29px from cWest:aSouth',
+  +   'out:aSouth held 13.4px before Main is 1.29px from cEast:aSouth',
+  +   'out:aSouth held 13.4px before Main is 1.29px from eCWest:aSouth',
+  +   'out:aSouth held 13.4px before Main is 1.29px from e2CWest:aSouth',
+  +   'out:aSouth held 13.4px before Main is 1.29px from eCEast:aSouth',
+  +   'out:aSouth held 13.4px before Main is 1.29px from eB:aSouth',
+  +   'out:aSouth held 13.4px before Main is 1.29px from eBMain:aSouth',
+  +   'out:aSouth held 13.4px before Main is 1.29px from e2BMain:aSouth',
+  +   'out:aSouth held 13.4px before Main is 1.29px from eA:aSouth',
+  +   'out:aSouth held 13.9px before Main is 0.79px from a:aSouth',
+  +   'out:aSouth held 13.9px before Main is 0.79px from badgeA:aSouth',
+  +   'out:aSouth held 13.9px before Main is 0.79px from bWest:aSouth',
+  +   'out:aSouth held 13.9px before Main is 0.79px from bNorth:aSouth',
+  +   'out:aSouth held 13.9px before Main is 0.79px from cWest:aSouth',
+  +   'out:aSouth held 13.9px before Main is 0.79px from cEast:aSouth',
+  +   'out:aSouth held 13.9px before Main is 0.79px from eCWest:aSouth',
+  +   'out:aSouth held 13.9px before Main is 0.79px from e2CWest:aSouth',
+  +   'out:aSouth held 13.9px before Main is 0.79px from eCEast:aSouth',
+  +   'out:aSouth held 13.9px before Main is 0.79px from eB:aSouth',
+  +   'out:aSouth held 13.9px before Main is 0.79px from eBMain:aSouth',
+  +   'out:aSouth held 13.9px before Main is 0.79px from e2BMain:aSouth',
+  +   'out:aSouth held 13.9px before Main is 0.79px from eA:aSouth',
+  +   'out:aSouth held 14.4px before Main is 0.29px from a:aSouth',
+  +   'out:aSouth held 14.4px before Main is 0.29px from badgeA:aSouth',
+  +   'out:aSouth held 14.4px before Main is 0.29px from bWest:aSouth',
+  +   'out:aSouth held 14.4px before Main is 0.29px from bNorth:aSouth',
+  +   'out:aSouth held 14.4px before Main is 0.29px from cWest:aSouth',
+  +   'out:aSouth held 14.4px before Main is 0.29px from cEast:aSouth',
+  +   'out:aSouth held 14.4px before Main is 0.29px from eCWest:aSouth',
+  +   'out:aSouth held 14.4px before Main is 0.29px from e2CWest:aSouth',
+  +   'out:aSouth held 14.4px before Main is 0.29px from eCEast:aSouth',
+  +   'out:aSouth held 14.4px before Main is 0.29px from eB:aSouth',
+  +   'out:aSouth held 14.4px before Main is 0.29px from eBMain:aSouth',
+  +   'out:aSouth held 14.4px before Main is 0.29px from e2BMain:aSouth',
+  +   'out:aSouth held 14.4px before Main is 0.29px from eA:aSouth',
+  +   'out:aSouth held 14.9px before Main is 0.21px from a:aSouth',
+  +   'out:aSouth held 14.9px before Main is 0.21px from badgeA:aSouth',
+  +   'out:aSouth held 14.9px before Main is 0.21px from bWest:aSouth',
+  +   'out:aSouth held 14.9px before Main is 0.21px from bNorth:aSouth',
+  +   'out:aSouth held 14.9px before Main is 0.21px from cWest:aSouth',
+  +   'out:aSouth held 14.9px before Main is 0.21px from cEast:aSouth',
+  +   'out:aSouth held 14.9px before Main is 0.21px from eCWest:aSouth',
+  +   'out:aSouth held 14.9px before Main is 0.21px from e2CWest:aSouth',
+  +   'out:aSouth held 14.9px before Main is 0.21px from eCEast:aSouth',
+  +   'out:aSouth held 14.9px before Main is 0.21px from eB:aSouth',
+  +   'out:aSouth held 14.9px before Main is 0.21px from eBMain:aSouth',
+  +   'out:aSouth held 14.9px before Main is 0.21px from e2BMain:aSouth',
+  +   'out:aSouth held 14.9px before Main is 0.21px from eA:aSouth',
+  +   'out:aSouth held 15.4px before Main is 0.71px from a:aSouth',
+  +   'out:aSouth held 15.4px before Main is 0.71px from badgeA:aSouth',
+  +   'out:aSouth held 15.4px before Main is 0.71px from bWest:aSouth',
+  +   'out:aSouth held 15.4px before Main is 0.71px from bNorth:aSouth',
+  +   'out:aSouth held 15.4px before Main is 0.71px from cWest:aSouth',
+  +   'out:aSouth held 15.4px before Main is 0.71px from cEast:aSouth',
+  +   'out:aSouth held 15.4px before Main is 0.71px from eCWest:aSouth',
+  +   'out:aSouth held 15.4px before Main is 0.71px from e2CWest:aSouth',
+  +   'out:aSouth held 15.4px before Main is 0.71px from eCEast:aSouth',
+  +   'out:aSouth held 15.4px before Main is 0.71px from eB:aSouth',
+  +   'out:aSouth held 15.4px before Main is 0.71px from eBMain:aSouth',
+  +   'out:aSouth held 15.4px before Main is 0.71px from e2BMain:aSouth',
+  +   'out:aSouth held 15.4px before Main is 0.71px from eA:aSouth',
+  +   'out:aSouth held 15.9px before Main is 1.21px from a:aSouth',
+  +   'out:aSouth held 15.9px before Main is 1.21px from badgeA:aSouth',
+  +   'out:aSouth held 15.9px before Main is 1.21px from bWest:aSouth',
+  +   'out:aSouth held 15.9px before Main is 1.21px from bNorth:aSouth',
+  +   'out:aSouth held 15.9px before Main is 1.21px from cWest:aSouth',
+  +   'out:aSouth held 15.9px before Main is 1.21px from cEast:aSouth',
+  +   'out:aSouth held 15.9px before Main is 1.21px from eCWest:aSouth',
+  +   'out:aSouth held 15.9px before Main is 1.21px from e2CWest:aSouth',
+  +   'out:aSouth held 15.9px before Main is 1.21px from eCEast:aSouth',
+  +   'out:aSouth held 15.9px before Main is 1.21px from eB:aSouth',
+  +   'out:aSouth held 15.9px before Main is 1.21px from eBMain:aSouth',
+  +   'out:aSouth held 15.9px before Main is 1.21px from e2BMain:aSouth',
+  +   'out:aSouth held 15.9px before Main is 1.21px from eA:aSouth',
+  +   'out:aSouth held 16.4px before Main is 1.71px from a:aSouth',
+  +   'out:aSouth held 16.4px before Main is 1.71px from badgeA:aSouth',
+  +   'out:aSouth held 16.4px before Main is 1.71px from bWest:aSouth',
+  +   'out:aSouth held 16.4px before Main is 1.71px from bNorth:aSouth',
+  +   'out:aSouth held 16.4px before Main is 1.71px from cWest:aSouth',
+  +   'out:aSouth held 16.4px before Main is 1.71px from cEast:aSouth',
+  +   'out:aSouth held 16.4px before Main is 1.71px from eCWest:aSouth',
+  +   'out:aSouth held 16.4px before Main is 1.71px from e2CWest:aSouth',
+  +   'out:aSouth held 16.4px before Main is 1.71px from eCEast:aSouth',
+  +   'out:aSouth held 16.4px before Main is 1.71px from eB:aSouth',
+  +   'out:aSouth held 16.4px before Main is 1.71px from eBMain:aSouth',
+  +   'out:aSouth held 16.4px before Main is 1.71px from e2BMain:aSouth',
+  +   'out:aSouth held 16.4px before Main is 1.71px from eA:aSouth',
+  +   'out:aSouth held 16.9px before Main is 2.21px from a:aSouth',
+  +   'out:aSouth held 16.9px before Main is 2.21px from badgeA:aSouth',
+  +   'out:aSouth held 16.9px before Main is 2.21px from bWest:aSouth',
+  +   'out:aSouth held 16.9px before Main is 2.21px from bNorth:aSouth',
+  +   'out:aSouth held 16.9px before Main is 2.21px from cWest:aSouth',
+  +   'out:aSouth held 16.9px before Main is 2.21px from cEast:aSouth',
+  +   'out:aSouth held 16.9px before Main is 2.21px from eCWest:aSouth',
+  +   'out:aSouth held 16.9px before Main is 2.21px from e2CWest:aSouth',
+  +   'out:aSouth held 16.9px before Main is 2.21px from eCEast:aSouth',
+  +   'out:aSouth held 16.9px before Main is 2.21px from eB:aSouth',
+  +   'out:aSouth held 16.9px before Main is 2.21px from eBMain:aSouth',
+  +   'out:aSouth held 16.9px before Main is 2.21px from e2BMain:aSouth',
+  +   'out:aSouth held 16.9px before Main is 2.21px from eA:aSouth',
+  +   'out:aSouth held 17.4px before Main is 2.71px from a:aSouth',
+  +   'out:aSouth held 17.4px before Main is 2.71px from badgeA:aSouth',
+  +   'out:aSouth held 17.4px before Main is 2.71px from bWest:aSouth',
+  +   'out:aSouth held 17.4px before Main is 2.71px from bNorth:aSouth',
+  +   'out:aSouth held 17.4px before Main is 2.71px from cWest:aSouth',
+  +   'out:aSouth held 17.4px before Main is 2.71px from cEast:aSouth',
+  +   'out:aSouth held 17.4px before Main is 2.71px from eCWest:aSouth',
+  +   'out:aSouth held 17.4px before Main is 2.71px from e2CWest:aSouth',
+  +   'out:aSouth held 17.4px before Main is 2.71px from eCEast:aSouth',
+  +   'out:aSouth held 17.4px before Main is 2.71px from eB:aSouth',
+  +   'out:aSouth held 17.4px before Main is 2.71px from eBMain:aSouth',
+  +   'out:aSouth held 17.4px before Main is 2.71px from e2BMain:aSouth',
+  +   'out:aSouth held 17.4px before Main is 2.71px from eA:aSouth',
+  +   'out:aSouth held 17.9px before Main is 3.21px from a:aSouth',
+  +   'out:aSouth held 17.9px before Main is 3.21px from badgeA:aSouth',
+  +   'out:aSouth held 17.9px before Main is 3.21px from bWest:aSouth',
+  +   'out:aSouth held 17.9px before Main is 3.21px from bNorth:aSouth',
+  +   'out:aSouth held 17.9px before Main is 3.21px from cWest:aSouth',
+  +   'out:aSouth held 17.9px before Main is 3.21px from cEast:aSouth',
+  +   'out:aSouth held 17.9px before Main is 3.21px from eCWest:aSouth',
+  +   'out:aSouth held 17.9px before Main is 3.21px from e2CWest:aSouth',
+  +   'out:aSouth held 17.9px before Main is 3.21px from eCEast:aSouth',
+  +   'out:aSouth held 17.9px before Main is 3.21px from eB:aSouth',
+  +   'out:aSouth held 17.9px before Main is 3.21px from eBMain:aSouth',
+  +   'out:aSouth held 17.9px before Main is 3.21px from e2BMain:aSouth',
+  +   'out:aSouth held 17.9px before Main is 3.21px from eA:aSouth',
+  +   'out:aSouth held 18.4px before Main is 3.71px from a:aSouth',
+  +   'out:aSouth held 18.4px before Main is 3.71px from badgeA:aSouth',
+  +   'out:aSouth held 18.4px before Main is 3.71px from bWest:aSouth',
+  +   'out:aSouth held 18.4px before Main is 3.71px from bNorth:aSouth',
+  +   'out:aSouth held 18.4px before Main is 3.71px from cWest:aSouth',
+  +   'out:aSouth held 18.4px before Main is 3.71px from cEast:aSouth',
+  +   'out:aSouth held 18.4px before Main is 3.71px from eCWest:aSouth',
+  +   'out:aSouth held 18.4px before Main is 3.71px from e2CWest:aSouth',
+  +   'out:aSouth held 18.4px before Main is 3.71px from eCEast:aSouth',
+  +   'out:aSouth held 18.4px before Main is 3.71px from eB:aSouth',
+  +   'out:aSouth held 18.4px before Main is 3.71px from eBMain:aSouth',
+  +   'out:aSouth held 18.4px before Main is 3.71px from e2BMain:aSouth',
+  +   'out:aSouth held 18.4px before Main is 3.71px from eA:aSouth',
+  +   'out:aSouth held 18.9px before Main is 4.21px from a:aSouth',
+  +   'out:aSouth held 18.9px before Main is 4.21px from badgeA:aSouth',
+  +   'out:aSouth held 18.9px before Main is 4.21px from bWest:aSouth',
+  +   'out:aSouth held 18.9px before Main is 4.21px from bNorth:aSouth',
+  +   'out:aSouth held 18.9px before Main is 4.21px from cWest:aSouth',
+  +   'out:aSouth held 18.9px before Main is 4.21px from cEast:aSouth',
+  +   'out:aSouth held 18.9px before Main is 4.21px from eCWest:aSouth',
+  +   'out:aSouth held 18.9px before Main is 4.21px from e2CWest:aSouth',
+  +   'out:aSouth held 18.9px before Main is 4.21px from eCEast:aSouth',
+  +   'out:aSouth held 18.9px before Main is 4.21px from eB:aSouth',
+  +   'out:aSouth held 18.9px before Main is 4.21px from eBMain:aSouth',
+  +   'out:aSouth held 18.9px before Main is 4.21px from e2BMain:aSouth',
+  +   'out:aSouth held 18.9px before Main is 4.21px from eA:aSouth',
+  +   'out:aSouth held 19.4px before Main is 4.70px from a:aSouth',
+  +   'out:aSouth held 19.4px before Main is 4.70px from badgeA:aSouth',
+  +   'out:aSouth held 19.4px before Main is 4.70px from bWest:aSouth',
+  +   'out:aSouth held 19.4px before Main is 4.70px from bNorth:aSouth',
+  +   'out:aSouth held 19.4px before Main is 4.70px from cWest:aSouth',
+  +   'out:aSouth held 19.4px before Main is 4.70px from cEast:aSouth',
+  +   'out:aSouth held 19.4px before Main is 4.70px from eCWest:aSouth',
+  +   'out:aSouth held 19.4px before Main is 4.70px from e2CWest:aSouth',
+  +   'out:aSouth held 19.4px before Main is 4.70px from eCEast:aSouth',
+  +   'out:aSouth held 19.4px before Main is 4.70px from eB:aSouth',
+  +   'out:aSouth held 19.4px before Main is 4.70px from eBMain:aSouth',
+  +   'out:aSouth held 19.4px before Main is 4.70px from e2BMain:aSouth',
+  +   'out:aSouth held 19.4px before Main is 4.70px from eA:aSouth',
+  +   'out:aSouth held 19.9px before Main is 5.20px from a:aSouth',
+  +   'out:aSouth held 19.9px before Main is 5.20px from badgeA:aSouth',
+  +   'out:aSouth held 19.9px before Main is 5.20px from bWest:aSouth',
+  +   'out:aSouth held 19.9px before Main is 5.20px from bNorth:aSouth',
+  +   'out:aSouth held 19.9px before Main is 5.20px from cWest:aSouth',
+  +   'out:aSouth held 19.9px before Main is 5.20px from cEast:aSouth',
+  +   'out:aSouth held 19.9px before Main is 5.20px from eCWest:aSouth',
+  +   'out:aSouth held 19.9px before Main is 5.20px from e2CWest:aSouth',
+  +   'out:aSouth held 19.9px before Main is 5.20px from eCEast:aSouth',
+  +   'out:aSouth held 19.9px before Main is 5.20px from eB:aSouth',
+  +   'out:aSouth held 19.9px before Main is 5.20px from eBMain:aSouth',
+  +   'out:aSouth held 19.9px before Main is 5.20px from e2BMain:aSouth',
+  +   'out:aSouth held 19.9px before Main is 5.20px from eA:aSouth',
+  +   'out:aSouth held 20.4px before Main is 5.70px from a:aSouth',
+  +   'out:aSouth held 20.4px before Main is 5.70px from badgeA:aSouth',
+  +   'out:aSouth held 20.4px before Main is 5.70px from bWest:aSouth',
+  +   'out:aSouth held 20.4px before Main is 5.70px from bNorth:aSouth',
+  +   'out:aSouth held 20.4px before Main is 5.70px from cWest:aSouth',
+  +   'out:aSouth held 20.4px before Main is 5.70px from cEast:aSouth',
+  +   'out:aSouth held 20.4px before Main is 5.70px from eCWest:aSouth',
+  +   'out:aSouth held 20.4px before Main is 5.70px from e2CWest:aSouth',
+  +   'out:aSouth held 20.4px before Main is 5.70px from eCEast:aSouth',
+  +   'out:aSouth held 20.4px before Main is 5.70px from eB:aSouth',
+  +   'out:aSouth held 20.4px before Main is 5.70px from eBMain:aSouth',
+  +   'out:aSouth held 20.4px before Main is 5.70px from e2BMain:aSouth',
+  +   'out:aSouth held 20.4px before Main is 5.70px from eA:aSouth',
+  +   'out:aSouth held 20.9px before Main is 6.20px from a:aSouth',
+  +   'out:aSouth held 20.9px before Main is 6.20px from badgeA:aSouth',
+  +   'out:aSouth held 20.9px before Main is 6.20px from bWest:aSouth',
+  +   'out:aSouth held 20.9px before Main is 6.20px from bNorth:aSouth',
+  +   'out:aSouth held 20.9px before Main is 6.20px from cWest:aSouth',
+  +   'out:aSouth held 20.9px before Main is 6.20px from cEast:aSouth',
+  +   'out:aSouth held 20.9px before Main is 6.20px from eCWest:aSouth',
+  +   'out:aSouth held 20.9px before Main is 6.20px from e2CWest:aSouth',
+  +   'out:aSouth held 20.9px before Main is 6.20px from eCEast:aSouth',
+  +   'out:aSouth held 20.9px before Main is 6.20px from eB:aSouth',
+  +   'out:aSouth held 20.9px before Main is 6.20px from eBMain:aSouth',
+  +   'out:aSouth held 20.9px before Main is 6.20px from e2BMain:aSouth',
+  +   'out:aSouth held 20.9px before Main is 6.20px from eA:aSouth',
+  +   'out:aSouth held 21.4px before Main is 6.70px from a:aSouth',
+  +   'out:aSouth held 21.4px before Main is 6.70px from badgeA:aSouth',
+  +   'out:aSouth held 21.4px before Main is 6.70px from bWest:aSouth',
+  +   'out:aSouth held 21.4px before Main is 6.70px from bNorth:aSouth',
+  +   'out:aSouth held 21.4px before Main is 6.70px from cWest:aSouth',
+  +   'out:aSouth held 21.4px before Main is 6.70px from cEast:aSouth',
+  +   'out:aSouth held 21.4px before Main is 6.70px from eCWest:aSouth',
+  +   'out:aSouth held 21.4px before Main is 6.70px from e2CWest:aSouth',
+  +   'out:aSouth held 21.4px before Main is 6.70px from eCEast:aSouth',
+  +   'out:aSouth held 21.4px before Main is 6.70px from eB:aSouth',
+  +   'out:aSouth held 21.4px before Main is 6.70px from eBMain:aSouth',
+  +   'out:aSouth held 21.4px before Main is 6.70px from e2BMain:aSouth',
+  +   'out:aSouth held 21.4px before Main is 6.70px from eA:aSouth',
+  +   'out:aSouth held 21.9px before Main is 7.20px from a:aSouth',
+  +   'out:aSouth held 21.9px before Main is 7.20px from badgeA:aSouth',
+  +   'out:aSouth held 21.9px before Main is 7.20px from bWest:aSouth',
+  +   'out:aSouth held 21.9px before Main is 7.20px from bNorth:aSouth',
+  +   'out:aSouth held 21.9px before Main is 7.20px from cWest:aSouth',
+  +   'out:aSouth held 21.9px before Main is 7.20px from cEast:aSouth',
+  +   'out:aSouth held 21.9px before Main is 7.20px from eCWest:aSouth',
+  +   'out:aSouth held 21.9px before Main is 7.20px from e2CWest:aSouth',
+  +   'out:aSouth held 21.9px before Main is 7.20px from eCEast:aSouth',
+  +   'out:aSouth held 21.9px before Main is 7.20px from eB:aSouth',
+  +   'out:aSouth held 21.9px before Main is 7.20px from eBMain:aSouth',
+  +   'out:aSouth held 21.9px before Main is 7.20px from e2BMain:aSouth',
+  +   'out:aSouth held 21.9px before Main is 7.20px from eA:aSouth',
+  +   'out:aSouth held 22.4px before Main is 7.70px from a:aSouth',
+  +   'out:aSouth held 22.4px before Main is 7.70px from badgeA:aSouth',
+  +   'out:aSouth held 22.4px before Main is 7.70px from bWest:aSouth',
+  +   'out:aSouth held 22.4px before Main is 7.70px from bNorth:aSouth',
+  +   'out:aSouth held 22.4px before Main is 7.70px from cWest:aSouth',
+  +   'out:aSouth held 22.4px before Main is 7.70px from cEast:aSouth',
+  +   'out:aSouth held 22.4px before Main is 7.70px from eCWest:aSouth',
+  +   'out:aSouth held 22.4px before Main is 7.70px from e2CWest:aSouth',
+  +   'out:aSouth held 22.4px before Main is 7.70px from eCEast:aSouth',
+  +   'out:aSouth held 22.4px before Main is 7.70px from eB:aSouth',
+  +   'out:aSouth held 22.4px before Main is 7.70px from eBMain:aSouth',
+  +   'out:aSouth held 22.4px before Main is 7.70px from e2BMain:aSouth',
+  +   'out:aSouth held 22.4px before Main is 7.70px from eA:aSouth',
+  +   'out:aSouth held 22.9px before Main is 8.20px from a:aSouth',
+  +   'out:aSouth held 22.9px before Main is 8.20px from badgeA:aSouth',
+  +   'out:aSouth held 22.9px before Main is 8.20px from bWest:aSouth',
+  +   'out:aSouth held 22.9px before Main is 8.20px from bNorth:aSouth',
+  +   'out:aSouth held 22.9px before Main is 8.20px from cWest:aSouth',
+  +   'out:aSouth held 22.9px before Main is 8.20px from cEast:aSouth',
+  +   'out:aSouth held 22.9px before Main is 8.20px from eCWest:aSouth',
+  +   'out:aSouth held 22.9px before Main is 8.20px from e2CWest:aSouth',
+  +   'out:aSouth held 22.9px before Main is 8.20px from eCEast:aSouth',
+  +   'out:aSouth held 22.9px before Main is 8.20px from eB:aSouth',
+  +   'out:aSouth held 22.9px before Main is 8.20px from eBMain:aSouth',
+  +   'out:aSouth held 22.9px before Main is 8.20px from e2BMain:aSouth',
+  +   'out:aSouth held 22.9px before Main is 8.20px from eA:aSouth',
+  +   'out:aSouth held 23.4px before Main is 8.70px from a:aSouth',
+  +   'out:aSouth held 23.4px before Main is 8.70px from badgeA:aSouth',
+  +   'out:aSouth held 23.4px before Main is 8.70px from bWest:aSouth',
+  +   'out:aSouth held 23.4px before Main is 8.70px from bNorth:aSouth',
+  +   'out:aSouth held 23.4px before Main is 8.70px from cWest:aSouth',
+  +   'out:aSouth held 23.4px before Main is 8.70px from cEast:aSouth',
+  +   'out:aSouth held 23.4px before Main is 8.70px from eCWest:aSouth',
+  +   'out:aSouth held 23.4px before Main is 8.70px from e2CWest:aSouth',
+  +   'out:aSouth held 23.4px before Main is 8.70px from eCEast:aSouth',
+  +   'out:aSouth held 23.4px before Main is 8.70px from eB:aSouth',
+  +   'out:aSouth held 23.4px before Main is 8.70px from eBMain:aSouth',
+  +   'out:aSouth held 23.4px before Main is 8.70px from e2BMain:aSouth',
+  +   'out:aSouth held 23.4px before Main is 8.70px from eA:aSouth',
+  +   'out:aSouth held 23.9px before Main is 9.20px from a:aSouth',
+  +   'out:aSouth held 23.9px before Main is 9.20px from badgeA:aSouth',
+  +   'out:aSouth held 23.9px before Main is 9.20px from bWest:aSouth',
+  +   'out:aSouth held 23.9px before Main is 9.20px from bNorth:aSouth',
+  +   'out:aSouth held 23.9px before Main is 9.20px from cWest:aSouth',
+  +   'out:aSouth held 23.9px before Main is 9.20px from cEast:aSouth',
+  +   'out:aSouth held 23.9px before Main is 9.20px from eCWest:aSouth',
+  +   'out:aSouth held 23.9px before Main is 9.20px from e2CWest:aSouth',
+  +   'out:aSouth held 23.9px before Main is 9.20px from eCEast:aSouth',
+  +   'out:aSouth held 23.9px before Main is 9.20px from eB:aSouth',
+  +   'out:aSouth held 23.9px before Main is 9.20px from eBMain:aSouth',
+  +   'out:aSouth held 23.9px before Main is 9.20px from e2BMain:aSouth',
+  +   'out:aSouth held 23.9px before Main is 9.20px from eA:aSouth',
+  +   'out:aSouth held 24.4px before Main is 9.70px from a:aSouth',
+  +   'out:aSouth held 24.4px before Main is 9.70px from badgeA:aSouth',
+  +   'out:aSouth held 24.4px before Main is 9.70px from bWest:aSouth',
+  +   'out:aSouth held 24.4px before Main is 9.70px from bNorth:aSouth',
+  +   'out:aSouth held 24.4px before Main is 9.70px from cWest:aSouth',
+  +   'out:aSouth held 24.4px before Main is 9.70px from cEast:aSouth',
+  +   'out:aSouth held 24.4px before Main is 9.70px from eCWest:aSouth',
+  +   'out:aSouth held 24.4px before Main is 9.70px from e2CWest:aSouth',
+  +   'out:aSouth held 24.4px before Main is 9.70px from eCEast:aSouth',
+  +   'out:aSouth held 24.4px before Main is 9.70px from eB:aSouth',
+  +   'out:aSouth held 24.4px before Main is 9.70px from eBMain:aSouth',
+  +   'out:aSouth held 24.4px before Main is 9.70px from e2BMain:aSouth',
+  +   'out:aSouth held 24.4px before Main is 9.70px from eA:aSouth',
+  +   'out:aSouth held 24.9px before Main is 10.20px from a:aSouth',
+  +   'out:aSouth held 24.9px before Main is 10.20px from badgeA:aSouth',
+  +   'out:aSouth held 24.9px before Main is 10.20px from bWest:aSouth',
+  +   'out:aSouth held 24.9px before Main is 10.20px from bNorth:aSouth',
+  +   'out:aSouth held 24.9px before Main is 10.20px from cWest:aSouth',
+  +   'out:aSouth held 24.9px before Main is 10.20px from cEast:aSouth',
+  +   'out:aSouth held 24.9px before Main is 10.20px from eCWest:aSouth',
+  +   'out:aSouth held 24.9px before Main is 10.20px from e2CWest:aSouth',
+  +   'out:aSouth held 24.9px before Main is 10.20px from eCEast:aSouth',
+  +   'out:aSouth held 24.9px before Main is 10.20px from eB:aSouth',
+  +   'out:aSouth held 24.9px before Main is 10.20px from eBMain:aSouth',
+  +   'out:aSouth held 24.9px before Main is 10.20px from e2BMain:aSouth',
+  +   'out:aSouth held 24.9px before Main is 10.20px from eA:aSouth',
+  +   'out:aSouth held 25.4px before Main is 10.70px from a:aSouth',
+  +   'out:aSouth held 25.4px before Main is 10.70px from badgeA:aSouth',
+  +   'out:aSouth held 25.4px before Main is 10.70px from bWest:aSouth',
+  +   'out:aSouth held 25.4px before Main is 10.70px from bNorth:aSouth',
+  +   'out:aSouth held 25.4px before Main is 10.70px from cWest:aSouth',
+  +   'out:aSouth held 25.4px before Main is 10.70px from cEast:aSouth',
+  +   'out:aSouth held 25.4px before Main is 10.70px from eCWest:aSouth',
+  +   'out:aSouth held 25.4px before Main is 10.70px from e2CWest:aSouth',
+  +   'out:aSouth held 25.4px before Main is 10.70px from eCEast:aSouth',
+  +   'out:aSouth held 25.4px before Main is 10.70px from eB:aSouth',
+  +   'out:aSouth held 25.4px before Main is 10.70px from eBMain:aSouth',
+  +   'out:aSouth held 25.4px before Main is 10.70px from e2BMain:aSouth',
+  +   'out:aSouth held 25.4px before Main is 10.70px from eA:aSouth'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-main-median.test.js:122:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [
+      'out:aSouth held 12.4px before Main is 2.10px from a:aSouth',       'out:aSouth held 12.4px before Main is 2.10px from badgeA:aSouth',
+      'out:aSouth held 12.4px before Main is 2.10px from bWest:aSouth',   'out:aSouth held 12.4px before Main is 2.10px from bNorth:aSouth',
+      'out:aSouth held 12.4px before Main is 2.10px from cWest:aSouth',   'out:aSouth held 12.4px before Main is 2.10px from cEast:aSouth',
+      'out:aSouth held 12.4px before Main is 2.10px from eCWest:aSouth',  'out:aSouth held 12.4px before Main is 2.10px from e2CWest:aSouth',
+      'out:aSouth held 12.4px before Main is 2.10px from eCEast:aSouth',  'out:aSouth held 12.4px before Main is 2.10px from eB:aSouth',
+      'out:aSouth held 12.4px before Main is 2.10px from eBMain:aSouth',  'out:aSouth held 12.4px before Main is 2.10px from e2BMain:aSouth',
+      'out:aSouth held 12.4px before Main is 2.10px from eA:aSouth',      'out:aSouth held 12.9px before Main is 1.79px from a:aSouth',
+      'out:aSouth held 12.9px before Main is 1.79px from badgeA:aSouth',  'out:aSouth held 12.9px before Main is 1.79px from bWest:aSouth',
+      'out:aSouth held 12.9px before Main is 1.79px from bNorth:aSouth',  'out:aSouth held 12.9px before Main is 1.79px from cWest:aSouth',
+      'out:aSouth held 12.9px before Main is 1.79px from cEast:aSouth',   'out:aSouth held 12.9px before Main is 1.79px from eCWest:aSouth',
+      'out:aSouth held 12.9px before Main is 1.79px from e2CWest:aSouth', 'out:aSouth held 12.9px before Main is 1.79px from eCEast:aSouth',
+      'out:aSouth held 12.9px before Main is 1.79px from eB:aSouth',      'out:aSouth held 12.9px before Main is 1.79px from eBMain:aSouth',
+      'out:aSouth held 12.9px before Main is 1.79px from e2BMain:aSouth', 'out:aSouth held 12.9px before Main is 1.79px from eA:aSouth',
+      'out:aSouth held 13.4px before Main is 1.29px from a:aSouth',       'out:aSouth held 13.4px before Main is 1.29px from badgeA:aSouth',
+      'out:aSouth held 13.4px before Main is 1.29px from bWest:aSouth',   'out:aSouth held 13.4px before Main is 1.29px from bNorth:aSouth',
+      'out:aSouth held 13.4px before Main is 1.29px from cWest:aSouth',   'out:aSouth held 13.4px before Main is 1.29px from cEast:aSouth',
+      'out:aSouth held 13.4px before Main is 1.29px from eCWest:aSouth',  'out:aSouth held 13.4px before Main is 1.29px from e2CWest:aSouth',
+      'out:aSouth held 13.4px before Main is 1.29px from eCEast:aSouth',  'out:aSouth held 13.4px before Main is 1.29px from eB:aSouth',
+      'out:aSouth held 13.4px before Main is 1.29px from eBMain:aSouth',  'out:aSouth held 13.4px before Main is 1.29px from e2BMain:aSouth',
+      'out:aSouth held 13.4px before Main is 1.29px from eA:aSouth',      'out:aSouth held 13.9px before Main is 0.79px from a:aSouth',
+      'out:aSouth held 13.9px before Main is 0.79px from badgeA:aSouth',  'out:aSouth held 13.9px before Main is 0.79px from bWest:aSouth',
+      'out:aSouth held 13.9px before Main is 0.79px from bNorth:aSouth',  'out:aSouth held 13.9px before Main is 0.79px from cWest:aSouth',
+      'out:aSouth held 13.9px before Main is 0.79px from cEast:aSouth',   'out:aSouth held 13.9px before Main is 0.79px from eCWest:aSouth',
+      'out:aSouth held 13.9px before Main is 0.79px from e2CWest:aSouth', 'out:aSouth held 13.9px before Main is 0.79px from eCEast:aSouth',
+      'out:aSouth held 13.9px before Main is 0.79px from eB:aSouth',      'out:aSouth held 13.9px before Main is 0.79px from eBMain:aSouth',
+      'out:aSouth held 13.9px before Main is 0.79px from e2BMain:aSouth', 'out:aSouth held 13.9px before Main is 0.79px from eA:aSouth',
+      'out:aSouth held 14.4px before Main is 0.29px from a:aSouth',       'out:aSouth held 14.4px before Main is 0.29px from badgeA:aSouth',
+      'out:aSouth held 14.4px before Main is 0.29px from bWest:aSouth',   'out:aSouth held 14.4px before Main is 0.29px from bNorth:aSouth',
+      'out:aSouth held 14.4px before Main is 0.29px from cWest:aSouth',   'out:aSouth held 14.4px before Main is 0.29px from cEast:aSouth',
+      'out:aSouth held 14.4px before Main is 0.29px from eCWest:aSouth',  'out:aSouth held 14.4px before Main is 0.29px from e2CWest:aSouth',
+      'out:aSouth held 14.4px before Main is 0.29px from eCEast:aSouth',  'out:aSouth held 14.4px before Main is 0.29px from eB:aSouth',
+      'out:aSouth held 14.4px before Main is 0.29px from eBMain:aSouth',  'out:aSouth held 14.4px before Main is 0.29px from e2BMain:aSouth',
+      'out:aSouth held 14.4px before Main is 0.29px from eA:aSouth',      'out:aSouth held 14.9px before Main is 0.21px from a:aSouth',
+      'out:aSouth held 14.9px before Main is 0.21px from badgeA:aSouth',  'out:aSouth held 14.9px before Main is 0.21px from bWest:aSouth',
+      'out:aSouth held 14.9px before Main is 0.21px from bNorth:aSouth',  'out:aSouth held 14.9px before Main is 0.21px from cWest:aSouth',
+      'out:aSouth held 14.9px before Main is 0.21px from cEast:aSouth',   'out:aSouth held 14.9px before Main is 0.21px from eCWest:aSouth',
+      'out:aSouth held 14.9px before Main is 0.21px from e2CWest:aSouth', 'out:aSouth held 14.9px before Main is 0.21px from eCEast:aSouth',
+      'out:aSouth held 14.9px before Main is 0.21px from eB:aSouth',      'out:aSouth held 14.9px before Main is 0.21px from eBMain:aSouth',
+      'out:aSouth held 14.9px before Main is 0.21px from e2BMain:aSouth', 'out:aSouth held 14.9px before Main is 0.21px from eA:aSouth',
+      'out:aSouth held 15.4px before Main is 0.71px from a:aSouth',       'out:aSouth held 15.4px before Main is 0.71px from badgeA:aSouth',
+      'out:aSouth held 15.4px before Main is 0.71px from bWest:aSouth',   'out:aSouth held 15.4px before Main is 0.71px from bNorth:aSouth',
+      'out:aSouth held 15.4px before Main is 0.71px from cWest:aSouth',   'out:aSouth held 15.4px before Main is 0.71px from cEast:aSouth',
+      'out:aSouth held 15.4px before Main is 0.71px from eCWest:aSouth',  'out:aSouth held 15.4px before Main is 0.71px from e2CWest:aSouth',
+      'out:aSouth held 15.4px before Main is 0.71px from eCEast:aSouth',  'out:aSouth held 15.4px before Main is 0.71px from eB:aSouth',
+      'out:aSouth held 15.4px before Main is 0.71px from eBMain:aSouth',  'out:aSouth held 15.4px before Main is 0.71px from e2BMain:aSouth',
+      'out:aSouth held 15.4px before Main is 0.71px from eA:aSouth',      'out:aSouth held 15.9px before Main is 1.21px from a:aSouth',
+      'out:aSouth held 15.9px before Main is 1.21px from badgeA:aSouth',  'out:aSouth held 15.9px before Main is 1.21px from bWest:aSouth',
+      'out:aSouth held 15.9px before Main is 1.21px from bNorth:aSouth',  'out:aSouth held 15.9px before Main is 1.21px from cWest:aSouth',
+      'out:aSouth held 15.9px before Main is 1.21px from cEast:aSouth',   'out:aSouth held 15.9px before Main is 1.21px from eCWest:aSouth',
+      'out:aSouth held 15.9px before Main is 1.21px from e2CWest:aSouth', 'out:aSouth held 15.9px before Main is 1.21px from eCEast:aSouth',
+      ... 251 more items
+    ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/lot-a-parking.test.js:6:1
+✖ parking trace renders serializable surfaces and all three parking banks (6.485792ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(layout.items.some(i=>i.id==='a-pavement' && i.type==='surface'))
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-parking.test.js:11:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/lot-a-parking.test.js:17:1
+✖ migration preserves non-A geometry and only applies once (0.276042ms)
+  TypeError: Cannot set properties of undefined (setting 'count')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-parking.test.js:22:43)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+
+test at tests/lot-a.test.js:25:1
+✖ applying Lot A preserves every other object and project name (0.304084ms)
+  TypeError: Cannot set properties of undefined (setting 'x')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a.test.js:27:43)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+
+test at tests/lot-a.test.js:34:1
+✖ malformed mass coordinates and heights are rejected (0.197167ms)
+  TypeError: Cannot read properties of undefined (reading 'masses')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a.test.js:37:42)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+
+test at tests/lot-a.test.js:42:1
+✖ saved-layout update clears current positions only once and preserves other items (4.953958ms)
+  TypeError: Cannot set properties of undefined (setting 'modelRevision')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a.test.js:49:24)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+
+test at tests/model.test.js:5:1
+✖ starter layout round-trips and has three provisional lots (2.693959ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1584 !== 898
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:11:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1584,
+    expected: 898,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/model.test.js:15:1
+✖ closing a lot reduces capacity and removes its demonstration route (0.205208ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1173 !== 487
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:18:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1173,
+    expected: 487,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/model.test.js:34:1
+✖ deleting a lot unassigns its parking rows rather than leaving dangling references (0.231625ms)
+  TypeError: Cannot read properties of undefined (reading 'lotId')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:37:52)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+
+test at tests/model.test.js:41:1
+✖ invalid imports are rejected without mutating input (0.997958ms)
+  TypeError: Cannot set properties of undefined (setting 'lotId')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:55:82)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+
+test at tests/route-layout-alignment.test.js:16:1
+✖ resolved Main Position has one shared coordinate and all general approaches attach (3.7675ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(onLotGround('a',LOT_A_MAIN_POSITION))
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/route-layout-alignment.test.js:18:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/route-layout-alignment.test.js:26:1
+✖ road anchoring preserves physical road/entrance; proposals and missing shuttle returns are not invented (43.807166ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      [
+  +     21.061927943633087,
+  +     1100.4518497411743
+  -     22.289626814412422,
+  -     1109.9191793417115
+      ],
+      [
+  +     22.259087041507463,
+  +     67.18749713854544
+  -     28.666331396967784,
+  -     71.12712784328511
+      ],
+      [
+  +     48.60269514932481,
+  +     49.865337946852875
+  -     68.13593389933638,
+  -     51.42897431958676
+      ],
+      [
+  +     108.83934322706531,
+  +     52.94374705567271
+  -     111.300848923205,
+  -     56.229826620246264
+      ],
+      [
+  +     145.69301319581754,
+  +     62.96327521685426
+  -     146.04519200874014,
+  -     58.97191533706462
+      ],
+      [
+  +     152.7902666991465,
+  +     65.75940981084871
+  -     177.9203094016778,
+  -     75.77964918379641
+      ],
+      [
+  +     154.4066930590051,
+  +     67.1127797778565
+  -     220.95656034082128,
+  -     100.84010654668145
+      ],
+      [
+  +     156.02311941886373,
+  +     68.46614974486431
+  -     216,
+  -     104
+      ],
+      [
+  +     157.63954577872232,
+  +     69.8195197118721
+  -     217.85490056363312,
+  -     91.57755681363301
+      ]
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/route-layout-alignment.test.js:29:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ [ 21.061927943633087, 1100.4518497411743 ], [ 22.259087041507463, 67.18749713854544 ], [ 48.60269514932481, 49.865337946852875 ], [ 108.83934322706531, 52.94374705567271 ], [ 145.69301319581754, 62.96327521685426 ], [ 152.7902666991465, 65.75940981084871 ], [ 154.4066930590051, 67.1127797778565 ], [ 156.02311941886373, 68.46614974486431 ], [ 157.63954577872232, 69.8195197118721 ] ],
+    expected: [ [ 22.289626814412422, 1109.9191793417115 ], [ 28.666331396967784, 71.12712784328511 ], [ 68.13593389933638, 51.42897431958676 ], [ 111.300848923205, 56.229826620246264 ], [ 146.04519200874014, 58.97191533706462 ], [ 177.9203094016778, 75.77964918379641 ], [ 220.95656034082128, 100.84010654668145 ], [ 216, 104 ], [ 217.85490056363312, 91.57755681363301 ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/shuttles.test.js:23:1
+✖ five persistent buses loop with four to B and one cycling all C stops (138.069667ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(s.shuttles.slice(0,4).every(b=>b.stop==='bSouth'))
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:28:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/shuttles.test.js:34:1
+✖ B full switches to C after current trip completes at home, with no midroute jump (111.929041ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'four-b-one-c'
+  - 'all-c'
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:40:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'four-b-one-c',
+    expected: 'all-c',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/shuttles.test.js:45:1
+✖ fleet keeps completing trips in traffic in both allocation modes (1936.921334ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(s.shuttles.every(b=>b.trips>=3))
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:49:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/shuttles.test.js:53:1
+✖ badge parking stays available when general campus is full without inflating 1584 (14.157208ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  51 !== 2
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:56:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 51,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/shuttles.test.js:61:1
+✖ departure releases count-only A/B/C simultaneously through proper exits and buses continue (198.325166ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'a',
+      'b',
+      'c',
+  +   'c'
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:64:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'a', 'b', 'c', 'c' ],
+    expected: [ 'a', 'b', 'c' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/sunday-services.test.js:13:1
+✖ confirmed section capacities total1584; badge51 stays inside A411 (2.890083ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      aBadge: 51,
+      aNorth: 210,
+      aSouth: 150,
+      bBanana: 100,
+  ...
+      bSouth: 75,
+  +   cFirstNorth: 172,
+  +   cFirstSouth: 171,
+  +   cNorth: 171,
+  +   cSouth: 172
+  -   cNorth: 343,
+  -   cSouth: 343
+    }
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/sunday-services.test.js:17:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { aNorth: 210, aSouth: 150, aBadge: 51, bSouth: 75, bBanana: 100, bPocket: 8, bNorth: 304, cFirstNorth: 172, cFirstSouth: 171, cNorth: 171, cSouth: 172 },
+    expected: { aNorth: 210, aSouth: 150, aBadge: 51, bSouth: 75, bBanana: 100, bPocket: 8, bNorth: 304, cNorth: 343, cSouth: 343 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/sunday-services.test.js:83:1
+✖ three full Sunday scenario runs finish their demands, retain new cohorts and clear previous cohorts (42977.2ms)
+  AssertionError [ERR_ASSERTION]: eleven
+  
+  258 !== 1224
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/sunday-services.test.js:88:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 258,
+    expected: 1224,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/vehicle-routes.test.js:60:1
+✖ connector provenance is disclosed per mode; untraced joins are not called surveyed (17.887833ms)
+  AssertionError [ERR_ASSERTION]: Lot A approach to Main (aNorth)
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/vehicle-routes.test.js:65:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

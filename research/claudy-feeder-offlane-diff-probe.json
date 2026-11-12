@@ -1,0 +1,62 @@
+{
+ "bSouth": {
+  "vertices": [
+   178,
+   178
+  ],
+  "offFeederSamples": 1844,
+  "movedOver0_5px": 5,
+  "maxOffFeederShiftPx": 4.7,
+  "at": [
+   37.5,
+   527.8
+  ],
+  "sameVertexCount": true,
+  "firstDiffVertex": 166
+ },
+ "bBanana": {
+  "vertices": [
+   178,
+   178
+  ],
+  "offFeederSamples": 1706,
+  "movedOver0_5px": 5,
+  "maxOffFeederShiftPx": 4.7,
+  "at": [
+   37.5,
+   527.8
+  ],
+  "sameVertexCount": true,
+  "firstDiffVertex": 166
+ },
+ "bNorth": {
+  "vertices": [
+   165,
+   165
+  ],
+  "offFeederSamples": 761,
+  "movedOver0_5px": 5,
+  "maxOffFeederShiftPx": 4.7,
+  "at": [
+   37.5,
+   527.8
+  ],
+  "sameVertexCount": true,
+  "firstDiffVertex": 153
+ },
+ "bPocket": {
+  "vertices": [
+   173,
+   173
+  ],
+  "offFeederSamples": 1306,
+  "movedOver0_5px": 5,
+  "maxOffFeederShiftPx": 4.7,
+  "at": [
+   37.5,
+   527.8
+  ],
+  "sameVertexCount": true,
+  "firstDiffVertex": 161
+ }
+}

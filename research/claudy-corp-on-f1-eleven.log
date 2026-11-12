@@ -1,0 +1,253 @@
+{
+ "out": "research/claudy-corp-on-f1-eleven-all-stalls.json",
+ "stalledCount": 158,
+ "reasons": {
+  "clear-occupied-conflict": 29,
+  "safe-following": 129
+ },
+ "terminals": {
+  "cycle:1029>750>700": 1,
+  "cycle:700>1029>750": 62,
+  "cycle:750>700>1029": 1,
+  "terminal:1029": 1,
+  "terminal:750": 2,
+  "terminal:705": 2,
+  "terminal:558": 2,
+  "terminal:700": 1,
+  "terminal:647": 2,
+  "terminal:941": 2,
+  "terminal:577": 2,
+  "terminal:871": 2,
+  "terminal:760": 3,
+  "terminal:554": 3,
+  "terminal:538": 2,
+  "terminal:841": 2,
+  "terminal:797": 2,
+  "terminal:724": 2,
+  "terminal:795": 1,
+  "terminal:885": 1,
+  "terminal:779": 1,
+  "terminal:657": 1,
+  "terminal:831": 2,
+  "terminal:585": 2,
+  "terminal:905": 1,
+  "terminal:778": 1,
+  "terminal:617": 1,
+  "terminal:632": 2,
+  "terminal:897": 1,
+  "terminal:666": 1,
+  "terminal:870": 1,
+  "terminal:713": 1,
+  "terminal:865": 1,
+  "terminal:571": 1,
+  "terminal:771": 2,
+  "terminal:576": 1,
+  "terminal:890": 1,
+  "terminal:699": 1,
+  "terminal:702": 1,
+  "terminal:643": 1,
+  "terminal:595": 1,
+  "terminal:770": 1,
+  "terminal:777": 1,
+  "terminal:792": 1,
+  "terminal:819": 3,
+  "terminal:574": 1,
+  "terminal:611": 1,
+  "terminal:650": 1,
+  "terminal:948": 1,
+  "terminal:642": 1,
+  "terminal:933": 1,
+  "terminal:727": 1,
+  "terminal:616": 1,
+  "terminal:826": 1,
+  "terminal:853": 1,
+  "terminal:590": 1,
+  "terminal:581": 1,
+  "terminal:599": 1,
+  "terminal:764": 1,
+  "terminal:714": 1,
+  "terminal:696": 1,
+  "terminal:755": 1,
+  "terminal:559": 1,
+  "terminal:609": 2,
+  "terminal:shuttle-3": 1,
+  "terminal:938": 1,
+  "terminal:371": 1,
+  "terminal:840": 1,
+  "terminal:733": 1,
+  "terminal:639": 1,
+  "terminal:shuttle-4": 1,
+  "terminal:763": 1,
+  "terminal:1348": 1,
+  "terminal:1349": 1,
+  "terminal:545": 1
+ },
+ "corporate": {
+  "shared": {
+   "occupants": [],
+   "direction": null,
+   "lastDirection": "ne"
+  },
+  "operators": [
+   {
+    "index": 59,
+    "reason": "record passage",
+    "waiting": 0,
+    "admitted": 0,
+    "admittedInRow": 0,
+    "request": null
+   },
+   {
+    "index": 60,
+    "reason": "queue approaching",
+    "waiting": 1,
+    "admitted": 142,
+    "admittedInRow": 2,
+    "request": null
+   },
+   {
+    "index": 61,
+    "reason": "queue approaching",
+    "waiting": 4,
+    "admitted": 209,
+    "admittedInRow": 2,
+    "request": null
+   }
+  ]
+ },
+ "earliest": [
+  {
+   "id": 700,
+   "since": 1460,
+   "yield": "clear-occupied-conflict",
+   "to": 1029,
+   "route": "Departure · bNorth · bNorth",
+   "px": [
+    1032.5,
+    1096.9
+   ]
+  },
+  {
+   "id": 750,
+   "since": 1460,
+   "yield": "safe-following",
+   "to": 700,
+   "route": "Departure · bNorth · bNorth",
+   "px": [
+    1022.3,
+    1065.8
+   ]
+  },
+  {
+   "id": 1029,
+   "since": 1460,
+   "yield": "clear-occupied-conflict",
+   "to": 750,
+   "route": "Arrival · Equity entrance/exit 2 → C staffed entrance · cFirstSouth",
+   "px": [
+    1032.7,
+    1098.7
+   ]
+  },
+  {
+   "id": 705,
+   "since": 1463,
+   "yield": "clear-occupied-conflict",
+   "to": 750,
+   "route": "Departure · bNorth · bNorth",
+   "px": [
+    1039.4,
+    1035
+   ]
+  },
+  {
+   "id": 558,
+   "since": 1464,
+   "yield": "safe-following",
+   "to": 705,
+   "route": "Departure · bNorth · bNorth",
+   "px": [
+    1070.9,
+    1035
+   ]
+  },
+  {
+   "id": 647,
+   "since": 1464,
+   "yield": "safe-following",
+   "to": 558,
+   "route": "Departure · bNorth · bNorth",
+   "px": [
+    1102.3,
+    1035
+   ]
+  },
+  {
+   "id": 577,
+   "since": 1465,
+   "yield": "safe-following",
+   "to": 941,
+   "route": "Departure · bNorth · bNorth",
+   "px": [
+    1165.2,
+    1038
+   ]
+  },
+  {
+   "id": 941,
+   "since": 1465,
+   "yield": "safe-following",
+   "to": 647,
+   "route": "Departure · cEast · cFirstSouth",
+   "px": [
+    1133.8,
+    1033.8
+   ]
+  },
+  {
+   "id": 1019,
+   "since": 1466,
+   "yield": "clear-occupied-conflict",
+   "to": 750,
+   "route": "Arrival · Equity Entrance → C staffed entrance · cFirstSouth",
+   "px": [
+    990.6,
+    1050.3
+   ]
+  },
+  {
+   "id": 871,
+   "since": 1476,
+   "yield": "safe-following",
+   "to": 577,
+   "route": "Departure · cWest · cFirstNorth",
+   "px": [
+    1186.4,
+    1031.5
+   ]
+  },
+  {
+   "id": 760,
+   "since": 1489,
+   "yield": "clear-occupied-conflict",
+   "to": 871,
+   "route": "Departure · bNorth · bNorth",
+   "px": [
+    1228.3,
+    1020.7
+   ]
+  },
+  {
+   "id": 554,
+   "since": 1500,
+   "yield": "clear-occupied-conflict",
+   "to": 760,
+   "route": "Departure · bNorth · bNorth",
+   "px": [
+    1241.3,
+    978.6
+   ]
+  }
+ ]
+}
+eleven exit 0

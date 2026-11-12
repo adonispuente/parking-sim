@@ -26,17 +26,19 @@ test('all service breaks use actual service +45 to +55, not scenario elapsed45',
 
 test('home buses hold during service break and resume when it ends',()=>{
   const preset=SUNDAY_SERVICES.eleven;
-  const state={cars:[],lanes:[],clock:5400,occupancy:{b:100},zoneOccupancy:{},phase:'arrival',serviceController:{preset}};
+  const breakStart=(preset.startMinute-preset.beginMinute+45)*60;
+  const state={cars:[],lanes:[],clock:breakStart,occupancy:{b:100},zoneOccupancy:{},phase:'arrival',serviceController:{preset}};
   attachShuttles(state,lane,{activeCount:5,dwellSeconds:0});
   state.prepareShuttles(live);
   assert.equal(state.cars.length,0);
   assert.ok(state.shuttles.every(bus=>bus.phase==='service-break'));
-  state.clock=6000;state.prepareShuttles(live);
+  state.clock=breakStart+600;state.prepareShuttles(live);
   assert.ok(state.cars.some(car=>car.fleetBus),'ready fleet resumes without resetting the scenario');
 });
 
 test('break never removes a moving bus; a remote bus can finish its circuit',()=>{
-  const state={cars:[],lanes:[],clock:5400,occupancy:{b:100},zoneOccupancy:{},phase:'arrival',serviceController:{preset:SUNDAY_SERVICES.eleven}};
+  const preset=SUNDAY_SERVICES.eleven;
+  const state={cars:[],lanes:[],clock:(preset.startMinute-preset.beginMinute+45)*60,occupancy:{b:100},zoneOccupancy:{},phase:'arrival',serviceController:{preset}};
   attachShuttles(state,lane,{activeCount:1,dwellSeconds:0});
   const bus=state.shuttles[0];
   Object.assign(bus,{circuit:'b',leg:1,readyAt:0,phase:'remote-dwell'});

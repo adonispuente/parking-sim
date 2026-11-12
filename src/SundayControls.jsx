@@ -1,34 +1,40 @@
 import React from 'react';
 import { SUNDAY_SERVICES, serviceOptions, formatServiceClock } from './sundayServices.js';
 import { PARKING_ZONES } from './parkingZones.js';
+import { serviceCarryOptions } from './serviceCarry.js';
 
 export default function SundayControls({options,setOptions,stats,onReset,onRun}) {
   const config=options.service??{},status=stats.serviceStatus;
   const change=patch=>setOptions(o=>({...o,service:{...o.service,...patch}}));
   function preset(id) {
     const s=SUNDAY_SERVICES[id];
-    setOptions(o=>({...o,phase:'arrival',service:{enabled:true,...serviceOptions(id)},initialOccupancy:{...s.initialOccupancy},initialZoneOccupancy:undefined,
+    setOptions(o=>({...o,phase:'arrival',service:{enabled:true,...serviceOptions(id)},initialOccupancy:{...s.initialOccupancy},initialZoneOccupancy:undefined,initialServiceCarry:undefined,
       shuttles:{...o.shuttles,activeCount:s.activeBuses,dispatchDuringDepartures:s.transition}}));
     onReset();
   }
   const nextService=config.id==='nine'?'eleven':config.id==='eleven'?'final':null;
-  const carryReady=!!nextService&&status?.remaining===0&&(stats.active??0)===0&&(stats.waiting??[]).every(n=>n===0)&&Object.values(stats.reserved??{}).every(n=>n===0);
+  const carryReady=!!nextService&&!!stats.serviceCarry;
   function carryForward() {
-    const next=SUNDAY_SERVICES[nextService];
-    setOptions(o=>({...o,phase:'arrival',service:{enabled:true,...serviceOptions(nextService)},initialOccupancy:{...stats.occupancy},initialZoneOccupancy:{...stats.zoneOccupancy},
-      shuttles:{...o.shuttles,activeCount:next.activeBuses,dispatchDuringDepartures:true}}));
+    const patch=serviceCarryOptions(options,stats,nextService);
+    setOptions(o=>({...o,...patch}));
     onReset();
   }
   return <section className="sunday-panel" aria-label="Sunday service simulation">
     <strong>Sunday service flow</strong>
+    <small className="service-parked" aria-label="Current parked cars">{['a','b','c'].map(lot=><span key={lot}>Lot {lot.toUpperCase()}: <b>{stats.occupancy?.[lot]??options.initialOccupancy?.[lot]??0}</b> parked</span>)}</small>
     <small>Fixed services: 9:00 · 11:00 · 1:15. Scenario clock uses simulated time and playback speed.</small>
     <label>Simulation schedule<select aria-label="Sunday service scenario" value={config.enabled?config.id:'manual'} onChange={e=>{
       if(e.target.value==='manual'){setOptions(o=>({...o,service:{...o.service,enabled:false}}));onReset();}
       else preset(e.target.value);
     }}><option value="manual">Manual traffic controls</option>{Object.values(SUNDAY_SERVICES).map(s=><option key={s.id} value={s.id}>{s.label}</option>)}</select></label>
     {config.enabled&&<>
-      <div className="service-clock" role="status"><strong>{status?.clock??(config.id==='nine'?'8:15':config.id==='eleven'?'10:15':'12:30')}</strong><span>{status?.phase??'Ready to start'}</span><small>{status?.issued??0} / {config.demand} arrivals issued · {status?.remaining??config.demand} scheduled</small></div>
-      <small>Arrival target: about 95% by 45 minutes after service starts. Remaining late-arrival timing is provisional, not a measured distribution.</small>
+      <div className="service-clock" role="status"><strong>{status?.clock??formatServiceClock(config.beginMinute??SUNDAY_SERVICES[config.id].beginMinute)}</strong><span>{status?.phase??'Ready to start'}</span><small>{status?.issued??0} / {config.demand} arrivals issued · {status?.remaining??config.demand} scheduled</small></div>
+      <small>Arrival timing: 75% arrive by service start; the rest come late, with about 95% by 45 minutes after service starts. Late-arrival spacing is provisional, not a measured distribution.</small>
+      <small aria-label="Service dismissal times">Current service dismisses {formatServiceClock(status?.dismissalMinute??((SUNDAY_SERVICES[config.id]?.startMinute??540)+75))}.{status?.previousDismissalMinute!=null&&` Previous service dismisses ${formatServiceClock(status.previousDismissalMinute)}.`} Dismissal is 75 minutes after service start.</small>
+      <div className="gate-status" aria-label="Sunday arrival gate status">
+        <span>Lot A: {status?.gates?.a?.reason==='manual-closure'?'manually closed':status?.gates?.a?.reason==='until-dismissal'?`closed until dismissal (${formatServiceClock(status.gates.a.releaseMinute)})`:status?.gates?.a?.reason==='waiting-for-half'?'dismissed; waiting for ≤50%':'service gate open'}{status?.gates?.a&&` · ${status.gates.a.generalUsed} general parked/inbound`}</span>
+        <span>Lots B / C: capacity and manual closures only</span>
+      </div>
       {stats.shuttleBreak?.enabled&&<small role="status" aria-label="Service shuttle break">Shuttle break {formatServiceClock(stats.shuttleBreak.startMinute)}–{formatServiceClock(stats.shuttleBreak.endMinute)} · {stats.shuttleBreak.active?'finishing circuits, then holding at A home':(status?.minute??0)>=stats.shuttleBreak.endMinute?'complete · buses running':'scheduled'}. Buses never stop in the roadway for the break.</small>}
       <label>Arriving cars for this service<input aria-label="Service attendance cars" type="number" min="0" max="2500" value={config.demand} onChange={e=>change({demand:Math.max(0,Math.min(2500,Number(e.target.value)||0))})}/></label>
       <label>Equity share of arrivals (%) · minimum 10<input aria-label="Service Equity share" type="number" min="10" max="90" value={config.equityPercent??10} onChange={e=>change({equityPercent:Math.max(10,Math.min(90,Number(e.target.value)||10))})}/></label>
@@ -36,17 +42,20 @@ export default function SundayControls({options,setOptions,stats,onReset,onRun})
       {status&&<small>Scheduled mix: {status.equityCount??0} Equity arrivals · {status.corporateCount??0} Corporate-through arrivals · remainder follows A → B → C.</small>}
       {config.id!=='nine'&&<>
         <label>Early arrivals during first 20 minutes (%)<input aria-label="Early arrival share" type="number" min="0" max="100" value={config.earlyPercent??0} onChange={e=>change({earlyPercent:Math.max(0,Math.min(100,Number(e.target.value)||0))})}/></label>
-        <label>Main departure window (minutes)<input aria-label="Departure readiness window" type="number" min="5" max="90" value={config.departureWindowMinutes??40} onChange={e=>change({departureWindowMinutes:Math.max(5,Math.min(90,Number(e.target.value)||5))})}/></label>
-        <label>People staying longer (%)<input aria-label="Long stayer share" type="number" min="0" max="90" value={config.lingerPercent??15} onChange={e=>change({lingerPercent:Math.max(0,Math.min(90,Number(e.target.value)||0))})}/></label>
-        <label>Additional lingering tail (minutes)<input aria-label="Lingering tail minutes" type="number" min="1" max="90" value={config.lingerMinutes??35} onChange={e=>change({lingerMinutes:Math.max(1,Math.min(90,Number(e.target.value)||1))})}/></label>
-        <small>A reopens at ≤180 general parked/inbound (badge excluded). B reopens at ≤243 if it began full; partially occupied B stays open. C stays available until capacity. Manual lot closures still apply.</small>
-        <div className="gate-status">{['a','b','c'].map(lot=><span key={lot}>Lot {lot.toUpperCase()}: {stats.gateStatus?.[lot]?'departure hold':'arrival gate open'}</span>)}</div>
+
+        <small>Once A closes, early vacancies do not reopen it. Reopening requires dismissal and ≤180 general parked/inbound (badge excluded). B and C have no half-full hold. Manual closures still apply.</small>
         <small>Vary “initial parked” below to represent the previous service. Initial totals distribute using the stated fill order; section values can be set individually.</small>
       </>}
       <div className="traffic-actions"><button onClick={()=>{onReset();onRun();}}>Apply inputs & restart service</button></div>
-      {nextService&&<><button disabled={!carryReady} onClick={carryForward}>Next service · carry current parked cars</button><small>Available after all scheduled arrivals finish parking. Carries actual section occupancy into the next dismissal window instead of loading a preset. Buses stage at home for the new scenario.</small></>}
-      <small>Demand and departure distributions are training inputs, not measured forecasts. Changes above apply on restart. 12:30 dismissal before 1:15 is provisional. Scheduled arrivals replace manual rate sliders.</small>
+      {nextService&&<><button disabled={!carryReady} onClick={carryForward}>Next service · carry current parked cars</button><small>Available after scheduled arrivals and car road legs finish. Preserves each car's service/readiness and A's latch; the clock never moves backward. Buses stage at home for the new scenario.</small></>}
+      <small aria-label="Departure cohort timing">Vehicle-cohort proxy: about 5% per lot are ready 5–10 minutes before dismissal; about 2% in A linger late. Provisional main readiness spread: 25 minutes after dismissal; A late tail: the next 5 minutes. Integer rounding is under one car per lot/cohort. Readiness is not a completed road exit.</small>
+      <small>Final service: 2:30 dismissal, ordinary vehicle readiness by 3:00. Near-empty church is the observation target, not zero parked cars. People, return transport and residual cleanup/serve-team headcounts are not modeled yet. No queued cars are removed to meet the clock. Changes apply on restart.</small>
     </>}
+  </section>;
+}
+
+export function ParkingSectionControls({options,setOptions,stats}) {
+  return <section className="sunday-panel" aria-label="Parking sections live occupancy">
     <strong>Parking sections · live occupancy</strong>
     <small>C fills the traced First Half across North + South before the remainder. Provisional training split: First Half343 / remainder343; North343 / South343 overall. No individual stall count was inferred from the image.</small>
     <small>Solid fill = parked fraction, west → east within the traced polygon. Inbound reservations are listed separately. These are operational sections, not invented stalls.</small>
@@ -56,6 +65,11 @@ export default function SundayControls({options,setOptions,stats,onReset,onRun})
       return <div key={zone.id}><strong>{zone.label}</strong><span>{n} / {zone.capacity}{reserved?` + ${reserved} inbound`:''}</span><progress aria-label={`${zone.label} occupancy`} max={zone.capacity} value={n}/></div>;
     })}</div>
     <details><summary>Initial section occupancy</summary><small>Overrides that section on the next restart; other sections retain the distribution from the initial lot total. Clear to restore that distribution.</small>{PARKING_ZONES.map(zone=><label key={zone.id}>{zone.label}<input aria-label={`${zone.label} initial occupancy`} type="number" min="0" max={zone.capacity} value={options.initialZoneOccupancy?.[zone.id]??''} placeholder="Use lot total" onChange={e=>setOptions(o=>({...o,initialZoneOccupancy:{...o.initialZoneOccupancy,[zone.id]:e.target.value===''?undefined:Math.min(zone.capacity,Math.max(0,Number(e.target.value)||0))}}))}/></label>)}</details>
+  </section>;
+}
+
+export function VolunteerControls({options,setOptions,stats,children}) {
+  return <section className="sunday-panel" aria-label="Volunteer section directions">
     <strong>Volunteer section directions</strong>
     <div className="gate-status" role="status" aria-label="Lot A Main Position">
       <strong>Lot A Main Position · three approaches · batches of 5</strong>
@@ -68,9 +82,10 @@ export default function SundayControls({options,setOptions,stats,onReset,onRun})
     <small>Direction changes apply to new assignments. Full sections fall back to another eligible section in the same lot. All B arrivals traverse the south aisle first.</small>
     <details><summary>Departure exit directions</summary><small>These are configurable volunteer policies, not new physical roads. Section-based B split is an illustrative default.</small>
       <label>Lot B departures<select aria-label="Lot B departure routing" value={options.departurePolicy?.b??'split'} onChange={e=>setOptions(o=>({...o,departurePolicy:{...o.departurePolicy,b:e.target.value}}))}><option value="split">South / Banana → west; North / Pocket → Equity</option><option value="west">Main west exit → Corporate / feeder</option><option value="north">Northern exit → Equity</option></select></label>
-      <label>Lot C departures<select aria-label="Lot C departure routing" value={options.departurePolicy?.c??'split'} onChange={e=>setOptions(o=>({...o,departurePolicy:{...o.departurePolicy,c:e.target.value}}))}><option value="split">Both exits · North → northwest; South → northeast</option><option value="west">Northwest exit → Equity</option><option value="east">Northeast exit → Equity</option></select></label>
-      <small>Volunteer control at B's exit, C's entrance and C's exits: shuttles first, then departures, then arrivals. Occupied space must clear before a conflicting movement proceeds. The section-based C split is a configurable dispatch default, not a traced lane rule.</small>
+      <label>Lot C departures<select aria-label="Lot C departure routing" value={options.departurePolicy?.c??'split'} onChange={e=>setOptions(o=>({...o,departurePolicy:{...o.departurePolicy,c:e.target.value}}))}><option value="split">Both exits · 50/50</option><option value="west">Median exit only (beside C entrance)</option><option value="east">Far-right northeast exit only</option></select></label>
+      <small>C arrivals enter only through the staffed entrance near the B exit; the far-right northeast exit is exit-only. C car departures follow the setting above: by default about half use the median exit beside the C entrance and half use the northeast exit. Shuttles ignore this setting and keep their own return route. Northern positions coordinate by radio: the C exit officer holds conflicting Corporate traffic for shuttles, after occupied space clears.</small>
     </details>
+    {children}
     {!!stats.routingIssues?.length&&<div className="capacity-status at-capacity"><strong>Route needs review</strong>{stats.routingIssues.map(issue=><small key={issue}>{issue}</small>)}</div>}
   </section>;
 }

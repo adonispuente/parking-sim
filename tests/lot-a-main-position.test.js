@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { attachLotAControl, attachMainPositionToLane, LOT_A_MAIN_POSITION } from '../src/lotAControl.js';
 import { zoneArrivalRoute, zoneDepartureRoute } from '../src/parkingRoutes.js';
 import { createCampusTraffic } from '../src/traffic.js';
+import { MAIN_POSITION_RESOLUTION } from '../src/positions/index.js';
 
 const makeState = () => {
   const state = { clock: 0, cars: [], lanes: ['aNorth','aSouth','aMain'].map(approach => ({
@@ -59,6 +60,17 @@ test('a distant North queue does not starve a ready inbound approach', () => {
   assert.equal(clear(s).id,'ready');
 });
 
+test('unadmitted vehicle already in Main Position clears before a new approach', () => {
+  const s=makeState(),clearing={...car('clearing',0),distance:7},waiting=car('waiting',1);
+  s.cars=[clearing,waiting];s.prepareLotAControl();
+  assert.equal(s.aMainControl.admittedId,null);
+  assert.equal(clearing.controlStopDistance,undefined);
+  assert.equal(waiting.controlStopDistance,5);
+  clearing.distance=9;s.observeLotAControl();
+  assert.equal(s.aMainControl.totalPassed.aNorth,1);
+  assert.equal(clear(s).id,'waiting');
+});
+
 test('all general A arrival/departure routes traverse the same position; badge stays separate', () => {
   for(const zone of ['aNorth','aSouth'])for(const out of [false,true]) {
     const points=out?zoneDepartureRoute('a',zone):zoneArrivalRoute('a',zone),lane={length:100};
@@ -66,7 +78,9 @@ test('all general A arrival/departure routes traverse the same position; badge s
     assert.ok(lane.aControl.stopDistance<lane.aControl.releaseDistance);
   }
   assert.equal(attachMainPositionToLane({length:100},zoneArrivalRoute('badgeA','aBadge'),'aMain'),false);
-  assert.deepEqual(LOT_A_MAIN_POSITION,[112,50]);
+  assert.deepEqual(LOT_A_MAIN_POSITION,MAIN_POSITION_RESOLUTION.point);
+  // Current source: #57 is the exact canonical Main point, no longer a provisional candidate.
+  assert.equal(MAIN_POSITION_RESOLUTION.provisional,false);
 });
 
 test('real general arrivals clear the staffed main approach and stay parked', () => {

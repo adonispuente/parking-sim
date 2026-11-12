@@ -1,0 +1,38 @@
+[
+ {
+  "arrivalBack": 2.2,
+  "aSouthDepartureBack": 3,
+  "aSouthDepartureStop": 2.69,
+  "fwdMin": 0.979,
+  "fwdWho": "a:aSouth held, out:aSouth@4.07",
+  "revMin": 0.893,
+  "revWho": "out:aSouth held, eA:aSouth@370.71"
+ },
+ {
+  "arrivalBack": 2.2,
+  "aSouthDepartureBack": 3.5,
+  "aSouthDepartureStop": 2.19,
+  "fwdMin": 0.979,
+  "fwdWho": "a:aSouth held, out:aSouth@2.76",
+  "revMin": 0.699,
+  "revWho": "out:aSouth held, a:aSouth@139.93"
+ },
+ {
+  "arrivalBack": 2.2,
+  "aSouthDepartureBack": 3.7,
+  "aSouthDepartureStop": 1.99,
+  "fwdMin": 0.979,
+  "fwdWho": "a:aSouth held, out:aSouth@1.99",
+  "revMin": 0.505,
+  "revWho": "out:aSouth held, a:aSouth@139.93"
+ },
+ {
+  "arrivalBack": 2.2,
+  "aSouthDepartureBack": 4,
+  "aSouthDepartureStop": 1.69,
+  "fwdMin": 0.979,
+  "fwdWho": "a:aSouth held, out:aSouth@1.69",
+  "revMin": 0.225,
+  "revWho": "out:aSouth held, a:aSouth@139.93"
+ }
+]

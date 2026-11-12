@@ -1,10 +1,8 @@
-import { BUILDINGS, ROADS, tracedItem, IMAGE_SIZE } from './campus.js';
-import { lotABuilding } from './lotA.js';
-import { upgradeLotAParking } from './lotAParking.js';
-import { upgradeEastCampus, upgradeShuttleAccess } from './eastCampus.js';
-export { upgradeLotAParking } from './lotAParking.js';
-export const STORAGE_KEY = 'parking-flow-layout-v1';
-export const WORLD = { width: 113.6, height: 113.6 * 566 / 735 };
+import { IMAGE_SIZE, WORLD_SCALE, SOURCE_PAIR } from './clearImageSource.js';
+import { tracedLayout } from './tracedMap.js';
+export const upgradeLotAParking = layout => layout;
+export const STORAGE_KEY = 'parking-flow-clear-image-v1';
+export const WORLD = { width: IMAGE_SIZE.width*WORLD_SCALE, height: IMAGE_SIZE.height*WORLD_SCALE };
 export const COLORS = ['#d2f481', '#83cbd5', '#bba8ed'];
 export const TYPES = ['lot', 'spaces', 'barricade', 'position', 'road', 'building', 'surface'];
 export const ROLES = ['Greeter', 'Traffic director', 'Lot attendant', 'Pedestrian crossing', 'Team lead'];
@@ -12,23 +10,7 @@ const item = (id, type, name, x, z, width, depth, rotation, extra = {}) =>
   ({ id, type, name, x, z, width, depth, rotation, ...extra });
 
 export function initialLayout() {
-  return upgradeShuttleAccess(upgradeEastCampus(upgradeLotAParking({
-    version: 1,
-    lotADraftRevision: 2,
-    name: 'Hope City · first layout',
-    items: [
-      item('lot-a', 'lot', 'A · Church west', 22, 25, 31, 36, 32, { capacity: 60, open: true, color: COLORS[0] }),
-      item('lot-b', 'lot', 'B · Central (verify use)', 58, 30, 29, 39, 0, { capacity: 80, open: true, color: COLORS[1] }),
-      item('lot-c', 'lot', 'C · East (verify use)', 92, 30, 33, 38, 0, { capacity: 90, open: true, color: COLORS[2] }),
-      ...BUILDINGS.map(trace => trace.id === 'church' ? lotABuilding() : tracedItem(trace, 'building')),
-      ...ROADS.map(trace => tracedItem(trace, 'road')),
-      item('row-a', 'spaces', 'West row · sample', 15, 18, 2.1, 4.5, 32, { count: 8, lotId: 'lot-a' }),
-      item('row-b', 'spaces', 'Central row · sample', 70, 28, 2.1, 4.5, 90, { count: 10, lotId: 'lot-b' }),
-      item('row-c', 'spaces', 'East row · sample', 91, 43, 2.1, 4.5, 0, { count: 10, lotId: 'lot-c' }),
-
-      item('barrier-c', 'barricade', 'East lot gate · sample', 84, 8, 6, 0.8, 0),
-    ],
-  })));
+  return tracedLayout({items:[]});
 }
 
 export function makeItem(type, x, z, lotId = '') {
@@ -69,12 +51,12 @@ export function validateLayout(data) {
     if (i.type === 'spaces' && i.lotId && !data.items.some(lot => lot.id === i.lotId && lot.type === 'lot')) fail();
   }
   // Return only the serializable format, never retain a caller's mutable object.
-  return JSON.parse(JSON.stringify({ version: 1, name: data.name, items: data.items,
+  return JSON.parse(JSON.stringify({ version: 1, name: data.name, items: data.items, sourcePair:data.sourcePair,
     ...([1,2].includes(data.lotAParkingRevision) ? { lotAParkingRevision: data.lotAParkingRevision } : {}),
     ...(data.lotADraftRevision === 2 ? { lotADraftRevision: 2 } : {}),
     ...(data.eastCampusRevision === 1 ? { eastCampusRevision: 1 } : {}),
     ...(data.shuttleAccessRevision === 1 ? { shuttleAccessRevision: 1 } : {}),
-    ...([1,2,3].includes(data.tracedMapRevision) ? { tracedMapRevision: data.tracedMapRevision } : {}) }));
+    ...([1,2,3,4].includes(data.tracedMapRevision) ? { tracedMapRevision: data.tracedMapRevision } : {}) }));
 }
 
 export function stats(layout) {

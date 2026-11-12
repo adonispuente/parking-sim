@@ -1,0 +1,192 @@
+{
+ "out": "research/claudy-equity-exit2-final-all-stalls.json",
+ "stalledCount": 76,
+ "reasons": {
+  "corporate-drive-valve": 2,
+  "safe-following": 59,
+  "clear-occupied-conflict": 15
+ },
+ "terminals": {
+  "terminal:455": 48,
+  "terminal:1432": 26,
+  "terminal:shuttle-4": 1,
+  "terminal:410": 1
+ },
+ "corporate": {
+  "shared": {
+   "occupants": [
+    "shuttle-5"
+   ],
+   "direction": "ne",
+   "lastDirection": "ne"
+  },
+  "operators": [
+   {
+    "index": 59,
+    "reason": "record passage",
+    "waiting": 0,
+    "admitted": 0,
+    "admittedInRow": 0,
+    "request": null
+   },
+   {
+    "index": 60,
+    "reason": "higher class waiting at other end",
+    "waiting": 9,
+    "admitted": 128,
+    "admittedInRow": 2,
+    "request": {
+     "car": 1432,
+     "class": 1,
+     "stop": 69.88236620560166
+    }
+   },
+   {
+    "index": 61,
+    "reason": "opposing traffic in stretch",
+    "waiting": 25,
+    "admitted": 243,
+    "admittedInRow": 2,
+    "request": {
+     "car": 455,
+     "class": 3,
+     "stop": 86.69654667658341
+    }
+   }
+  ]
+ },
+ "earliest": [
+  {
+   "id": "shuttle-2",
+   "since": 2031,
+   "yield": "safe-following",
+   "to": 410,
+   "route": "Shuttle · b · leg 3 → home",
+   "px": [
+    540.5,
+    233.3
+   ]
+  },
+  {
+   "id": "shuttle-3",
+   "since": 2046,
+   "yield": "safe-following",
+   "to": 482,
+   "route": "Shuttle · b · leg 3 → home",
+   "px": [
+    636,
+    119.4
+   ]
+  },
+  {
+   "id": "shuttle-1",
+   "since": 2054,
+   "yield": "safe-following",
+   "to": 410,
+   "route": "Shuttle · b · leg 3 → home",
+   "px": [
+    540.5,
+    233.3
+   ]
+  },
+  {
+   "id": 455,
+   "since": 2625,
+   "yield": "corporate-drive-valve",
+   "to": null,
+   "route": "Departure · bWest · bBanana",
+   "px": [
+    537,
+    355.5
+   ]
+  },
+  {
+   "id": "shuttle-4",
+   "since": 2633,
+   "yield": "safe-following",
+   "to": 455,
+   "route": "Shuttle · b · leg 3 → home",
+   "px": [
+    533.9,
+    314.6
+   ]
+  },
+  {
+   "id": 410,
+   "since": 2638,
+   "yield": "safe-following",
+   "to": "shuttle-4",
+   "route": "Departure · bWest · bSouth",
+   "px": [
+    536.1,
+    273.9
+   ]
+  },
+  {
+   "id": 1432,
+   "since": 2642,
+   "yield": "corporate-drive-valve",
+   "to": null,
+   "route": "Arrival · bWest · bSouth",
+   "px": [
+    306.4,
+    548.7
+   ]
+  },
+  {
+   "id": "shuttle-5",
+   "since": 2644,
+   "yield": "clear-occupied-conflict",
+   "to": 1432,
+   "route": "Shuttle · cSouth · leg 1 → cRoundabout",
+   "px": [
+    265.9,
+    531.6
+   ]
+  },
+  {
+   "id": 367,
+   "since": 2662,
+   "yield": "safe-following",
+   "to": "shuttle-1",
+   "route": "Departure · bWest · bSouth",
+   "px": [
+    553.3,
+    194.5
+   ]
+  },
+  {
+   "id": 364,
+   "since": 2668,
+   "yield": "safe-following",
+   "to": 367,
+   "route": "Departure · bWest · bSouth",
+   "px": [
+    568,
+    166.7
+   ]
+  },
+  {
+   "id": 482,
+   "since": 2670,
+   "yield": "clear-occupied-conflict",
+   "to": 364,
+   "route": "Departure · bWest · bBanana",
+   "px": [
+    599.6,
+    137.9
+   ]
+  },
+  {
+   "id": 1442,
+   "since": 2689,
+   "yield": "clear-occupied-conflict",
+   "to": "shuttle-5",
+   "route": "Arrival · bWest · bSouth",
+   "px": [
+    222.1,
+    553.8
+   ]
+  }
+ ]
+}

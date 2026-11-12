@@ -1,0 +1,3 @@
+{"scenario":"nine","heldCars":{"aMain":12},"heldSeconds":{"aMain":1.8},"firstHeldAt":{"aMain":339.9}}
+{"scenario":"eleven","heldCars":{"aNorth":55,"aSouth":31,"aMain":33},"heldSeconds":{"aNorth":59.8,"aSouth":44.3,"aMain":25.2},"firstHeldAt":{"aNorth":4.7,"aSouth":5.6,"aMain":1275.4}}
+{"scenario":"final","heldCars":{"aNorth":57,"aSouth":26,"aMain":22},"heldSeconds":{"aNorth":62.5,"aSouth":45.2,"aMain":32},"firstHeldAt":{"aNorth":4.7,"aSouth":5.6,"aMain":1291.3}}

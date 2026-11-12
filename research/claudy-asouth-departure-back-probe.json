@@ -1,0 +1,164 @@
+[
+ {
+  "arrivalBack": 1.7,
+  "aSouthDepartureBack": 1.7,
+  "aSouthDepartureStop": 3.99,
+  "fwdMin": 0.882,
+  "fwdWho": "a:aSouth held, out:aNorth@5.57",
+  "revMin": 0,
+  "revWho": "out:aSouth held, a:aSouth@101.22"
+ },
+ {
+  "arrivalBack": 1.7,
+  "aSouthDepartureBack": 2.2,
+  "aSouthDepartureStop": 3.49,
+  "fwdMin": 0.882,
+  "fwdWho": "a:aSouth held, out:aNorth@5.57",
+  "revMin": 0.212,
+  "revWho": "out:aSouth held, eA:aSouth@371.27"
+ },
+ {
+  "arrivalBack": 1.7,
+  "aSouthDepartureBack": 2.7,
+  "aSouthDepartureStop": 2.99,
+  "fwdMin": 0.882,
+  "fwdWho": "a:aSouth held, out:aNorth@5.57",
+  "revMin": 0.672,
+  "revWho": "out:aSouth held, eA:aSouth@369.62"
+ },
+ {
+  "arrivalBack": 1.7,
+  "aSouthDepartureBack": 3,
+  "aSouthDepartureStop": 2.69,
+  "fwdMin": 0.882,
+  "fwdWho": "a:aSouth held, out:aNorth@5.57",
+  "revMin": 0.893,
+  "revWho": "out:aSouth held, eA:aSouth@369.26"
+ },
+ {
+  "arrivalBack": 1.7,
+  "aSouthDepartureBack": 3.2,
+  "aSouthDepartureStop": 2.49,
+  "fwdMin": 0.882,
+  "fwdWho": "a:aSouth held, out:aNorth@5.57",
+  "revMin": 0.956,
+  "revWho": "out:aSouth held, eA:aSouth@368.96"
+ },
+ {
+  "arrivalBack": 1.7,
+  "aSouthDepartureBack": 3.5,
+  "aSouthDepartureStop": 2.19,
+  "fwdMin": 0.882,
+  "fwdWho": "a:aSouth held, out:aNorth@5.57",
+  "revMin": 0.984,
+  "revWho": "out:aSouth held, a:aSouth@101.76"
+ },
+ {
+  "arrivalBack": 1.7,
+  "aSouthDepartureBack": 3.7,
+  "aSouthDepartureStop": 1.99,
+  "fwdMin": 0.882,
+  "fwdWho": "a:aSouth held, out:aNorth@5.57",
+  "revMin": 1,
+  "revWho": "out:aSouth held, a:aSouth@101.76"
+ },
+ {
+  "arrivalBack": 1.7,
+  "aSouthDepartureBack": 4,
+  "aSouthDepartureStop": 1.69,
+  "fwdMin": 0.882,
+  "fwdWho": "a:aSouth held, out:aNorth@5.57",
+  "revMin": 1.023,
+  "revWho": "out:aSouth held, a:aSouth@101.82"
+ },
+ {
+  "arrivalBack": 1.7,
+  "aSouthDepartureBack": 4.5,
+  "aSouthDepartureStop": 1.19,
+  "fwdMin": 0.882,
+  "fwdWho": "a:aSouth held, out:aNorth@5.57",
+  "revMin": 1.061,
+  "revWho": "out:aSouth held, a:aSouth@101.31"
+ },
+ {
+  "arrivalBack": 2.2,
+  "aSouthDepartureBack": 1.7,
+  "aSouthDepartureStop": 3.99,
+  "fwdMin": 0.979,
+  "fwdWho": "a:aSouth held, out:aSouth@3.99",
+  "revMin": 0,
+  "revWho": "out:aSouth held, a:aSouth@100.72"
+ },
+ {
+  "arrivalBack": 2.2,
+  "aSouthDepartureBack": 2.2,
+  "aSouthDepartureStop": 3.49,
+  "fwdMin": 0.979,
+  "fwdWho": "a:aSouth held, out:aSouth@3.49",
+  "revMin": 0.212,
+  "revWho": "out:aSouth held, eA:aSouth@369.81"
+ },
+ {
+  "arrivalBack": 2.2,
+  "aSouthDepartureBack": 2.7,
+  "aSouthDepartureStop": 2.99,
+  "fwdMin": 0.979,
+  "fwdWho": "a:aSouth held, out:aSouth@2.99",
+  "revMin": 0.672,
+  "revWho": "out:aSouth held, eA:aSouth@368.16"
+ },
+ {
+  "arrivalBack": 2.2,
+  "aSouthDepartureBack": 3,
+  "aSouthDepartureStop": 2.69,
+  "fwdMin": 0.979,
+  "fwdWho": "a:aSouth held, out:aSouth@4.07",
+  "revMin": 0.893,
+  "revWho": "out:aSouth held, eA:aSouth@370.71"
+ },
+ {
+  "arrivalBack": 2.2,
+  "aSouthDepartureBack": 3.2,
+  "aSouthDepartureStop": 2.49,
+  "fwdMin": 0.979,
+  "fwdWho": "a:aSouth held, out:aSouth@2.61",
+  "revMin": 0.956,
+  "revWho": "out:aSouth held, eA:aSouth@370.41"
+ },
+ {
+  "arrivalBack": 2.2,
+  "aSouthDepartureBack": 3.5,
+  "aSouthDepartureStop": 2.19,
+  "fwdMin": 0.979,
+  "fwdWho": "a:aSouth held, out:aSouth@2.76",
+  "revMin": 0.984,
+  "revWho": "out:aSouth held, a:aSouth@101.29"
+ },
+ {
+  "arrivalBack": 2.2,
+  "aSouthDepartureBack": 3.7,
+  "aSouthDepartureStop": 1.99,
+  "fwdMin": 0.979,
+  "fwdWho": "a:aSouth held, out:aSouth@1.99",
+  "revMin": 1,
+  "revWho": "out:aSouth held, a:aSouth@101.77"
+ },
+ {
+  "arrivalBack": 2.2,
+  "aSouthDepartureBack": 4,
+  "aSouthDepartureStop": 1.69,
+  "fwdMin": 0.979,
+  "fwdWho": "a:aSouth held, out:aSouth@1.69",
+  "revMin": 1.023,
+  "revWho": "out:aSouth held, a:aSouth@101.86"
+ },
+ {
+  "arrivalBack": 2.2,
+  "aSouthDepartureBack": 4.5,
+  "aSouthDepartureStop": 1.19,
+  "fwdMin": 0.979,
+  "fwdWho": "a:aSouth held, out:aSouth@4.04",
+  "revMin": 1.061,
+  "revWho": "out:aSouth held, a:aSouth@101.62"
+ }
+]

@@ -1,0 +1,2071 @@
+TAP version 13
+# Subtest: six/two hysteresis retains diversion through middle band and can be disabled
+ok 1 - six/two hysteresis retains diversion through middle band and can be disabled
+  ---
+  duration_ms: 1.296291
+  type: 'test'
+  ...
+# Subtest: only pre-Main general cars count; road decision excludes cars past \#59
+ok 2 - only pre-Main general cars count; road decision excludes cars past \#59
+  ---
+  duration_ms: 0.228083
+  type: 'test'
+  ...
+# Subtest: Bravo diversion route starts at pose and never reverses along Feeder
+ok 3 - Bravo diversion route starts at pose and never reverses along Feeder
+  ---
+  duration_ms: 15.964
+  type: 'test'
+  ...
+# Subtest: on-road redirect conserves built pose, ID, cohort and reservations and updates history
+ok 4 - on-road redirect conserves built pose, ID, cohort and reservations and updates history
+  ---
+  duration_ms: 137.674459
+  type: 'test'
+  ...
+# Subtest: new general requests choose Bravo while closed or full Bravo falls back to Alpha
+ok 5 - new general requests choose Bravo while closed or full Bravo falls back to Alpha
+  ---
+  duration_ms: 35.906541
+  type: 'test'
+  ...
+# Subtest: permit arrival is not diverted when Alpha is backed up
+ok 6 - permit arrival is not diverted when Alpha is backed up
+  ---
+  duration_ms: 25.543
+  type: 'test'
+  ...
+# Subtest: arrival demo parks all ten and retains them well beyond the former dwell timer
+ok 7 - arrival demo parks all ten and retains them well beyond the former dwell timer
+  ---
+  duration_ms: 309.095459
+  type: 'test'
+  ...
+# Subtest: explicit departure phase releases retained cars without resetting or teleporting
+ok 8 - explicit departure phase releases retained cars without resetting or teleporting
+  ---
+  duration_ms: 314.666416
+  type: 'test'
+  ...
+# Subtest: each Equity origin assigns C via its staffed entrance even when A has room
+ok 9 - each Equity origin assigns C via its staffed entrance even when A has room
+  ---
+  duration_ms: 113.274666
+  type: 'test'
+  ...
+# Subtest: feeder spills into B then C while Equity never enters through a C exit
+ok 10 - feeder spills into B then C while Equity never enters through a C exit
+  ---
+  duration_ms: 128.403125
+  type: 'test'
+  ...
+# Subtest: full campus sends all new arrivals away without queues or overflow parking
+ok 11 - full campus sends all new arrivals away without queues or overflow parking
+  ---
+  duration_ms: 8.321167
+  type: 'test'
+  ...
+# Subtest: C full alone holds Equity upstream instead of inventing a fallback
+ok 12 - C full alone holds Equity upstream instead of inventing a fallback
+  ---
+  duration_ms: 2.406958
+  type: 'test'
+  ...
+# Subtest: capacity reservations prevent overbooking and remaining arrivals are sent away
+ok 13 - capacity reservations prevent overbooking and remaining arrivals are sent away
+  ---
+  duration_ms: 62.220917
+  type: 'test'
+  ...
+# Subtest: bWest -> bSouth: entrance-side mouth, no reversal, passes \#61
+ok 14 - bWest -> bSouth: entrance-side mouth, no reversal, passes \#61
+  ---
+  duration_ms: 1.332208
+  type: 'test'
+  ...
+# Subtest: bWest -> bBanana: entrance-side mouth, no reversal, passes \#61
+ok 15 - bWest -> bBanana: entrance-side mouth, no reversal, passes \#61
+  ---
+  duration_ms: 0.354458
+  type: 'test'
+  ...
+# Subtest: bWest -> bPocket: entrance-side mouth, no reversal, passes \#61
+ok 16 - bWest -> bPocket: entrance-side mouth, no reversal, passes \#61
+  ---
+  duration_ms: 0.185125
+  type: 'test'
+  ...
+# Subtest: bWest -> bNorth: entrance-side mouth, no reversal, passes \#61
+ok 17 - bWest -> bNorth: entrance-side mouth, no reversal, passes \#61
+  ---
+  duration_ms: 0.16225
+  type: 'test'
+  ...
+# Subtest: bNorth -> bSouth: entrance-side mouth, no reversal, passes \#61
+ok 18 - bNorth -> bSouth: entrance-side mouth, no reversal, passes \#61
+  ---
+  duration_ms: 0.067459
+  type: 'test'
+  ...
+# Subtest: bNorth -> bBanana: entrance-side mouth, no reversal, passes \#61
+ok 19 - bNorth -> bBanana: entrance-side mouth, no reversal, passes \#61
+  ---
+  duration_ms: 0.055041
+  type: 'test'
+  ...
+# Subtest: bNorth -> bPocket: entrance-side mouth, no reversal, passes \#61
+ok 20 - bNorth -> bPocket: entrance-side mouth, no reversal, passes \#61
+  ---
+  duration_ms: 0.081333
+  type: 'test'
+  ...
+# Subtest: bNorth -> bNorth: entrance-side mouth, no reversal, passes \#61
+ok 21 - bNorth -> bNorth: entrance-side mouth, no reversal, passes \#61
+  ---
+  duration_ms: 0.057
+  type: 'test'
+  ...
+# Subtest: Black Permit holds feeder through-arrivals for outbound shuttle then immediately releases
+ok 22 - Black Permit holds feeder through-arrivals for outbound shuttle then immediately releases
+  ---
+  duration_ms: 2.495958
+  type: 'test'
+  ...
+# Subtest: departures and cars already occupying the merge are not frozen by Black Permit
+ok 23 - departures and cars already occupying the merge are not frozen by Black Permit
+  ---
+  duration_ms: 0.456375
+  type: 'test'
+  ...
+# Subtest: actual outbound B and C shuttle lanes trigger the Black Permit operator
+ok 24 - actual outbound B and C shuttle lanes trigger the Black Permit operator
+  ---
+  duration_ms: 1189.738542
+  type: 'test'
+  ...
+# Subtest: opposing fleet buses pass through the same connector (reversed=false)
+ok 25 - opposing fleet buses pass through the same connector (reversed=false)
+  ---
+  duration_ms: 2.118416
+  type: 'test'
+  ...
+# Subtest: opposing fleet buses pass through the same connector (reversed=true)
+ok 26 - opposing fleet buses pass through the same connector (reversed=true)
+  ---
+  duration_ms: 0.67
+  type: 'test'
+  ...
+# Subtest: same-lane fleet buses pass through a stopped bus
+ok 27 - same-lane fleet buses pass through a stopped bus
+  ---
+  duration_ms: 0.84775
+  type: 'test'
+  ...
+# Subtest: fleet bus still stops behind an ordinary stopped car
+ok 28 - fleet bus still stops behind an ordinary stopped car
+  ---
+  duration_ms: 0.313459
+  type: 'test'
+  ...
+# Subtest: ordinary car still stops behind a fleet bus
+ok 29 - ordinary car still stops behind a fleet bus
+  ---
+  duration_ms: 0.158375
+  type: 'test'
+  ...
+# Subtest: second shuttle launch ignores bus at its start while retaining 15s HOME spacing
+ok 30 - second shuttle launch ignores bus at its start while retaining 15s HOME spacing
+  ---
+  duration_ms: 1198.425875
+  type: 'test'
+  ...
+# Subtest: shuttle launch stays blocked by ordinary car at its start
+ok 31 - shuttle launch stays blocked by ordinary car at its start
+  ---
+  duration_ms: 1.457333
+  type: 'test'
+  ...
+# Subtest: latest map preserves satellite aspect and has three polygon roofs
+not ok 32 - latest map preserves satellite aspect and has three polygon roofs
+  ---
+  duration_ms: 2.111084
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/campus.test.js:6:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 1.2289803220035778
+    - 1.2322206095791002
+         ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1.2322206095791002
+  actual: 1.2289803220035778
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/campus.test.js:8:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.start (node:internal/test_runner/test:1096:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17)
+  ...
+# Subtest: curved spine joins both frontage streets in image coordinates
+not ok 33 - curved spine joins both frontage streets in image coordinates
+  ---
+  duration_ms: 0.995167
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/campus.test.js:11:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'points')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/campus.test.js:14:26)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+# Subtest: invalid trace coordinates and widths are rejected
+not ok 34 - invalid trace coordinates and widths are rejected
+  ---
+  duration_ms: 1.578416
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/campus.test.js:19:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'points')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/campus.test.js:21:44)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+  ...
+# Subtest: cWest/cFirstNorth enters through \#63 and never detours to northeast after admission
+ok 35 - cWest/cFirstNorth enters through \#63 and never detours to northeast after admission
+  ---
+  duration_ms: 1.725709
+  type: 'test'
+  ...
+# Subtest: cWest/cFirstSouth enters through \#63 and never detours to northeast after admission
+ok 36 - cWest/cFirstSouth enters through \#63 and never detours to northeast after admission
+  ---
+  duration_ms: 10.234292
+  type: 'test'
+  ...
+# Subtest: cWest/cNorth enters through \#63 and never detours to northeast after admission
+ok 37 - cWest/cNorth enters through \#63 and never detours to northeast after admission
+  ---
+  duration_ms: 0.328792
+  type: 'test'
+  ...
+# Subtest: cWest/cSouth enters through \#63 and never detours to northeast after admission
+ok 38 - cWest/cSouth enters through \#63 and never detours to northeast after admission
+  ---
+  duration_ms: 7.052
+  type: 'test'
+  ...
+# Subtest: eCWest/cFirstNorth enters through \#63 and never detours to northeast after admission
+ok 39 - eCWest/cFirstNorth enters through \#63 and never detours to northeast after admission
+  ---
+  duration_ms: 0.180583
+  type: 'test'
+  ...
+# Subtest: eCWest/cFirstSouth enters through \#63 and never detours to northeast after admission
+ok 40 - eCWest/cFirstSouth enters through \#63 and never detours to northeast after admission
+  ---
+  duration_ms: 0.320458
+  type: 'test'
+  ...
+# Subtest: eCWest/cNorth enters through \#63 and never detours to northeast after admission
+ok 41 - eCWest/cNorth enters through \#63 and never detours to northeast after admission
+  ---
+  duration_ms: 0.27175
+  type: 'test'
+  ...
+# Subtest: eCWest/cSouth enters through \#63 and never detours to northeast after admission
+ok 42 - eCWest/cSouth enters through \#63 and never detours to northeast after admission
+  ---
+  duration_ms: 0.35075
+  type: 'test'
+  ...
+# Subtest: e2CWest/cFirstNorth enters through \#63 and never detours to northeast after admission
+ok 43 - e2CWest/cFirstNorth enters through \#63 and never detours to northeast after admission
+  ---
+  duration_ms: 0.160583
+  type: 'test'
+  ...
+# Subtest: e2CWest/cFirstSouth enters through \#63 and never detours to northeast after admission
+ok 44 - e2CWest/cFirstSouth enters through \#63 and never detours to northeast after admission
+  ---
+  duration_ms: 0.367542
+  type: 'test'
+  ...
+# Subtest: e2CWest/cNorth enters through \#63 and never detours to northeast after admission
+ok 45 - e2CWest/cNorth enters through \#63 and never detours to northeast after admission
+  ---
+  duration_ms: 0.154208
+  type: 'test'
+  ...
+# Subtest: e2CWest/cSouth enters through \#63 and never detours to northeast after admission
+ok 46 - e2CWest/cSouth enters through \#63 and never detours to northeast after admission
+  ---
+  duration_ms: 0.348333
+  type: 'test'
+  ...
+# Subtest: actual built C lanes from all origins stay at staffed mouth, not northeast exit
+ok 47 - actual built C lanes from all origins stay at staffed mouth, not northeast exit
+  ---
+  duration_ms: 1320.176708
+  type: 'test'
+  ...
+# Subtest: opposing directions on Corporate get separate right-hand lanes
+ok 48 - opposing directions on Corporate get separate right-hand lanes
+  ---
+  duration_ms: 6.55925
+  type: 'test'
+  ...
+# Subtest: same direction on a street stays one physical queue
+ok 49 - same direction on a street stays one physical queue
+  ---
+  duration_ms: 8.195375
+  type: 'test'
+  ...
+# Subtest: lot points (Main Position) are never offset
+ok 50 - lot points (Main Position) are never offset
+  ---
+  duration_ms: 3.884125
+  type: 'test'
+  ...
+# Subtest: A departures through Main do not double back into the opposing held queue
+ok 51 - A departures through Main do not double back into the opposing held queue
+  ---
+  duration_ms: 58.82025
+  type: 'test'
+  ...
+# Subtest: connectors prefer traced pavement; fallbacks are flagged
+not ok 52 - connectors prefer traced pavement; fallbacks are flagged
+  ---
+  duration_ms: 40.754292
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/clear-image-runtime.test.js:68:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/clear-image-runtime.test.js:71:12)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+  ...
+# Subtest: mixed A departure drains both North and South through Main
+ok 53 - mixed A departure drains both North and South through Main
+  ---
+  duration_ms: 151.251417
+  type: 'test'
+  ...
+# Subtest: B departures never run against traced B arrival or shuttle circulation
+ok 54 - B departures never run against traced B arrival or shuttle circulation
+  ---
+  duration_ms: 117.935083
+  type: 'test'
+  ...
+# Subtest: A arrivals cross Lot A Main exactly once
+ok 55 - A arrivals cross Lot A Main exactly once
+  ---
+  duration_ms: 5.470583
+  type: 'test'
+  ...
+# Subtest: three separate operators, \#60 and \#61 own opposite ends, \#59 records passage only
+ok 56 - three separate operators, \#60 and \#61 own opposite ends, \#59 records passage only
+  ---
+  duration_ms: 10.199292
+  type: 'test'
+  ...
+# Subtest: departure inside the stretch holds an opposing arrival at its stop line
+ok 57 - departure inside the stretch holds an opposing arrival at its stop line
+  ---
+  duration_ms: 1.905083
+  type: 'test'
+  ...
+# Subtest: shuttle waiting at \#60 outranks a departure waiting at \#61
+ok 58 - shuttle waiting at \#60 outranks a departure waiting at \#61
+  ---
+  duration_ms: 1.680959
+  type: 'test'
+  ...
+# Subtest: departure waiting at \#61 outranks an arrival waiting at \#60
+ok 59 - departure waiting at \#61 outranks an arrival waiting at \#60
+  ---
+  duration_ms: 1.58525
+  type: 'test'
+  ...
+# Subtest: arrival vs shuttle stays on existing local bus priority (no valve)
+ok 60 - arrival vs shuttle stays on existing local bus priority (no valve)
+  ---
+  duration_ms: 2.048708
+  type: 'test'
+  ...
+# Subtest: same-direction follower is admitted behind a departure already in the stretch
+ok 61 - same-direction follower is admitted behind a departure already in the stretch
+  ---
+  duration_ms: 0.771958
+  type: 'test'
+  ...
+# Subtest: \#59 never holds traffic; disabled operators hold nothing
+ok 62 - \#59 never holds traffic; disabled operators hold nothing
+  ---
+  duration_ms: 1.548458
+  type: 'test'
+  ...
+# Subtest: two-way: opposing lanes wider than conflictGap get no valve, passage still counted
+ok 63 - two-way: opposing lanes wider than conflictGap get no valve, passage still counted
+  ---
+  duration_ms: 0.6485
+  type: 'test'
+  ...
+# Subtest: every operator counts vehicles passing its point exactly once
+ok 64 - every operator counts vehicles passing its point exactly once
+  ---
+  duration_ms: 1.367208
+  type: 'test'
+  ...
+# Subtest: Corporate through lanes share a centerline, stay on pavement and clear opposing bus/car bodies
+ok 65 - Corporate through lanes share a centerline, stay on pavement and clear opposing bus/car bodies
+  ---
+  duration_ms: 48.40925
+  type: 'test'
+  ...
+# Subtest: isolated west B departure completes in production without artificial corridor hold
+ok 66 - isolated west B departure completes in production without artificial corridor hold
+  ---
+  duration_ms: 1234.930375
+  type: 'test'
+  ...
+# Subtest: indexed lane sampling preserves Three points and tangents including segment boundaries
+ok 67 - indexed lane sampling preserves Three points and tangents including segment boundaries
+  ---
+  duration_ms: 6.0725
+  type: 'test'
+  ...
+# Subtest: failed route construction is attempted once per scenario, not once per ready car per tick
+ok 68 - failed route construction is attempted once per scenario, not once per ready car per tick
+  ---
+  duration_ms: 202.414333
+  type: 'test'
+  ...
+# Subtest: B north/pocket departures connect to the labeled north exit
+ok 69 - B north/pocket departures connect to the labeled north exit
+  ---
+  duration_ms: 23.984125
+  type: 'test'
+  ...
+# Subtest: C departure routes start at exits, never retrace the shuttle entrance turnaround
+ok 70 - C departure routes start at exits, never retrace the shuttle entrance turnaround
+  ---
+  duration_ms: 71.746541
+  type: 'test'
+  ...
+# Subtest: 11am departures clear C entrance and all five shuttles complete repeated trips
+ok 71 - 11am departures clear C entrance and all five shuttles complete repeated trips
+  ---
+  duration_ms: 3503.285208
+  type: 'test'
+  ...
+# Subtest: three-way stop halts all cars, then releases a single priority departure and clears before next
+ok 72 - three-way stop halts all cars, then releases a single priority departure and clears before next
+  ---
+  duration_ms: 8.981084
+  type: 'test'
+  ...
+# Subtest: Clay approach is separated into two travel-right lanes without changing source coordinates
+ok 73 - Clay approach is separated into two travel-right lanes without changing source coordinates
+  ---
+  duration_ms: 0.207292
+  type: 'test'
+  ...
+# Subtest: two labeled Equity entrances are distinct inbound origins
+not ok 74 - two labeled Equity entrances are distinct inbound origins
+  ---
+  duration_ms: 5.930833
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/equity-routing.test.js:18:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(inPolygon(west[0],ring('Equity Entrance')))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/equity-routing.test.js:20:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.start (node:internal/test_runner/test:1096:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17)
+  ...
+# Subtest: both Equity C routes follow pavement then the staffed west entrance, not an exit
+not ok 75 - both Equity C routes follow pavement then the staffed west entrance, not an exit
+  ---
+  duration_ms: 16.920625
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/equity-routing.test.js:30:1'
+  failureType: 'testCodeFailure'
+  error: 'eCWest traverses Equity Drive'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/equity-routing.test.js:39:12)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+# Subtest: clear Corporate exit is released immediately and an empty opposing quota never holds it
+ok 76 - clear Corporate exit is released immediately and an empty opposing quota never holds it
+  ---
+  duration_ms: 4.396167
+  type: 'test'
+  ...
+# Subtest: both queues get ten actually-cleared exits then five actually-cleared entries
+ok 77 - both queues get ten actually-cleared exits then five actually-cleared entries
+  ---
+  duration_ms: 1.702834
+  type: 'test'
+  ...
+# Subtest: occupied junction clears before a new conflicting exit enters
+ok 78 - occupied junction clears before a new conflicting exit enters
+  ---
+  duration_ms: 1.068709
+  type: 'test'
+  ...
+# Subtest: shuttle has priority over batch, but its queued physical leader may clear
+ok 79 - shuttle has priority over batch, but its queued physical leader may clear
+  ---
+  duration_ms: 0.320333
+  type: 'test'
+  ...
+# Subtest: nonconflicting parallel approaches are not batched against each other
+ok 80 - nonconflicting parallel approaches are not batched against each other
+  ---
+  duration_ms: 0.170042
+  type: 'test'
+  ...
+# Subtest: wide two-way Corporate default never imposes the legacy whole-stretch valve
+ok 81 - wide two-way Corporate default never imposes the legacy whole-stretch valve
+  ---
+  duration_ms: 1.09975
+  type: 'test'
+  ...
+# Subtest: reassigned lane does not inherit an old passage exemption or admission
+ok 82 - reassigned lane does not inherit an old passage exemption or admission
+  ---
+  duration_ms: 0.212875
+  type: 'test'
+  ...
+# Subtest: actual movement honors 10:5 under replenished competing queues
+ok 83 - actual movement honors 10:5 under replenished competing queues
+  ---
+  duration_ms: 19.057458
+  type: 'test'
+  ...
+# Subtest: a same-lane car follows its priority bus without a junction quota stop
+ok 84 - a same-lane car follows its priority bus without a junction quota stop
+  ---
+  duration_ms: 0.395792
+  type: 'test'
+  ...
+# Subtest: only Lot B west departures take the Feeder middle lane
+ok 85 - only Lot B west departures take the Feeder middle lane
+  ---
+  duration_ms: 1.318792
+  type: 'test'
+  ...
+# Subtest: arrival lanes are unchanged by the optional Feeder offset
+ok 86 - arrival lanes are unchanged by the optional Feeder offset
+  ---
+  duration_ms: 23.273875
+  type: 'test'
+  ...
+# Subtest: B west middle lane stays paved, clear of obstacles and separated past the exit
+ok 87 - B west middle lane stays paved, clear of obstacles and separated past the exit
+  ---
+  duration_ms: 106.786667
+  type: 'test'
+  ...
+# Subtest: B west departures pass Alpha arrivals queued north of the exit (416/1172 case)
+ok 88 - B west departures pass Alpha arrivals queued north of the exit (416/1172 case)
+  ---
+  duration_ms: 201.647
+  type: 'test'
+  ...
+# Subtest: officer admits only one ready car, counts clearance, does not overwrite Main Position
+ok 89 - officer admits only one ready car, counts clearance, does not overwrite Main Position
+  ---
+  duration_ms: 16.730875
+  type: 'test'
+  ...
+# Subtest: occupied feeder merge clears before an A exit is admitted
+ok 90 - occupied feeder merge clears before an A exit is admitted
+  ---
+  duration_ms: 0.170542
+  type: 'test'
+  ...
+# Subtest: priority bus holds conflicting A exit but does not trap its physical feeder leader
+ok 91 - priority bus holds conflicting A exit but does not trap its physical feeder leader
+  ---
+  duration_ms: 0.102125
+  type: 'test'
+  ...
+# Subtest: feeder traffic stays free without waiting Lot A departures; passed traffic is not phantom demand
+ok 92 - feeder traffic stays free without waiting Lot A departures; passed traffic is not phantom demand
+  ---
+  duration_ms: 0.090417
+  type: 'test'
+  ...
+# Subtest: officer can be disabled without removing physical roads
+ok 93 - officer can be disabled without removing physical roads
+  ---
+  duration_ms: 0.078166
+  type: 'test'
+  ...
+# Subtest: Lot A Main Position alternates actual five-car passages, then drains partial batches
+ok 94 - Lot A Main Position alternates actual five-car passages, then drains partial batches
+  ---
+  duration_ms: 168.910875
+  type: 'test'
+  ...
+# Subtest: an empty North does not strand South
+ok 95 - an empty North does not strand South
+  ---
+  duration_ms: 46.909
+  type: 'test'
+  ...
+# Subtest: badge cars turn east/right inside permit entrance, stay clear of A pickup and roofs
+not ok 96 - badge cars turn east/right inside permit entrance, stay clear of A pickup and roofs
+  ---
+  duration_ms: 18.161791
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-batch-control.test.js:31:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(internal.some(p=>p[0]===190&&p[1]===250))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-batch-control.test.js:36:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+  ...
+# Subtest: photo boundary contains entire east apron and matches pavement coordinates
+not ok 97 - photo boundary contains entire east apron and matches pavement coordinates
+  ---
+  duration_ms: 12.396417
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-envelope.test.js:14:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'points')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-envelope.test.js:19:40)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.start (node:internal/test_runner/test:1096:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17)
+  ...
+# Subtest: revision one boundary migration retains building, custom rows and lot state
+not ok 98 - revision one boundary migration retains building, custom rows and lot state
+  ---
+  duration_ms: 0.541167
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-envelope.test.js:29:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot set properties of undefined (setting 'count')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-envelope.test.js:33:60)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+# Subtest: aNorth departure is held at the measured setback; mainStopBack itself unchanged
+ok 99 - aNorth departure is held at the measured setback; mainStopBack itself unchanged
+  ---
+  duration_ms: 0.872583
+  type: 'test'
+  ...
+# Subtest: Main-inbound arrivals are held at the measured aMain setback (2.2, aSouth repair)
+ok 100 - Main-inbound arrivals are held at the measured aMain setback (2.2, aSouth repair)
+  ---
+  duration_ms: 0.211458
+  type: 'test'
+  ...
+# Subtest: held aNorth departure body clears every admitted arrival path past Main
+ok 101 - held aNorth departure body clears every admitted arrival path past Main
+  ---
+  duration_ms: 3.7415
+  type: 'test'
+  ...
+# Subtest: the old 1.7 hold reproduces the measured lock geometry (guards the diagnosis)
+ok 102 - the old 1.7 hold reproduces the measured lock geometry (guards the diagnosis)
+  ---
+  duration_ms: 0.261917
+  type: 'test'
+  ...
+# Subtest: five-car policy and Main anchor unchanged; every general A route passes exactly through Main
+ok 103 - five-car policy and Main anchor unchanged; every general A route passes exactly through Main
+  ---
+  duration_ms: 1.506458
+  type: 'test'
+  ...
+# Subtest: held arrival body clears every A departure lane on built lanes
+ok 104 - held arrival body clears every A departure lane on built lanes
+  ---
+  duration_ms: 211.808
+  type: 'test'
+  ...
+# Subtest: queued arrivals behind the held car clear every A departure lane
+ok 105 - queued arrivals behind the held car clear every A departure lane
+  ---
+  duration_ms: 175.217792
+  type: 'test'
+  ...
+# Subtest: held departure body clears every A arrival APPROACH (median side) on built lanes
+ok 106 - held departure body clears every A arrival APPROACH (median side) on built lanes
+  ---
+  duration_ms: 8947.102958
+  type: 'test'
+  ...
+# Subtest: held departure body clears the FULL A arrival lane (incl. post-Main aisle)
+ok 107 - held departure body clears the FULL A arrival lane (incl. post-Main aisle)
+  ---
+  duration_ms: 7466.446584
+  type: 'test'
+  ...
+# Subtest: arrivals keep right of travel (entrance side), departures right of travel (exit side)
+ok 108 - arrivals keep right of travel (entrance side), departures right of travel (exit side)
+  ---
+  duration_ms: 0.382625
+  type: 'test'
+  ...
+# Subtest: median offsets avoid obstacles and every step-down is recorded
+ok 109 - median offsets avoid obstacles and every step-down is recorded
+  ---
+  duration_ms: 46.286
+  type: 'test'
+  ...
+# Subtest: no median offset was silently reduced
+ok 110 - no median offset was silently reduced
+  ---
+  duration_ms: 0.169333
+  type: 'test'
+  ...
+# Subtest: one position controls all three ready approaches and counts only clearance
+ok 111 - one position controls all three ready approaches and counts only clearance
+  ---
+  duration_ms: 2.0875
+  type: 'test'
+  ...
+# Subtest: five cleared cars switch equally ranked ready roads
+ok 112 - five cleared cars switch equally ranked ready roads
+  ---
+  duration_ms: 1.720416
+  type: 'test'
+  ...
+# Subtest: priority waits for occupied vehicle, then serves shuttle before departure before arrival
+ok 113 - priority waits for occupied vehicle, then serves shuttle before departure before arrival
+  ---
+  duration_ms: 0.230042
+  type: 'test'
+  ...
+# Subtest: a distant North queue does not starve a ready inbound approach
+ok 114 - a distant North queue does not starve a ready inbound approach
+  ---
+  duration_ms: 0.099209
+  type: 'test'
+  ...
+# Subtest: unadmitted vehicle already in Main Position clears before a new approach
+ok 115 - unadmitted vehicle already in Main Position clears before a new approach
+  ---
+  duration_ms: 0.090042
+  type: 'test'
+  ...
+# Subtest: all general A arrival/departure routes traverse the same position; badge stays separate
+ok 116 - all general A arrival/departure routes traverse the same position; badge stays separate
+  ---
+  duration_ms: 90.551375
+  type: 'test'
+  ...
+# Subtest: real general arrivals clear the staffed main approach and stay parked
+ok 117 - real general arrivals clear the staffed main approach and stay parked
+  ---
+  duration_ms: 89.290083
+  type: 'test'
+  ...
+# Subtest: parking trace renders serializable surfaces and all three parking banks
+not ok 118 - parking trace renders serializable surfaces and all three parking banks
+  ---
+  duration_ms: 8.624
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-parking.test.js:6:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(layout.items.some(i=>i.id==='a-pavement' && i.type==='surface'))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-parking.test.js:11:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.start (node:internal/test_runner/test:1096:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17)
+  ...
+# Subtest: migration preserves non-A geometry and only applies once
+not ok 119 - migration preserves non-A geometry and only applies once
+  ---
+  duration_ms: 0.3095
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-parking.test.js:17:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot set properties of undefined (setting 'count')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-parking.test.js:22:43)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+# Subtest: east apron shares the entire main hall east boundary
+ok 120 - east apron shares the entire main hall east boundary
+  ---
+  duration_ms: 0.102167
+  type: 'test'
+  ...
+# Subtest: surface imports reject malformed elevations, colors, and missing polygons
+ok 121 - surface imports reject malformed elevations, colors, and missing polygons
+  ---
+  duration_ms: 1.0545
+  type: 'test'
+  ...
+# Subtest: production approaches apply the measured holds (aMain 2.2, aSouth 3.2, aNorth 3.0)
+ok 122 - production approaches apply the measured holds (aMain 2.2, aSouth 3.2, aNorth 3.0)
+  ---
+  duration_ms: 1.987917
+  type: 'test'
+  ...
+# Subtest: no admitted A departure yields to a batch-held Main-inbound arrival (chord rule)
+ok 123 - no admitted A departure yields to a batch-held Main-inbound arrival (chord rule)
+  ---
+  duration_ms: 24.45675
+  type: 'test'
+  ...
+# Subtest: no admitted arrival yields to a batch-held A departure, full lane incl. post-Main aisle (chord rule)
+ok 124 - no admitted arrival yields to a batch-held A departure, full lane incl. post-Main aisle (chord rule)
+  ---
+  duration_ms: 17.300208
+  type: 'test'
+  ...
+# Subtest: the pre-repair 1.7 stops reproduce the logged 299/1150 lock (guards the diagnosis)
+ok 125 - the pre-repair 1.7 stops reproduce the logged 299/1150 lock (guards the diagnosis)
+  ---
+  duration_ms: 36.099417
+  type: 'test'
+  ...
+# Subtest: aSouth hold window is bounded on both sides (3.0 and 3.5 both lock)
+ok 126 - aSouth hold window is bounded on both sides (3.0 and 3.5 both lock)
+  ---
+  duration_ms: 32.590708
+  type: 'test'
+  ...
+# Subtest: Lot A has three separate finite roof masses and serializes
+ok 127 - Lot A has three separate finite roof masses and serializes
+  ---
+  duration_ms: 2.482875
+  type: 'test'
+  ...
+# Subtest: applying Lot A preserves every other object and project name
+not ok 128 - applying Lot A preserves every other object and project name
+  ---
+  duration_ms: 0.425042
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a.test.js:25:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot set properties of undefined (setting 'x')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a.test.js:27:43)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+# Subtest: malformed mass coordinates and heights are rejected
+not ok 129 - malformed mass coordinates and heights are rejected
+  ---
+  duration_ms: 0.289333
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a.test.js:34:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'masses')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a.test.js:37:42)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+  ...
+# Subtest: saved-layout update clears current positions only once and preserves other items
+not ok 130 - saved-layout update clears current positions only once and preserves other items
+  ---
+  duration_ms: 4.903208
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a.test.js:42:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot set properties of undefined (setting 'modelRevision')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a.test.js:49:24)
+    async Test.run (node:internal/test_runner/test:1208:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+  ...
+# Subtest: starter layout round-trips and has three provisional lots
+not ok 131 - starter layout round-trips and has three provisional lots
+  ---
+  duration_ms: 6.634417
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:5:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1584 !== 898
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 898
+  actual: 1584
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:11:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.start (node:internal/test_runner/test:1096:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17)
+  ...
+# Subtest: closing a lot reduces capacity and removes its demonstration route
+not ok 132 - closing a lot reduces capacity and removes its demonstration route
+  ---
+  duration_ms: 0.660834
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:15:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1173 !== 487
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 487
+  actual: 1173
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:18:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+# Subtest: all placement tools create valid serializable objects
+ok 133 - all placement tools create valid serializable objects
+  ---
+  duration_ms: 9.075334
+  type: 'test'
+  ...
+# Subtest: deleting a lot unassigns its parking rows rather than leaving dangling references
+not ok 134 - deleting a lot unassigns its parking rows rather than leaving dangling references
+  ---
+  duration_ms: 0.389167
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:34:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'lotId')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:37:52)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+  ...
+# Subtest: invalid imports are rejected without mutating input
+not ok 135 - invalid imports are rejected without mutating input
+  ---
+  duration_ms: 1.305167
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:41:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot set properties of undefined (setting 'lotId')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:55:82)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+  ...
+# Subtest: roles, assignees, geometry and notes survive export/import
+ok 136 - roles, assignees, geometry and notes survive export/import
+  ---
+  duration_ms: 0.50875
+  type: 'test'
+  ...
+# Subtest: C exit officer holds conflicting arrivals and departures; independent road stays open
+ok 137 - C exit officer holds conflicting arrivals and departures; independent road stays open
+  ---
+  duration_ms: 4.125
+  type: 'test'
+  ...
+# Subtest: occupied Corporate traffic clears before the shuttle, bus-to-bus exception retained
+ok 138 - occupied Corporate traffic clears before the shuttle, bus-to-bus exception retained
+  ---
+  duration_ms: 1.170834
+  type: 'test'
+  ...
+# Subtest: radio releases a stopped physical leader needed by an occupied car
+ok 139 - radio releases a stopped physical leader needed by an occupied car
+  ---
+  duration_ms: 0.563875
+  type: 'test'
+  ...
+# Subtest: hold continues until shuttle tail clears and inbound/non-C buses do not preempt
+ok 140 - hold continues until shuttle tail clears and inbound/non-C buses do not preempt
+  ---
+  duration_ms: 0.395959
+  type: 'test'
+  ...
+# Subtest: all actual C return legs announce on shared radio; ordinary C cars ignore east policy
+ok 141 - all actual C return legs announce on shared radio; ordinary C cars ignore east policy
+  ---
+  duration_ms: 1086.877458
+  type: 'test'
+  ...
+# Subtest: B diversions count five actual launches, pause between batches, restore east route when clear
+ok 142 - B diversions count five actual launches, pause between batches, restore east route when clear
+  ---
+  duration_ms: 0.978958
+  type: 'test'
+  ...
+# Subtest: Clay backup requires sustained road waits and resets when cars move
+ok 143 - Clay backup requires sustained road waits and resets when cars move
+  ---
+  duration_ms: 0.197042
+  type: 'test'
+  ...
+# Subtest: reverse restores private state, never steps negative, and forward resumes identically
+ok 144 - reverse restores private state, never steps negative, and forward resumes identically
+  ---
+  duration_ms: 0.816833
+  type: 'test'
+  ...
+# Subtest: reverse retains fractional ticks across rendered frames
+ok 145 - reverse retains fractional ticks across rendered frames
+  ---
+  duration_ms: 0.927667
+  type: 'test'
+  ...
+# Subtest: real 40-minute eleven transition clears the C radio handoff instead of trapping its physical leader
+ok 146 - real 40-minute eleven transition clears the C radio handoff instead of trapping its physical leader
+  ---
+  duration_ms: 9051.17125
+  type: 'test'
+  ...
+# Subtest: playback advances 1–30× time with bounded updates and forwards settings
+ok 147 - playback advances 1–30× time with bounded updates and forwards settings
+  ---
+  duration_ms: 1.320625
+  type: 'test'
+  ...
+# Subtest: playback bounds long frame catch-up and rejects invalid frame durations
+ok 148 - playback bounds long frame catch-up and rejects invalid frame durations
+  ---
+  duration_ms: 0.182084
+  type: 'test'
+  ...
+# Subtest: 5× playback completes the ten-car demo and preserves parking until departure
+ok 149 - 5× playback completes the ten-car demo and preserves parking until departure
+  ---
+  duration_ms: 546.502708
+  type: 'test'
+  ...
+# Subtest: recorded reverse updates earlier cars immediately without any reconstruction
+ok 150 - recorded reverse updates earlier cars immediately without any reconstruction
+  ---
+  duration_ms: 2.342208
+  type: 'test'
+  ...
+# Subtest: forward resumption restores private state once, then advances identically
+ok 151 - forward resumption restores private state once, then advances identically
+  ---
+  duration_ms: 1.639333
+  type: 'test'
+  ...
+# Subtest: history bounds, old-history refill, zero and input invalidation
+ok 152 - history bounds, old-history refill, zero and input invalidation
+  ---
+  duration_ms: 3.208083
+  type: 'test'
+  ...
+# Subtest: real traffic recorded rewind restores car poses/counts and deterministic forward state
+ok 153 - real traffic recorded rewind restores car poses/counts and deterministic forward state
+  ---
+  duration_ms: 1352.83375
+  type: 'test'
+  ...
+# Subtest: Operations mounts compact parked counts and retires requested sections/presets
+ok 154 - Operations mounts compact parked counts and retires requested sections/presets
+  ---
+  duration_ms: 0.722625
+  type: 'test'
+  ...
+# Subtest: revised traces connect to fixed Main without a grid detour and disclose residual
+ok 155 - revised traces connect to fixed Main without a grid detour and disclose residual
+  ---
+  duration_ms: 2.659042
+  type: 'test'
+  ...
+# Subtest: station adjustment cannot become an unbounded shortcut
+ok 156 - station adjustment cannot become an unbounded shortcut
+  ---
+  duration_ms: 0.242125
+  type: 'test'
+  ...
+# Subtest: revised inbound approach continues forward to Main rather than looping south and back
+ok 157 - revised inbound approach continues forward to Main rather than looping south and back
+  ---
+  duration_ms: 34.526333
+  type: 'test'
+  ...
+# Subtest: A departure begins at the labeled exit throat, not the old arrival-end turnaround
+ok 158 - A departure begins at the labeled exit throat, not the old arrival-end turnaround
+  ---
+  duration_ms: 1.769
+  type: 'test'
+  ...
+# Subtest: resolved Main Position has one shared coordinate and all general approaches attach
+not ok 159 - resolved Main Position has one shared coordinate and all general approaches attach
+  ---
+  duration_ms: 15.432
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/route-layout-alignment.test.js:16:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(onLotGround('a',LOT_A_MAIN_POSITION))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/route-layout-alignment.test.js:18:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+# Subtest: road anchoring preserves physical road/entrance; proposals and missing shuttle returns are not invented
+not ok 160 - road anchoring preserves physical road/entrance; proposals and missing shuttle returns are not invented
+  ---
+  duration_ms: 48.701708
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/route-layout-alignment.test.js:26:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        [
+    +     21.061927943633087,
+    +     1100.4518497411743
+    -     22.289626814412422,
+    -     1109.9191793417115
+        ],
+        [
+    +     22.259087041507463,
+    +     67.18749713854544
+    -     28.666331396967784,
+    -     71.12712784328511
+        ],
+        [
+    +     48.60269514932481,
+    +     49.865337946852875
+    -     68.13593389933638,
+    -     51.42897431958676
+        ],
+        [
+    +     108.83934322706531,
+    +     52.94374705567271
+    -     111.300848923205,
+    -     56.229826620246264
+        ],
+        [
+    +     145.69301319581754,
+    +     62.96327521685426
+    -     146.04519200874014,
+    -     58.97191533706462
+        ],
+        [
+    +     152.7902666991465,
+    +     65.75940981084871
+    -     177.9203094016778,
+    -     75.77964918379641
+        ],
+        [
+    +     154.4066930590051,
+    +     67.1127797778565
+    -     220.95656034082128,
+    -     100.84010654668145
+        ],
+        [
+    +     156.02311941886373,
+    +     68.46614974486431
+    -     216,
+    -     104
+        ],
+        [
+    +     157.63954577872232,
+    +     69.8195197118721
+    -     217.85490056363312,
+    -     91.57755681363301
+        ]
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      0: 22.289626814412422
+      1: 1109.9191793417115
+    1:
+      0: 28.666331396967784
+      1: 71.12712784328511
+    2:
+      0: 68.13593389933638
+      1: 51.42897431958676
+    3:
+      0: 111.300848923205
+      1: 56.229826620246264
+    4:
+      0: 146.04519200874014
+      1: 58.97191533706462
+    5:
+      0: 177.9203094016778
+      1: 75.77964918379641
+    6:
+      0: 220.95656034082128
+      1: 100.84010654668145
+    7:
+      0: 216
+      1: 104
+    8:
+      0: 217.85490056363312
+      1: 91.57755681363301
+  actual:
+    0:
+      0: 21.061927943633087
+      1: 1100.4518497411743
+    1:
+      0: 22.259087041507463
+      1: 67.18749713854544
+    2:
+      0: 48.60269514932481
+      1: 49.865337946852875
+    3:
+      0: 108.83934322706531
+      1: 52.94374705567271
+    4:
+      0: 145.69301319581754
+      1: 62.96327521685426
+    5:
+      0: 152.7902666991465
+      1: 65.75940981084871
+    6:
+      0: 154.4066930590051
+      1: 67.1127797778565
+    7:
+      0: 156.02311941886373
+      1: 68.46614974486431
+    8:
+      0: 157.63954577872232
+      1: 69.8195197118721
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/route-layout-alignment.test.js:29:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+  ...
+# Subtest: controlled A paths avoid roof/blocked centerlines
+ok 161 - controlled A paths avoid roof/blocked centerlines
+  ---
+  duration_ms: 60.928917
+  type: 'test'
+  ...
+# Subtest: Lot A mixed North/South departures drain through both staffed controls
+ok 162 - Lot A mixed North/South departures drain through both staffed controls
+  ---
+  duration_ms: 111.314
+  type: 'test'
+  ...
+# Subtest: UI speed contract has matching reverse/forward speeds, initially 5; elapsed timeline removed
+ok 163 - UI speed contract has matching reverse/forward speeds, initially 5; elapsed timeline removed
+  ---
+  duration_ms: 5.756458
+  type: 'test'
+  ...
+# Subtest: fixed live ticks and rewind-forward replay preserve private state exactly
+ok 164 - fixed live ticks and rewind-forward replay preserve private state exactly
+  ---
+  duration_ms: 1.03375
+  type: 'test'
+  ...
+# Subtest: live input changes invalidate history; caller mutation cannot change frozen inputs
+ok 165 - live input changes invalidate history; caller mutation cannot change frozen inputs
+  ---
+  duration_ms: 0.386
+  type: 'test'
+  ...
+# Subtest: latest seek wins; cancellation never publishes partial reconstructed state
+ok 166 - latest seek wins; cancellation never publishes partial reconstructed state
+  ---
+  duration_ms: 0.200209
+  type: 'test'
+  ...
+# Subtest: seek validates targets and chunk-yields with progress
+ok 167 - seek validates targets and chunk-yields with progress
+  ---
+  duration_ms: 0.456667
+  type: 'test'
+  ...
+# Subtest: zero-time reconstruction applies live controls without advancing the clock
+ok 168 - zero-time reconstruction applies live controls without advancing the clock
+  ---
+  duration_ms: 0.163041
+  type: 'test'
+  ...
+# Subtest: speed and frame partition change pace, not the sequence of traffic ticks
+ok 169 - speed and frame partition change pace, not the sequence of traffic ticks
+  ---
+  duration_ms: 0.722125
+  type: 'test'
+  ...
+# Subtest: cancellation during chunking discards partial work and preserves visible state
+ok 170 - cancellation during chunking discards partial work and preserves visible state
+  ---
+  duration_ms: 0.24425
+  type: 'test'
+  ...
+# Subtest: real demo replay restores queues, reservations, cars and parked records
+ok 171 - real demo replay restores queues, reservations, cars and parked records
+  ---
+  duration_ms: 329.537208
+  type: 'test'
+  ...
+# Subtest: real service replay preserves seeded shuttles, schedule and controller state
+ok 172 - real service replay preserves seeded shuttles, schedule and controller state
+  ---
+  duration_ms: 1106.48
+  type: 'test'
+  ...
+# Subtest: eleven transition replay preserves departure IDs, gates and initial occupancy
+ok 173 - eleven transition replay preserves departure IDs, gates and initial occupancy
+  ---
+  duration_ms: 1949.412375
+  type: 'test'
+  ...
+# Subtest: final transition replay preserves departure IDs, gates and initial occupancy
+ok 174 - final transition replay preserves departure IDs, gates and initial occupancy
+  ---
+  duration_ms: 2065.012958
+  type: 'test'
+  ...
+# Subtest: 30× advances thirty simulated seconds per real second without enlarging fixed ticks
+ok 175 - 30× advances thirty simulated seconds per real second without enlarging fixed ticks
+  ---
+  duration_ms: 0.289084
+  type: 'test'
+  ...
+# Subtest: 1:15 Equity uses B then C only as fallback; older services and manual keep staffed C
+ok 176 - 1:15 Equity uses B then C only as fallback; older services and manual keep staffed C
+  ---
+  duration_ms: 1.7815
+  type: 'test'
+  ...
+# Subtest: both Equity origins reach B through labeled main entrance on street pavement
+ok 177 - both Equity origins reach B through labeled main entrance on street pavement
+  ---
+  duration_ms: 16.163291
+  type: 'test'
+  ...
+# Subtest: all service breaks use actual service +45 to +55, not scenario elapsed45
+ok 178 - all service breaks use actual service +45 to +55, not scenario elapsed45
+  ---
+  duration_ms: 0.886042
+  type: 'test'
+  ...
+# Subtest: home buses hold during service break and resume when it ends
+ok 179 - home buses hold during service break and resume when it ends
+  ---
+  duration_ms: 1137.174208
+  type: 'test'
+  ...
+# Subtest: break never removes a moving bus; a remote bus can finish its circuit
+ok 180 - break never removes a moving bus; a remote bus can finish its circuit
+  ---
+  duration_ms: 1.612833
+  type: 'test'
+  ...
+# Subtest: nine: 95% arrival target is 45 minutes after actual service start
+ok 181 - nine: 95% arrival target is 45 minutes after actual service start
+  ---
+  duration_ms: 2.004458
+  type: 'test'
+  ...
+# Subtest: eleven: 95% arrival target is 45 minutes after actual service start
+ok 182 - eleven: 95% arrival target is 45 minutes after actual service start
+  ---
+  duration_ms: 0.823041
+  type: 'test'
+  ...
+# Subtest: final: 95% arrival target is 45 minutes after actual service start
+ok 183 - final: 95% arrival target is 45 minutes after actual service start
+  ---
+  duration_ms: 0.151875
+  type: 'test'
+  ...
+# Subtest: large early transition override cannot consume the reserved 5% tail
+ok 184 - large early transition override cannot consume the reserved 5% tail
+  ---
+  duration_ms: 0.112542
+  type: 'test'
+  ...
+# Subtest: nine demand 101: 75% on time at service start, the rest late
+ok 185 - nine demand 101: 75% on time at service start, the rest late
+  ---
+  duration_ms: 0.211542
+  type: 'test'
+  ...
+# Subtest: nine demand 950: 75% on time at service start, the rest late
+ok 186 - nine demand 950: 75% on time at service start, the rest late
+  ---
+  duration_ms: 0.560291
+  type: 'test'
+  ...
+# Subtest: nine demand 1224: 75% on time at service start, the rest late
+ok 187 - nine demand 1224: 75% on time at service start, the rest late
+  ---
+  duration_ms: 0.443042
+  type: 'test'
+  ...
+# Subtest: nine demand 300: 75% on time at service start, the rest late
+ok 188 - nine demand 300: 75% on time at service start, the rest late
+  ---
+  duration_ms: 0.54175
+  type: 'test'
+  ...
+# Subtest: eleven demand 101: 75% on time at service start, the rest late
+ok 189 - eleven demand 101: 75% on time at service start, the rest late
+  ---
+  duration_ms: 0.128916
+  type: 'test'
+  ...
+# Subtest: eleven demand 950: 75% on time at service start, the rest late
+ok 190 - eleven demand 950: 75% on time at service start, the rest late
+  ---
+  duration_ms: 0.267625
+  type: 'test'
+  ...
+# Subtest: eleven demand 1224: 75% on time at service start, the rest late
+ok 191 - eleven demand 1224: 75% on time at service start, the rest late
+  ---
+  duration_ms: 0.285209
+  type: 'test'
+  ...
+# Subtest: eleven demand 300: 75% on time at service start, the rest late
+ok 192 - eleven demand 300: 75% on time at service start, the rest late
+  ---
+  duration_ms: 0.123083
+  type: 'test'
+  ...
+# Subtest: final demand 101: 75% on time at service start, the rest late
+ok 193 - final demand 101: 75% on time at service start, the rest late
+  ---
+  duration_ms: 0.061083
+  type: 'test'
+  ...
+# Subtest: final demand 950: 75% on time at service start, the rest late
+ok 194 - final demand 950: 75% on time at service start, the rest late
+  ---
+  duration_ms: 0.209458
+  type: 'test'
+  ...
+# Subtest: final demand 1224: 75% on time at service start, the rest late
+ok 195 - final demand 1224: 75% on time at service start, the rest late
+  ---
+  duration_ms: 0.231333
+  type: 'test'
+  ...
+# Subtest: final demand 300: 75% on time at service start, the rest late
+ok 196 - final demand 300: 75% on time at service start, the rest late
+  ---
+  duration_ms: 0.447
+  type: 'test'
+  ...
+# Subtest: initial releases are spread over the first 90 seconds and HOME starts obey a 15s headway
+ok 197 - initial releases are spread over the first 90 seconds and HOME starts obey a 15s headway
+  ---
+  duration_ms: 1133.6685
+  type: 'test'
+  ...
+# Subtest: a blocked HOME launch retries without losing its ready time or circuit
+ok 198 - a blocked HOME launch retries without losing its ready time or circuit
+  ---
+  duration_ms: 1.388542
+  type: 'test'
+  ...
+# Subtest: default pickup dwell is fresh, bounded and reproducible for each bus visit
+ok 199 - default pickup dwell is fresh, bounded and reproducible for each bus visit
+  ---
+  duration_ms: 6.595917
+  type: 'test'
+  ...
+# Subtest: legacy explicit dwell override remains exact, including zero
+ok 200 - legacy explicit dwell override remains exact, including zero
+  ---
+  duration_ms: 2.20125
+  type: 'test'
+  ...
+# Subtest: remote legs finish during a break and a retired bus then holds at home
+ok 201 - remote legs finish during a break and a retired bus then holds at home
+  ---
+  duration_ms: 1.634834
+  type: 'test'
+  ...
+# Subtest: all shuttle loops begin/end at exact labeled pickups and avoid roofs/blocked zones
+ok 202 - all shuttle loops begin/end at exact labeled pickups and avoid roofs/blocked zones
+  ---
+  duration_ms: 661.709458
+  type: 'test'
+  ...
+# Subtest: five persistent buses loop with four to B and one cycling all C stops
+not ok 203 - five persistent buses loop with four to B and one cycling all C stops
+  ---
+  duration_ms: 227.135958
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:23:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(s.shuttles.slice(0,4).every(b=>b.stop==='bSouth'))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:28:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+  ...
+# Subtest: B full switches to C after current trip completes at home, with no midroute jump
+not ok 204 - B full switches to C after current trip completes at home, with no midroute jump
+  ---
+  duration_ms: 193.504583
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:34:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'four-b-one-c'
+    - 'all-c'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'all-c'
+  actual: 'four-b-one-c'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:40:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+  ...
+# Subtest: fleet keeps completing trips in traffic in both allocation modes
+ok 205 - fleet keeps completing trips in traffic in both allocation modes
+  ---
+  duration_ms: 1454.278667
+  type: 'test'
+  ...
+# Subtest: badge parking stays available when general campus is full without inflating 1584
+not ok 206 - badge parking stays available when general campus is full without inflating 1584
+  ---
+  duration_ms: 18.8465
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:53:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    51 !== 2
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 2
+  actual: 51
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:56:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+  ...
+# Subtest: departure releases count-only A/B/C simultaneously through proper exits and buses continue
+not ok 207 - departure releases count-only A/B/C simultaneously through proper exits and buses continue
+  ---
+  duration_ms: 149.738709
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:61:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'a',
+        'b',
+        'c',
+    +   'c'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'a'
+    1: 'b'
+    2: 'c'
+  actual:
+    0: 'a'
+    1: 'b'
+    2: 'c'
+    3: 'c'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:64:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+  ...
+# Subtest: shared following works for different routes and respects the longer bus body
+ok 208 - shared following works for different routes and respects the longer bus body
+  ---
+  duration_ms: 0.2275
+  type: 'test'
+  ...
+# Subtest: open capacity decreases for parking/reservations, excludes closed lots and recovers on departure
+ok 209 - open capacity decreases for parking/reservations, excludes closed lots and recovers on departure
+  ---
+  duration_ms: 26.498334
+  type: 'test'
+  ...
+# Subtest: confirmed section capacities total1584; badge51 stays inside A411
+not ok 210 - confirmed section capacities total1584; badge51 stays inside A411
+  ---
+  duration_ms: 3.9835
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/sunday-services.test.js:13:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+    
+      {
+        aBadge: 51,
+        aNorth: 210,
+        aSouth: 150,
+        bBanana: 100,
+    ...
+        bSouth: 75,
+    +   cFirstNorth: 172,
+    +   cFirstSouth: 171,
+    +   cNorth: 171,
+    +   cSouth: 172
+    -   cNorth: 343,
+    -   cSouth: 343
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    aNorth: 210
+    aSouth: 150
+    aBadge: 51
+    bSouth: 75
+    bBanana: 100
+    bPocket: 8
+    bNorth: 304
+    cNorth: 343
+    cSouth: 343
+  actual:
+    aNorth: 210
+    aSouth: 150
+    aBadge: 51
+    bSouth: 75
+    bBanana: 100
+    bPocket: 8
+    bNorth: 304
+    cFirstNorth: 172
+    cFirstSouth: 171
+    cNorth: 171
+    cSouth: 172
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/sunday-services.test.js:17:10)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.start (node:internal/test_runner/test:1096:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17)
+  ...
+# Subtest: transition gate excludes badges, latches at50%, and partial B stays open
+ok 211 - transition gate excludes badges, latches at50%, and partial B stays open
+  ---
+  duration_ms: 1.58625
+  type: 'test'
+  ...
+# Subtest: scheduled old-cohort departures vary, keep lingerers and do not release new-service arrivals
+ok 212 - scheduled old-cohort departures vary, keep lingerers and do not release new-service arrivals
+  ---
+  duration_ms: 1426.513917
+  type: 'test'
+  ...
+# Subtest: early transition arrivals use C while A/B held; partly empty B remains reachable
+ok 213 - early transition arrivals use C while A/B held; partly empty B remains reachable
+  ---
+  duration_ms: 59.07025
+  type: 'test'
+  ...
+# Subtest: all general-zone routes avoid roof/blocked polygons and B routes visit south before north
+ok 214 - all general-zone routes avoid roof/blocked polygons and B routes visit south before north
+  ---
+  duration_ms: 38.557417
+  type: 'test'
+  ...
+# Subtest: badge arrivals cannot exceed their51 slots or claim general spaces
+ok 215 - badge arrivals cannot exceed their51 slots or claim general spaces
+  ---
+  duration_ms: 141.300666
+  type: 'test'
+  ...
+# Subtest: parallel curves cannot mutually deadlock with each vehicle believing the other ahead
+ok 216 - parallel curves cannot mutually deadlock with each vehicle believing the other ahead
+  ---
+  duration_ms: 0.382875
+  type: 'test'
+  ...
+# Subtest: occupancy fill cutoff is west-first and respects filled polygon area
+ok 217 - occupancy fill cutoff is west-first and respects filled polygon area
+  ---
+  duration_ms: 0.601208
+  type: 'test'
+  ...
+# Subtest: three full Sunday scenario runs finish their demands, retain new cohorts and clear previous cohorts
+not ok 218 - three full Sunday scenario runs finish their demands, retain new cohorts and clear previous cohorts
+  ---
+  duration_ms: 58006.908375
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/sunday-services.test.js:83:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    final
+    
+    850 !== 300
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 300
+  actual: 850
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/sunday-services.test.js:89:12)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+  ...
+# Subtest: ordered B and C circuits include every pickup and home without crossing annotated obstacles
+ok 219 - ordered B and C circuits include every pickup and home without crossing annotated obstacles
+  ---
+  duration_ms: 624.974417
+  type: 'test'
+  ...
+# Subtest: three active buses serve 2B/1C, retiring buses return home, and departure dispatch retains B
+ok 220 - three active buses serve 2B/1C, retiring buses return home, and departure dispatch retains B
+  ---
+  duration_ms: 483.443166
+  type: 'test'
+  ...
+# Subtest: Corporate opposing bus centers clear on west, north and vertical cross sections
+ok 221 - Corporate opposing bus centers clear on west, north and vertical cross sections
+  ---
+  duration_ms: 39.945625
+  type: 'test'
+  ...
+# Subtest: strict class priority: a bus has at least20 car value, then departures, then arrivals
+ok 222 - strict class priority: a bus has at least20 car value, then departures, then arrivals
+  ---
+  duration_ms: 1.091666
+  type: 'test'
+  ...
+# Subtest: shuttle wins an unoccupied crossing regardless of insertion order (reversed=false)
+ok 223 - shuttle wins an unoccupied crossing regardless of insertion order (reversed=false)
+  ---
+  duration_ms: 1.55675
+  type: 'test'
+  ...
+# Subtest: departure has priority over arriving cars (reversed=false)
+ok 224 - departure has priority over arriving cars (reversed=false)
+  ---
+  duration_ms: 0.870625
+  type: 'test'
+  ...
+# Subtest: shuttle wins an unoccupied crossing regardless of insertion order (reversed=true)
+ok 225 - shuttle wins an unoccupied crossing regardless of insertion order (reversed=true)
+  ---
+  duration_ms: 0.332875
+  type: 'test'
+  ...
+# Subtest: departure has priority over arriving cars (reversed=true)
+ok 226 - departure has priority over arriving cars (reversed=true)
+  ---
+  duration_ms: 0.222084
+  type: 'test'
+  ...
+# Subtest: a queue of twenty arrivals cannot outvote one approaching shuttle
+ok 227 - a queue of twenty arrivals cannot outvote one approaching shuttle
+  ---
+  duration_ms: 1.004625
+  type: 'test'
+  ...
+# Subtest: a vehicle already crossing clears before the priority bus enters
+ok 228 - a vehicle already crossing clears before the priority bus enters
+  ---
+  duration_ms: 0.473208
+  type: 'test'
+  ...
+# Subtest: priority bus follows the slower lead car without overlap or reverse-yield deadlock
+ok 229 - priority bus follows the slower lead car without overlap or reverse-yield deadlock
+  ---
+  duration_ms: 0.834291
+  type: 'test'
+  ...
+# Subtest: opposing separated lanes keep moving without a false shuttle conflict
+ok 230 - opposing separated lanes keep moving without a false shuttle conflict
+  ---
+  duration_ms: 0.163708
+  type: 'test'
+  ...
+# Subtest: equally ranked cars resolve crossing ties identically after array reorder
+ok 231 - equally ranked cars resolve crossing ties identically after array reorder
+  ---
+  duration_ms: 8.462625
+  type: 'test'
+  ...
+# Subtest: a held shuttle does not reserve an empty crossing it cannot approach
+ok 232 - a held shuttle does not reserve an empty crossing it cannot approach
+  ---
+  duration_ms: 0.496542
+  type: 'test'
+  ...
+# Subtest: lower-priority traffic resumes once the shuttle clears the crossing
+ok 233 - lower-priority traffic resumes once the shuttle clears the crossing
+  ---
+  duration_ms: 2.66875
+  type: 'test'
+  ...
+# Subtest: merging arrival yields before taking the shuttle lane
+ok 234 - merging arrival yields before taking the shuttle lane
+  ---
+  duration_ms: 0.536541
+  type: 'test'
+  ...
+# Subtest: Corporate Drive west stretch: opposing lanes clear bus/bus width
+ok 235 - Corporate Drive west stretch: opposing lanes clear bus/bus width
+  ---
+  duration_ms: 8.20125
+  type: 'test'
+  ...
+# Subtest: Equity Drive: opposing lanes clear bus/bus width where paved room allows
+ok 236 - Equity Drive: opposing lanes clear bus/bus width where paved room allows
+  ---
+  duration_ms: 4.843875
+  type: 'test'
+  ...
+# Subtest: Feeder Road keeps the original 6 px offset
+ok 237 - Feeder Road keeps the original 6 px offset
+  ---
+  duration_ms: 0.981834
+  type: 'test'
+  ...
+# Subtest: catalog binds every unified-source shape once
+ok 238 - catalog binds every unified-source shape once
+  ---
+  duration_ms: 1.743583
+  type: 'test'
+  ...
+# Subtest: identity registration in the 1374x1118 frame; no affine/legacy size
+ok 239 - identity registration in the 1374x1118 frame; no affine/legacy size
+  ---
+  duration_ms: 0.391625
+  type: 'test'
+  ...
+# Subtest: Main Position is the canonical source point \#57 used by the controller
+ok 240 - Main Position is the canonical source point \#57 used by the controller
+  ---
+  duration_ms: 0.084625
+  type: 'test'
+  ...
+# Subtest: B arrivals use the B entrance, visit B South, avoid roofs and record runtime use
+ok 241 - B arrivals use the B entrance, visit B South, avoid roofs and record runtime use
+  ---
+  duration_ms: 6.84075
+  type: 'test'
+  ...
+# Subtest: connector provenance is disclosed per mode; untraced joins are not called surveyed
+not ok 242 - connector provenance is disclosed per mode; untraced joins are not called surveyed
+  ---
+  duration_ms: 17.584166
+  type: 'test'
+  location: '/Users/adonispuente/Desktop/Developer/parking-sim/tests/vehicle-routes.test.js:60:1'
+  failureType: 'testCodeFailure'
+  error: 'C staffed entrance #63 to #8 interior'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/vehicle-routes.test.js:65:12)
+    Test.runInAsyncScope (node:async_hooks:226:14)
+    Test.run (node:internal/test_runner/test:1201:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+    Test.postRun (node:internal/test_runner/test:1330:19)
+    Test.run (node:internal/test_runner/test:1258:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+  ...
+1..242
+# tests 242
+# suites 0
+# pass 215
+# fail 27
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 63292.737709

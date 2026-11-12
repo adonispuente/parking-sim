@@ -1,0 +1,241 @@
+{
+ "scenario": "eleven",
+ "lanes": 24,
+ "staffWorld": [
+  {
+   "i": 59,
+   "x": 2.112448474547833,
+   "z": 44.47507129114171
+  },
+  {
+   "i": 60,
+   "x": 22.181316742378982,
+   "z": 42.48788515577053
+  },
+  {
+   "i": 61,
+   "x": 40.16740207716792,
+   "z": 30.558309100457578
+  }
+ ],
+ "rows": [
+  {
+   "name": "Feeder → A public",
+   "len": 104.9,
+   "hits": {
+    "59": {
+     "gap": 0.53,
+     "at": 47.5,
+     "heading": -90
+    }
+   }
+  },
+  {
+   "name": "Feeder → A Black Permit",
+   "len": 76.1,
+   "hits": {
+    "59": {
+     "gap": 1.5,
+     "at": 46.4,
+     "heading": 10
+    },
+    "60": {
+     "gap": 0.44,
+     "at": 68.1,
+     "heading": -148
+    }
+   }
+  },
+  {
+   "name": "Feeder → B west",
+   "len": 93.1,
+   "hits": {
+    "59": {
+     "gap": 1,
+     "at": 46.4,
+     "heading": 9
+    },
+    "60": {
+     "gap": 2.92,
+     "at": 66.6,
+     "heading": -3
+    },
+    "61": {
+     "gap": 0.5,
+     "at": 93.1,
+     "heading": -78
+    }
+   }
+  },
+  {
+   "name": "Feeder → C staffed entrance",
+   "len": 150.8,
+   "hits": {
+    "59": {
+     "gap": 0.21,
+     "at": 46.4,
+     "heading": -133
+    },
+    "60": {
+     "gap": 2.94,
+     "at": 67.2,
+     "heading": -4
+    },
+    "61": {
+     "gap": 0.2,
+     "at": 92.6,
+     "heading": -84
+    }
+   }
+  },
+  {
+   "name": "Shuttle · b · leg 1 → bSouth",
+   "len": 103.5,
+   "hits": {
+    "60": {
+     "gap": 0.17,
+     "at": 21.2,
+     "heading": 86
+    },
+    "61": {
+     "gap": 2.05,
+     "at": 50,
+     "heading": -7
+    }
+   }
+  },
+  {
+   "name": "Shuttle · b · leg 3 → home",
+   "len": 89.1,
+   "hits": {
+    "60": {
+     "gap": 0.45,
+     "at": 68.2,
+     "heading": -147
+    },
+    "61": {
+     "gap": 0.99,
+     "at": 42,
+     "heading": 112
+    }
+   }
+  },
+  {
+   "name": "Shuttle · cNorth · leg 1 → cRoundabout",
+   "len": 128.5,
+   "hits": {
+    "60": {
+     "gap": 0.37,
+     "at": 22.2,
+     "heading": 147
+    },
+    "61": {
+     "gap": 0.23,
+     "at": 51.5,
+     "heading": -83
+    }
+   }
+  },
+  {
+   "name": "Shuttle · cNorth · leg 3 → home",
+   "len": 141.8,
+   "hits": {
+    "60": {
+     "gap": 0.38,
+     "at": 120.6,
+     "heading": -90
+    },
+    "61": {
+     "gap": 1.2,
+     "at": 95.1,
+     "heading": 106
+    }
+   }
+  },
+  {
+   "name": "Shuttle · cSouth · leg 1 → cRoundabout",
+   "len": 128.5,
+   "hits": {
+    "60": {
+     "gap": 0.37,
+     "at": 22.2,
+     "heading": 147
+    },
+    "61": {
+     "gap": 0.23,
+     "at": 51.5,
+     "heading": -83
+    }
+   }
+  },
+  {
+   "name": "Shuttle · cSouth · leg 3 → home",
+   "len": 179.3,
+   "hits": {
+    "60": {
+     "gap": 0.39,
+     "at": 157.8,
+     "heading": -90
+    },
+    "61": {
+     "gap": 1.2,
+     "at": 132.6,
+     "heading": 106
+    }
+   }
+  },
+  {
+   "name": "Departure · bWest · bSouth",
+   "len": 152.1,
+   "hits": {
+    "59": {
+     "gap": 1.1,
+     "at": 149.6,
+     "heading": 170
+    },
+    "60": {
+     "gap": 1.92,
+     "at": 129.9,
+     "heading": 177
+    },
+    "61": {
+     "gap": 1.16,
+     "at": 105.2,
+     "heading": 100
+    }
+   }
+  },
+  {
+   "name": "Departure · bWest · bBanana",
+   "len": 140.8,
+   "hits": {
+    "59": {
+     "gap": 1.15,
+     "at": 138.3,
+     "heading": 173
+    },
+    "60": {
+     "gap": 1.92,
+     "at": 118.5,
+     "heading": 177
+    },
+    "61": {
+     "gap": 1.16,
+     "at": 93.8,
+     "heading": 100
+    }
+   }
+  },
+  {
+   "name": "Arrival · a · aNorth",
+   "len": 118.2,
+   "hits": {
+    "59": {
+     "gap": 0.18,
+     "at": 46.7,
+     "heading": -90
+    }
+   }
+  }
+ ]
+}

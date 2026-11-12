@@ -21,6 +21,8 @@ test('indexed lane sampling preserves Three points and tangents including segmen
 test('failed route construction is attempted once per scenario, not once per ready car per tick', () => {
   const settings=serviceOptions('eleven',{demand:0});
   const state=createCampusTraffic({initialOccupancy:{b:487},service:{enabled:true,...settings}});
+  // Isolate the route cache from service readiness (production now has pre-roll).
+  for(const car of state.parkedVehicles)car.readyAt=0;
   let attempts=0;
   state.lanes.push = () => { attempts++; throw new Error('test unresolved route'); };
   for(let i=0;i<20;i++)state.step(.05);
@@ -52,6 +54,7 @@ test('C departure routes start at exits, never retrace the shuttle entrance turn
   }
   const state=createCampusTraffic({phase:'departure',initialZoneOccupancy:{cNorth:1,cSouth:1}});
   state.step(.05);
+  // Commander rule (2026-11-07): C cars use both C exits ~50/50 (default 'split').
   assert.deepEqual(state.cars.filter(car=>car.phase==='departing').map(car=>car.access).sort(),['cEast','cWest']);
   assert.deepEqual(state.routingIssues,[]);
 });
@@ -59,7 +62,9 @@ test('C departure routes start at exits, never retrace the shuttle entrance turn
 test('11am departures clear C entrance and all five shuttles complete repeated trips', () => {
   const config=serviceOptions('eleven',{demand:0});
   const state=createCampusTraffic({initialOccupancy:config.initialOccupancy,service:{enabled:true,...config},shuttles:{activeCount:5,dwellSeconds:12}});
-  for(let i=0;i<6000;i++)state.step(.05);
+  // Staggered launches + 30-60 s random boarding delays: allow 10 minutes for two full circuits.
+  const seconds=(615-config.beginMinute)*60+600;
+  for(let i=0;i<seconds*20;i++)state.step(.05);
   assert.deepEqual(state.routingIssues,[]);
   assert.ok(state.departed.a>0&&state.departed.b>0&&state.departed.c>10);
   assert.ok(state.shuttles.every(bus=>bus.trips>=2),'C bus must not remain stuck at entrance');

@@ -1,0 +1,552 @@
+{
+  "version": 1,
+  "root": "/Users/adonispuente/Desktop/Developer/parking-sim",
+  "state": "applied",
+  "archive": "/Users/adonispuente/Desktop/Developer/parking-sim-archives/2026-11-08-legacy-code/legacy-code.tar.gz",
+  "reason": "Retired pre-traced-map hand-drawn layout modules and exclusive tests; not traffic fixes.",
+  "remove": [
+    {
+      "path": "src/campus.js",
+      "bytes": 2745,
+      "sha256": "42586fd0f4645df79e392ebe86513df5f4237d5d8d3e6437c652c0eb84aa44ee"
+    },
+    {
+      "path": "src/eastCampus.js",
+      "bytes": 7129,
+      "sha256": "a32d406c24206cc1962b5af3c03040e49191667ce4465f988a21aecd7b8e17ae"
+    },
+    {
+      "path": "src/lotA.js",
+      "bytes": 2214,
+      "sha256": "2999a9adc36efa5d27cdfffb50f84b4cdaefb13b8ef15fd145597b14fedf9105"
+    },
+    {
+      "path": "src/lotAParking.js",
+      "bytes": 4087,
+      "sha256": "8da74d1a98577d1295bf599c0f4d2303856614f7dd7580655e6140186d939cb3"
+    },
+    {
+      "path": "tests/campus.test.js",
+      "bytes": 1325,
+      "sha256": "7a4e9ce64bd891c703e181c8065398fedd756aba76e8cfce26444efc85feecbb"
+    },
+    {
+      "path": "tests/lot-a.test.js",
+      "bytes": 2761,
+      "sha256": "681159cae07b3ef4b78ef5b3e762cfa28b8c77e9f2ac80a7039495bf58139a61"
+    },
+    {
+      "path": "tests/lot-a-parking.test.js",
+      "bytes": 1980,
+      "sha256": "7cd05d62296002be7ccd83dc12c5a415bc0441bd75c072c2f564dd4d94d88305"
+    },
+    {
+      "path": "tests/lot-a-envelope.test.js",
+      "bytes": 1821,
+      "sha256": "aeeb84597ad7d48d5b92972766ed90738e586c9a4eaec1867cbd4483985d7998"
+    }
+  ],
+  "protectedAtPlan": [
+    {
+      "path": "images/Clear Image.json",
+      "bytes": 70016,
+      "sha256": "853186d6fb30b371fec487e70b1e5f3e13eea80ca5cf82aeae70ad3465e46e66"
+    },
+    {
+      "path": "images/Clear Image.png",
+      "bytes": 2884970,
+      "sha256": "9b88a0585275896580f28b6ff13e10e0200dde7ed2b36c263384bc166be279be"
+    },
+    {
+      "path": "images/EverythingClearImage.json",
+      "bytes": 70017,
+      "sha256": "e09faa49fc9fb6e0f3f7455fe255d064cd45160b2477eb3283dc2c4ba3eabd90"
+    },
+    {
+      "path": "images/HopeCityLayout.json",
+      "bytes": 37922,
+      "sha256": "f0adc10300dbfd7a4d8e35b912dd6b025b899b3ad04acc4bcde4a5a9d7c1015d"
+    },
+    {
+      "path": "images/HopeCityLayout.png",
+      "bytes": 789816,
+      "sha256": "d64c0aea58a4bb94f7174ca0fdc2ba33d7e5683769b917d4dceddd2915bd8ce5"
+    },
+    {
+      "path": "images/HopeCityLayoutCUpdated.json",
+      "bytes": 37922,
+      "sha256": "6f8a1d9a83230fb1cb8cb80b9540a6073c6ee392b0f19d320cfe11341bf769ef"
+    },
+    {
+      "path": "images/HopeCityLayoutFirstHalfincluded.json",
+      "bytes": 37922,
+      "sha256": "6f8a1d9a83230fb1cb8cb80b9540a6073c6ee392b0f19d320cfe11341bf769ef"
+    },
+    {
+      "path": "images/HopeCityLayoutVectors.json",
+      "bytes": 37101,
+      "sha256": "01eeed905bc5e2d2ffc4d2ed6bc36e8a86d7403e11084f6d303e3f0381f93cad"
+    },
+    {
+      "path": "images/Lot A revision.json",
+      "bytes": 70016,
+      "sha256": "6bd04d7b7116ff6da23d9b33c87d446d1d9ef15f9bdfa56042fe44499a0b1ffc"
+    },
+    {
+      "path": "images/Vehicle Routes.json",
+      "bytes": 48432,
+      "sha256": "76ecc423c42bb9c95c921269bee45fc6d411c3792919ea9afef2c9ef933cf510"
+    },
+    {
+      "path": "index.html",
+      "bytes": 476,
+      "sha256": "0b70b4e9ed68395c9b415aeb72694330e76dfccbab8d6d72fa7c27c6f8f455d4"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 37285,
+      "sha256": "a4971e5f58ea4b98b64e0f14b04350f839d8ac315ade6c5d9161985ca515da14"
+    },
+    {
+      "path": "package.json",
+      "bytes": 445,
+      "sha256": "b834fd52faba7ed21993204cc7c4646674a02f5655c87c15c0100bfae9791874"
+    },
+    {
+      "path": "scripts/maintain-legacy-code.py",
+      "bytes": 8678,
+      "sha256": "fa88296e17f49c566f60bc6c707df02f6c29a3037a82b311a20514a827ca75cb"
+    },
+    {
+      "path": "scripts/maintain-research.py",
+      "bytes": 11576,
+      "sha256": "691a2967e58cdf029749139fa5279bfc2af218694f37e8f6e8a11b67e8ff20ce"
+    },
+    {
+      "path": "scripts/profile-eleven.mjs",
+      "bytes": 2271,
+      "sha256": "3418676d2cbbe63874ea03c2aff653e3346a7e5c35456e890456e2c6e8a943ea"
+    },
+    {
+      "path": "src/RouteSourcesPanel.jsx",
+      "bytes": 2542,
+      "sha256": "577ce8848bcb11d140f1991bfb94d98c570a632e5987dc2bb27b585bb4313add"
+    },
+    {
+      "path": "src/Scene.jsx",
+      "bytes": 32990,
+      "sha256": "6a631c1b433fcdccc993f8ec6748c1204dcc0fcef301794c48fa652030214207"
+    },
+    {
+      "path": "src/SundayControls.jsx",
+      "bytes": 11870,
+      "sha256": "bec8c05c74438c3079708cae9596ea8f08743261d179176a552d6f4a9511ee20"
+    },
+    {
+      "path": "src/alphaQueueRelief.js",
+      "bytes": 1728,
+      "sha256": "5b7dcc9045d0aca40251767681613c13aa80bdcc625385f8f329318c96a1baa6"
+    },
+    {
+      "path": "src/blackPermitControl.js",
+      "bytes": 2597,
+      "sha256": "a5c673d012ffbec1e805f1a7236079b2e346f2400fd7e7cc1fa30cd4c252c451"
+    },
+    {
+      "path": "src/buildingModels.js",
+      "bytes": 7340,
+      "sha256": "b25fd395ef1baa1394cdbb6804272f9bcc51626394351663e153eaec7f9e60bb"
+    },
+    {
+      "path": "src/cParkingGeometry.js",
+      "bytes": 2185,
+      "sha256": "c2fa106e3eb74078ee49d617c234daadc8512496bf2f8d428733caeb1b4936d4"
+    },
+    {
+      "path": "src/campusAnnotations.js",
+      "bytes": 379,
+      "sha256": "d3744b45e4870323a7d980a7fc4d02b44a723b505870629ec5fef4aa1dbaace5"
+    },
+    {
+      "path": "src/campusSimulation.js",
+      "bytes": 16098,
+      "sha256": "13d7eb4014b19a38078485a46770989a9ae6c94c812d75711efbbbd821c04cbb"
+    },
+    {
+      "path": "src/clearImageSource.js",
+      "bytes": 4168,
+      "sha256": "058c5c856af5c1f671ec09db4b8df26a18474ef92e82537e4009f6f46b33fa5e"
+    },
+    {
+      "path": "src/corporateDriveOperators.js",
+      "bytes": 10190,
+      "sha256": "9ad4811b0ef6a3fbee57dbe47e46301cb496693d0bf92d488c689c006475907e"
+    },
+    {
+      "path": "src/corporateLanes.js",
+      "bytes": 3734,
+      "sha256": "806c8bab4c4d716e67b194be3d43e878ff5a3a5a8346dc04fe97f02967b0a966"
+    },
+    {
+      "path": "src/equityClayStop.js",
+      "bytes": 3848,
+      "sha256": "83fe2d40b96c025d4c97b9e5b89186babfe103d6c29c577f4451539000c016e7"
+    },
+    {
+      "path": "src/exitPriorityJunction.js",
+      "bytes": 6922,
+      "sha256": "ea9d72bbe5aeda67f09bf4f9ee2aa9bcc0180b3f609fed6ac105c796c8383e9f"
+    },
+    {
+      "path": "src/feederOfficer.js",
+      "bytes": 4467,
+      "sha256": "7725e8c23fcfc87b46d9cb346cd5eca228c2a267d62165e773224ae286791e08"
+    },
+    {
+      "path": "src/lanePath.js",
+      "bytes": 865,
+      "sha256": "7c1b622a0fb12eed80f956e06608b639aff41b620f19a1eefdc74f57a6e0a4e8"
+    },
+    {
+      "path": "src/lotAControl.js",
+      "bytes": 10114,
+      "sha256": "12f3c1fcf98e0fdaf33306fdc9b41f52eac7de1b164887c3b5dd39e95ab51208"
+    },
+    {
+      "path": "src/main.jsx",
+      "bytes": 35384,
+      "sha256": "abb7a17f435af91a0508416d66351974b9cc562a5a51b1641279a5e66a06aadc"
+    },
+    {
+      "path": "src/model.js",
+      "bytes": 5310,
+      "sha256": "12d00aedd6a7fb883385e8eaf3822f5d03d62adeba31d5a05374ba5aa2ac78cd"
+    },
+    {
+      "path": "src/northernCorporateControl.js",
+      "bytes": 7360,
+      "sha256": "e485341e1cf955d8ed7419948ecf4e67451d51355757eafa4fa757b2d6203f7d"
+    },
+    {
+      "path": "src/occupancyFill.js",
+      "bytes": 1351,
+      "sha256": "7134af01613bca150319d458526062574261d4c3e44300b49b94e768a6370097"
+    },
+    {
+      "path": "src/parkingAvailability.js",
+      "bytes": 574,
+      "sha256": "6acea1c2d7b94b475cdb6e5c341fc28638aa4f47b878a0818dfe8c39ff1bb657"
+    },
+    {
+      "path": "src/parkingRoutes.js",
+      "bytes": 25311,
+      "sha256": "60aa0545e1d723317647ac3eef23fc9420101753c66a564557636d159d2c3ad2"
+    },
+    {
+      "path": "src/parkingZones.js",
+      "bytes": 3907,
+      "sha256": "7aa4d1529411f7fda0593312f75963f6297298e9194b997eaf566aff7810174d"
+    },
+    {
+      "path": "src/pavementRouting.js",
+      "bytes": 3275,
+      "sha256": "baac80730d0ca36db263bba4d3e248c1a6e432d36f50eca69ba02e281268281f"
+    },
+    {
+      "path": "src/playback.js",
+      "bytes": 6652,
+      "sha256": "390582465e95b5ebf320d4cd33ad9ed0ba666cdce527d5709827b706647eefc2"
+    },
+    {
+      "path": "src/playbackFrames.js",
+      "bytes": 735,
+      "sha256": "cc776f6a7d6bc0b9600873cda30b1e74ccaddc38403faee1b0d240d38424f168"
+    },
+    {
+      "path": "src/roadAnchoredRoutes.js",
+      "bytes": 1134,
+      "sha256": "1b1b6b5b567c9d36bbfd1d6c31e4d4023cd678ba265d1c3fec3e974aff5a6a1e"
+    },
+    {
+      "path": "src/sharedTraffic.js",
+      "bytes": 14338,
+      "sha256": "abe3e83cf0089b767f5d697afe79071995a170e918b21770219c3665cab036e4"
+    },
+    {
+      "path": "src/shuttleRoutes.js",
+      "bytes": 3861,
+      "sha256": "fcaf712494014d65e1f78d1c01982d372b4a820c22680a32d06dcba63badf78a"
+    },
+    {
+      "path": "src/shuttles.js",
+      "bytes": 7236,
+      "sha256": "ed9a75329989cff059178b52b6eab26b6683747eea6b1fed6548431fe017d0aa"
+    },
+    {
+      "path": "src/sourceRouting.js",
+      "bytes": 8876,
+      "sha256": "5f57c6b294c4d6aa608ff133f2e3b7de775e789c1777054fd33b2071dbef6843"
+    },
+    {
+      "path": "src/styles.css",
+      "bytes": 28711,
+      "sha256": "ecca7b40e48316db722438bffd6029bd3adbd1f6d00f00397a05bb65c215002e"
+    },
+    {
+      "path": "src/sundayServices.js",
+      "bytes": 7653,
+      "sha256": "7bf72dc814274e56d33afc67d3f21de8c3bff230470807663c0091767fe44712"
+    },
+    {
+      "path": "src/tracedMap.js",
+      "bytes": 2971,
+      "sha256": "3a6c9c57945edba7cf2a1aed292dad83bba448c35976d5f1aa7ed1a14775fbef"
+    },
+    {
+      "path": "src/traffic.js",
+      "bytes": 8874,
+      "sha256": "6ed8adbfe33baad90f194578f9edd7b17fcbdf1e531a44f84fe148ceab75fd06"
+    },
+    {
+      "path": "src/trafficPolicy.js",
+      "bytes": 1092,
+      "sha256": "ad995b8af20f35d4240fbc4c91599a031ae31ce5db99632451e9ae334b09bff9"
+    },
+    {
+      "path": "src/trafficPositions.js",
+      "bytes": 643,
+      "sha256": "9ba386569e6d932e9fe0a2eaa76bad5d05a4d7d6678b0408fd27fb236d3085d3"
+    },
+    {
+      "path": "src/trafficPriority.js",
+      "bytes": 915,
+      "sha256": "681a5afc7d1894c7c148d6e60809daa8a8caad6c9114c1c956ffbce9c820055d"
+    },
+    {
+      "path": "src/vectorRoutes.js",
+      "bytes": 3543,
+      "sha256": "a947d9bc6a25ca06088544bbe384f272ae335c76bcdb3aa6753a3c62ecba2302"
+    },
+    {
+      "path": "src/vehicleInteractions.js",
+      "bytes": 244,
+      "sha256": "7820492acf545a4710a35a3019ee5c3305cbc44e30fa02584db3d931f75585d4"
+    },
+    {
+      "path": "src/vehicleRegistration.js",
+      "bytes": 1292,
+      "sha256": "e7c4c9d424dc6ad2ba6a6bbea5be39ffb2c4628cc31106ac7aae5dc1af157f88"
+    },
+    {
+      "path": "src/vehicleRouteCatalog.js",
+      "bytes": 3990,
+      "sha256": "87e7b0e1312d5b49ffa960524a40ca263982295c63c596082165a84347343901"
+    },
+    {
+      "path": "src/vehicleRouteManifest.js",
+      "bytes": 2965,
+      "sha256": "560f9dbf2826d9169b4847067e0742476baf4b2dce1a9145439b9788985d07ed"
+    },
+    {
+      "path": "src/worldActors.js",
+      "bytes": 7986,
+      "sha256": "afd92f4d6d1ae73b4c534cdd8d716aee9dc756bc92d1ca9e816619c0bad91e80"
+    },
+    {
+      "path": "tests/alpha-queue-relief.test.js",
+      "bytes": 5078,
+      "sha256": "154ab85013c4e687e7c6455bddf4753a238d03c688b287031a103e46a63235f4"
+    },
+    {
+      "path": "tests/arrival-controls.test.js",
+      "bytes": 3584,
+      "sha256": "1a468ba260fcab7278cfa859d5c7c6e00b8b118676b99c1b49ede531bf70efc4"
+    },
+    {
+      "path": "tests/b-entrance-median.test.js",
+      "bytes": 1943,
+      "sha256": "174c795618569047f91659e2399be6347165b8325e00fa8f3b62ffcb4a24073d"
+    },
+    {
+      "path": "tests/b-north-direct-exit.test.js",
+      "bytes": 3061,
+      "sha256": "ad26efacce27d0efa1f3780e1bebf3c6d846d35de57a2f06611819d357d5f507"
+    },
+    {
+      "path": "tests/black-permit-control.test.js",
+      "bytes": 2577,
+      "sha256": "f616121d5876047aa3ae52a0994fec7d87c06cee23d9cb2416869683f9f1ee4f"
+    },
+    {
+      "path": "tests/bus-passage.test.js",
+      "bytes": 4036,
+      "sha256": "a69098738bb25e294d3e8dd2bd3b8fc2d3218f0820174e1d2bf986d31298a778"
+    },
+    {
+      "path": "tests/c-entrance-median.test.js",
+      "bytes": 2956,
+      "sha256": "ec0bbf0b427505a3f26ac9537d2c64e99bb43b2b88c13fb68729222de419ef81"
+    },
+    {
+      "path": "tests/charlie-staffed-entry.test.js",
+      "bytes": 1974,
+      "sha256": "bdea16c78efde27c301799d5bed0b4d042cb9ddbc5079e895d64ebbfb31a4ccc"
+    },
+    {
+      "path": "tests/clear-image-runtime.test.js",
+      "bytes": 7811,
+      "sha256": "aaa9ae1b19055650494c526c521cbfd677f41248b57c679d07bcdd80fcf59a56"
+    },
+    {
+      "path": "tests/corporate-drive-operators.test.js",
+      "bytes": 7457,
+      "sha256": "e879e6d313c3d1de98dc1d7e6aaba0d3671b1218d71fa66c0702ee99a137f479"
+    },
+    {
+      "path": "tests/corporate-wide-road.test.js",
+      "bytes": 2205,
+      "sha256": "223c11d01bbb4a0eb781d023762348c203b37b81d4c31ce8507c46b9c4c3d610"
+    },
+    {
+      "path": "tests/eleven-performance.test.js",
+      "bytes": 3734,
+      "sha256": "425918a7e9498cb3434fdfa7fa46dd012270cc9bb706516309db52a6f80854a8"
+    },
+    {
+      "path": "tests/equity-clay-stop.test.js",
+      "bytes": 1823,
+      "sha256": "6352d2d8a0c1b60c89b5ebf68f699b4f4f2e705208a017c9a98d5f948b4d0a2c"
+    },
+    {
+      "path": "tests/equity-routing.test.js",
+      "bytes": 2821,
+      "sha256": "a6cff1c222f0c41b2b4af4f95841b4005462c01693c9f3679cb2bfbc974286f1"
+    },
+    {
+      "path": "tests/exit-priority-junction.test.js",
+      "bytes": 7005,
+      "sha256": "65e01b30d6f598f7e8a3c39d7c03c7fb09acb5400ed0d18c8923c4997ce1f537"
+    },
+    {
+      "path": "tests/feeder-middle-outbound.test.js",
+      "bytes": 6328,
+      "sha256": "f6057f2b7c7c491ccf37417e7a5087ddb8048bff6a1aa7284a2b25e5b9a40a44"
+    },
+    {
+      "path": "tests/feeder-officer.test.js",
+      "bytes": 3108,
+      "sha256": "109e17aa04b8c823ccc8379169c271bc16c723e0e7fef65e0f6073fac69f0489"
+    },
+    {
+      "path": "tests/lot-a-batch-control.test.js",
+      "bytes": 2379,
+      "sha256": "36b0ce6dd460394839cbe2215525ffa88b0820ea3355951f392239ea208ac9ee"
+    },
+    {
+      "path": "tests/lot-a-main-held-departure.test.js",
+      "bytes": 4273,
+      "sha256": "7f731bd4219fa2f66d2a2382874b45b2a560db73ebb5175024d0ca0950d7bf7d"
+    },
+    {
+      "path": "tests/lot-a-main-median.test.js",
+      "bytes": 8127,
+      "sha256": "cdd1342a0d817139ca452f669d0d787a4a66f0d5a6b1ab180c426a878ae6ee83"
+    },
+    {
+      "path": "tests/lot-a-main-position.test.js",
+      "bytes": 4415,
+      "sha256": "4f94e67d80bac05bff92d7a808298248679d210e2581d6653c4d1e01eb8182ff"
+    },
+    {
+      "path": "tests/lot-a-south-held-chord.test.js",
+      "bytes": 7463,
+      "sha256": "a37bfe4b0de06b11449bb772c2e1f305f5d073768b48dea5b70a268577512da5"
+    },
+    {
+      "path": "tests/model.test.js",
+      "bytes": 3249,
+      "sha256": "352fad4f211dddbf04cba454ae7bfea900034580779d5c14b03376dc47e2eaf8"
+    },
+    {
+      "path": "tests/northern-radio.test.js",
+      "bytes": 7682,
+      "sha256": "4143cba48f8384abee6711ad226e5c4e290b5fbc076e21d85c1c3d4c210e6269"
+    },
+    {
+      "path": "tests/playback.test.js",
+      "bytes": 1746,
+      "sha256": "975dbe36cb3f2a78ccfaf8c1130f2c0a4904f645a4e68ec16a7f9d13c827aea6"
+    },
+    {
+      "path": "tests/recorded-rewind.test.js",
+      "bytes": 3753,
+      "sha256": "8a748489c1ba8cded1d8f8e97ac8df17d6357622bc47e5e7a27fdc4d5e826b72"
+    },
+    {
+      "path": "tests/revised-main-connectors.test.js",
+      "bytes": 1655,
+      "sha256": "9123875bd5ed36435411f3ada9633ce0de87e40707e63f30226fec39e75f8d56"
+    },
+    {
+      "path": "tests/route-layout-alignment.test.js",
+      "bytes": 2948,
+      "sha256": "1d07d2935c712ff2ab4ba2e102d1610a97bbd30529b4870ad578190f88ad5c75"
+    },
+    {
+      "path": "tests/seekable-playback.test.js",
+      "bytes": 7576,
+      "sha256": "9f4473a243e274e325aae386427067e88cf99d6abaf614bed5a13f47b0a53a48"
+    },
+    {
+      "path": "tests/service-arrival-policy.test.js",
+      "bytes": 3233,
+      "sha256": "e50f27b752492b55fb41c772d1483e7d35ace0fdb84665a46d80c9d880474116"
+    },
+    {
+      "path": "tests/service-shuttle-break.test.js",
+      "bytes": 3097,
+      "sha256": "f94fdc99609865ed29f8a169914a2caeed3a6c51314ed51b8d4fde0b53ae6671"
+    },
+    {
+      "path": "tests/service-timing.test.js",
+      "bytes": 4205,
+      "sha256": "68ebcbdb866f4c5ebd2024d9ca2d3bd12568acf8915256e3d9c3f62d4f12897a"
+    },
+    {
+      "path": "tests/shuttle-staggering.test.js",
+      "bytes": 4286,
+      "sha256": "4479055cce6464bcc1ac2fc9507ce1a132da23f83d5ceba17fb79096e86b9435"
+    },
+    {
+      "path": "tests/shuttles.test.js",
+      "bytes": 5083,
+      "sha256": "f6e0c35de9ff74530820f0cbde151a0cce12c418075ba41019e7339c2a27a76a"
+    },
+    {
+      "path": "tests/sunday-services.test.js",
+      "bytes": 6592,
+      "sha256": "f14b78a8637216cbccc3421815462cb6dfec05db7aa819b006b0bbd182b5f004"
+    },
+    {
+      "path": "tests/sunday-shuttle-circuits.test.js",
+      "bytes": 4388,
+      "sha256": "fec5436bc58c91665b109ed1b9216bb0dc0af3afd0b12ca6ace4485a82625119"
+    },
+    {
+      "path": "tests/traffic-priority.test.js",
+      "bytes": 5453,
+      "sha256": "9b15d57e1e6bfddd0b74203e203c7133437b1aa0109070e31c45592b2f3b806d"
+    },
+    {
+      "path": "tests/two-way-lanes.test.js",
+      "bytes": 3016,
+      "sha256": "e1ca319a3912c4476a1a2271bfd8c0909706c5a3a2ecf4a2b228ea3d56a9e738"
+    },
+    {
+      "path": "tests/vehicle-routes.test.js",
+      "bytes": 3615,
+      "sha256": "df13e5fd580750b1711b11bb0dca6c5d8b5fa9446770424789eec7dcdc4b64f4"
+    }
+  ],
+  "archiveSha256": "2c20668cdd226e6cc8fd6920285dc6025b7db01784d9186bd2d55c3a2ad1dfff"
+}

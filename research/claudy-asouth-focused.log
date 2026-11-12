@@ -1,0 +1,58 @@
+✔ Lot A Main Position alternates actual five-car passages, then drains partial batches (66.77ms)
+✔ an empty North does not strand South (20.475959ms)
+✖ badge cars turn east/right inside permit entrance, stay clear of A pickup and roofs (4.43075ms)
+✔ aNorth departure is held at the measured setback; mainStopBack itself unchanged (0.886625ms)
+✔ Main-inbound arrivals are held at the measured aMain setback (2.2, aSouth repair) (0.138042ms)
+✔ held aNorth departure body clears every admitted arrival path past Main (2.581709ms)
+✔ the old 1.7 hold reproduces the measured lock geometry (guards the diagnosis) (0.251458ms)
+✔ five-car policy and Main anchor unchanged; every general A route passes exactly through Main (1.074083ms)
+✔ held arrival body clears every A departure lane on built lanes (68.584583ms)
+✔ queued arrivals behind the held car clear every A departure lane (61.079959ms)
+✔ held departure body clears every A arrival APPROACH (median side) on built lanes (5287.780833ms)
+✔ held departure body clears the FULL A arrival lane (incl. post-Main aisle) (5223.335208ms) # remaining aSouth shared-aisle conflict; aNorth repaired by MAIN_DEPARTURE_HOLD_BACK
+✔ arrivals keep right of travel (entrance side), departures right of travel (exit side) (0.320083ms)
+✔ median offsets avoid obstacles and every step-down is recorded (46.10775ms)
+✔ no median offset was silently reduced (0.0885ms)
+✔ one position controls all three ready approaches and counts only clearance (1.793167ms)
+✔ five cleared cars switch equally ranked ready roads (0.429959ms)
+✔ priority waits for occupied vehicle, then serves shuttle before departure before arrival (0.235458ms)
+✔ a distant North queue does not starve a ready inbound approach (0.097541ms)
+✔ unadmitted vehicle already in Main Position clears before a new approach (0.197667ms)
+✔ all general A arrival/departure routes traverse the same position; badge stays separate (41.853625ms)
+✔ real general arrivals clear the staffed main approach and stay parked (43.180708ms)
+✔ production approaches apply the measured holds (aMain 2.2, aSouth 3.2, aNorth 3.0) (1.144125ms)
+✔ no admitted A departure yields to a batch-held Main-inbound arrival (chord rule) (5.499417ms)
+✔ no admitted arrival yields to a batch-held A departure, full lane incl. post-Main aisle (chord rule) (15.414709ms)
+✔ the pre-repair 1.7 stops reproduce the logged 299/1150 lock (guards the diagnosis) (18.173583ms)
+✔ aSouth hold window is bounded on both sides (3.0 and 3.5 both lock) (26.481292ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 25
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 1
+ℹ duration_ms 11554.179333
+
+✖ failing tests:
+
+test at tests/lot-a-batch-control.test.js:31:1
+✖ badge cars turn east/right inside permit entrance, stay clear of A pickup and roofs (4.43075ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(internal.some(p=>p[0]===190&&p[1]===250))
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-batch-control.test.js:36:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

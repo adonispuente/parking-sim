@@ -1,0 +1,183 @@
+{
+  "seconds": 2399.9999999999654,
+  "cpuMs": 7975.9490000000005,
+  "entered": [
+    546,
+    34,
+    33
+  ],
+  "departed": {
+    "a": 302,
+    "b": 370,
+    "c": 88
+  },
+  "active": 82,
+  "issues": [],
+  "metrics": {
+    "releaseFrames": 2829,
+    "heldFrames": 2521,
+    "clearingFrames": 1294,
+    "backupFrames": 3724,
+    "maxHeld": 11
+  },
+  "diverted": 32,
+  "cCarAccess": [
+    "cWest"
+  ],
+  "trips": [
+    10,
+    10,
+    10,
+    10,
+    8
+  ],
+  "radioPositions": 8,
+  "radio": {
+    "provisional": true,
+    "positions": [
+      {
+        "index": 62,
+        "name": "Lot B north exit position",
+        "position": [
+          849.1166193136331,
+          70.96818181363301
+        ],
+        "channel": "parking operations"
+      },
+      {
+        "index": 63,
+        "name": "Lot C staffed entrance",
+        "position": [
+          982.3549005636331,
+          68.74552556363301
+        ],
+        "channel": "parking operations"
+      },
+      {
+        "index": 64,
+        "name": "Lot C exit position",
+        "position": [
+          1247.1556818136332,
+          74.35880681363301
+        ],
+        "channel": "parking operations"
+      }
+    ],
+    "shuttles": [
+      {
+        "id": "shuttle-1",
+        "number": 1,
+        "phase": "remote-dwell",
+        "circuit": "b",
+        "leg": 1,
+        "position": [
+          847.623497366639,
+          406.4238589368868
+        ],
+        "moving": false
+      },
+      {
+        "id": "shuttle-2",
+        "number": 2,
+        "phase": "remote-dwell",
+        "circuit": "b",
+        "leg": 1,
+        "position": [
+          847.623497366639,
+          406.4238589368868
+        ],
+        "moving": false
+      },
+      {
+        "id": "shuttle-3",
+        "number": 3,
+        "phase": "remote-dwell",
+        "circuit": "b",
+        "leg": 1,
+        "position": [
+          847.623497366639,
+          406.4238589368868
+        ],
+        "moving": false
+      },
+      {
+        "id": "shuttle-4",
+        "number": 4,
+        "phase": "home-dwell",
+        "circuit": null,
+        "leg": 0,
+        "position": [
+          161.27002535029837,
+          370.6428966313768
+        ],
+        "moving": false
+      },
+      {
+        "id": "shuttle-5",
+        "number": 5,
+        "phase": "circuit",
+        "circuit": "cNorth",
+        "leg": 2,
+        "position": [
+          1241.3097485814171,
+          147.64012452576887
+        ],
+        "moving": true
+      }
+    ],
+    "releaseBuses": [
+      "shuttle-5"
+    ],
+    "heldCars": 9,
+    "clearingCars": 1,
+    "reason": "clear occupied Corporate traffic, then release C shuttle",
+    "clayBackedUp": false,
+    "diversionRemaining": 0,
+    "diverted": 32,
+    "nextBatchAt": 242.80000000001982,
+    "batchSize": 5,
+    "clearingIds": [
+      1495
+    ]
+  },
+  "held": [
+    {
+      "id": 1495,
+      "lane": "Arrival · Equity Entrance → C staffed entrance · cFirstNorth",
+      "distance": 244.8527638695784,
+      "wait": "safe-following",
+      "to": 578,
+      "point": {
+        "x": 105.70714453846823,
+        "y": 0.6,
+        "z": 7.00345861100148
+      }
+    },
+    {
+      "id": 1508,
+      "lane": "Arrival · Equity Entrance → C staffed entrance · cFirstSouth",
+      "distance": 190.58577677756378,
+      "stop": 190.58577677756378,
+      "wait": "charlie-exit-radio-shuttle-release",
+      "to": null,
+      "point": {
+        "x": 106.99495287291077,
+        "y": 0.6,
+        "z": 5.052373742454591
+      }
+    },
+    {
+      "id": "shuttle-5",
+      "lane": "Shuttle · cNorth · leg 3 → home",
+      "distance": 5.917961171634717,
+      "stop": 5.917961171634717,
+      "wait": "charlie-exit-radio-shuttle-release",
+      "to": null,
+      "point": {
+        "x": 102.62939406029766,
+        "y": 0.6,
+        "z": 12.206636205332854
+      }
+    }
+  ]
+}

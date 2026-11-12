@@ -1,0 +1,45 @@
+✔ bWest -> bSouth: entrance-side mouth, no reversal, passes #61 (1.097917ms)
+✔ bWest -> bBanana: entrance-side mouth, no reversal, passes #61 (0.22225ms)
+✔ bWest -> bPocket: entrance-side mouth, no reversal, passes #61 (0.123333ms)
+✔ bWest -> bNorth: entrance-side mouth, no reversal, passes #61 (0.11525ms)
+✔ bNorth -> bSouth: entrance-side mouth, no reversal, passes #61 (0.045042ms)
+✔ bNorth -> bBanana: entrance-side mouth, no reversal, passes #61 (0.038125ms)
+✔ bNorth -> bPocket: entrance-side mouth, no reversal, passes #61 (0.068209ms)
+✔ bNorth -> bNorth: entrance-side mouth, no reversal, passes #61 (0.047084ms)
+✔ only Lot B west departures take the Feeder middle lane (0.630417ms)
+✔ arrival lanes are unchanged by the optional Feeder offset (7.126916ms)
+✔ B west middle lane stays paved, clear of obstacles and separated past the exit (30.950208ms)
+✔ B west departures pass Alpha arrivals queued north of the exit (416/1172 case) (54.402083ms)
+✔ catalog binds every unified-source shape once (1.089791ms)
+✔ identity registration in the 1374x1118 frame; no affine/legacy size (0.172791ms)
+✔ Main Position is the canonical source point #57 used by the controller (0.04475ms)
+✔ B arrivals use the B entrance, visit B South, avoid roofs and record runtime use (5.175042ms)
+✖ connector provenance is disclosed per mode; untraced joins are not called surveyed (13.486ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 16
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 851.275042
+
+✖ failing tests:
+
+test at tests/vehicle-routes.test.js:60:1
+✖ connector provenance is disclosed per mode; untraced joins are not called surveyed (13.486ms)
+  AssertionError [ERR_ASSERTION]: Lot A approach to Main (aNorth)
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/vehicle-routes.test.js:65:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

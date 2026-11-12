@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import annotation from '../images/HopeCityLayoutVectors.json' with { type: 'json' };
-import { inPolygon, onStreet } from '../src/pavementRouting.js';
+// Current source only: Lot B entrance is EverythingClearImage point #61.
+import { pointAt } from '../src/clearImageSource.js';
+import { onStreet } from '../src/pavementRouting.js';
 import { ROUTE_METADATA, STREET_SECTIONS, VECTOR_ROUTES } from '../src/vectorRoutes.js';
 import { selectArrivalAccess } from '../src/trafficPolicy.js';
 import { serviceArrivalPriorities } from '../src/sundayServices.js';
 
-const ring = label => annotation.shapes.find(shape => shape.label === label).points;
 const near = (a,b,tolerance=.25) => Math.hypot(a[0]-b[0],a[1]-b[1]) <= tolerance;
 const chooseAvailable = (priorities, available) => priorities.find(lot => available.includes(lot));
 
@@ -31,7 +31,7 @@ test('1:15 Equity uses B then C only as fallback; older services and manual keep
 });
 
 test('both Equity origins reach B through labeled main entrance on street pavement', () => {
-  const entrance = ring('Lot B entrance');
+  const entrance = pointAt(61);
   for (const [source,key,origin] of [[1,'eBMain','west'],[2,'e2BMain','south']]) {
     assert.deepEqual(selectArrivalAccess({target:'b',source}),{access:'bWest',route:key});
     assert.equal(ROUTE_METADATA.arrivalOrigin[key],origin);
@@ -39,7 +39,12 @@ test('both Equity origins reach B through labeled main entrance on street paveme
     const path=VECTOR_ROUTES.arrival[key],streetCount=STREET_SECTIONS.arrival[key];
     assert.ok(streetCount>3);
     assert.ok(near(path[0],ROUTE_METADATA.equityOrigins[origin][0],3));
-    for(let i=1;i<streetCount;i++) {
+    // Source origin may approach from beyond the traced street; those leading
+    // vertices must be genuinely off-street, few, and everything after on street.
+    const lead=ROUTE_METADATA.offMapLeadIn[key];
+    assert.ok(lead<=2&&lead<streetCount-3,`${key} untraced lead-in ${lead}`);
+    for(let i=0;i<lead;i++)assert.ok(!onStreet(path[i]),`${key} lead-in ${i} is off-street`);
+    for(let i=lead+1;i<streetCount;i++) {
       const [a,b]=[path[i-1],path[i]];
       const segments=Math.ceil(Math.hypot(a[0]-b[0],a[1]-b[1])/.25);
       for(let j=0;j<=segments;j++) {
@@ -47,7 +52,7 @@ test('both Equity origins reach B through labeled main entrance on street paveme
         assert.ok(onStreet([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]),`${key} street segment ${i}`);
       }
     }
-    assert.ok(inPolygon(path.at(-1),entrance),`${key} ends in labeled B entrance`);
+    assert.ok(near(path.at(-1),entrance,1),`${key} ends at source B entrance #61`);
     assert.ok(near(path.at(-1),VECTOR_ROUTES.arrival.bWest.at(-1)));
   }
 });

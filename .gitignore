@@ -2,3 +2,12 @@ node_modules/
 dist/
 .DS_Store
 *.local
+
+# Reproducible local tooling and generated profiling output
+.venv/
+__pycache__/
+*.py[cod]
+*.cpuprofile
+
+# New verification output belongs here; keep reports/manifests versionable
+research/runs/

@@ -1,0 +1,190 @@
+{
+ "out": "research/spartan-feeder-f1-eleven-all-stalls.json",
+ "stalledCount": 73,
+ "reasons": {
+  "corporate-drive-valve": 2,
+  "safe-following": 56,
+  "clear-occupied-conflict": 15
+ },
+ "terminals": {
+  "terminal:405": 45,
+  "terminal:1048": 28
+ },
+ "corporate": {
+  "shared": {
+   "occupants": [
+    "shuttle-5"
+   ],
+   "direction": "ne",
+   "lastDirection": "ne"
+  },
+  "operators": [
+   {
+    "index": 59,
+    "reason": "record passage",
+    "waiting": 0,
+    "admitted": 0,
+    "admittedInRow": 0,
+    "request": null
+   },
+   {
+    "index": 60,
+    "reason": "higher class waiting at other end",
+    "waiting": 11,
+    "admitted": 68,
+    "admittedInRow": 1,
+    "request": {
+     "car": 1048,
+     "class": 1,
+     "stop": 69.88236620560166
+    }
+   },
+   {
+    "index": 61,
+    "reason": "opposing traffic in stretch",
+    "waiting": 29,
+    "admitted": 149,
+    "admittedInRow": 5,
+    "request": {
+     "car": 405,
+     "class": 3,
+     "stop": 98.13526459463756
+    }
+   }
+  ]
+ },
+ "earliest": [
+  {
+   "id": 405,
+   "since": 1480,
+   "yield": "corporate-drive-valve",
+   "to": null,
+   "route": "Departure · bWest · bSouth",
+   "px": [
+    537.3,
+    352.5
+   ]
+  },
+  {
+   "id": "shuttle-4",
+   "since": 1481,
+   "yield": "safe-following",
+   "to": 405,
+   "route": "Shuttle · b · leg 3 → home",
+   "px": [
+    533.7,
+    311.6
+   ]
+  },
+  {
+   "id": "shuttle-1",
+   "since": 1481,
+   "yield": "safe-following",
+   "to": 405,
+   "route": "Shuttle · b · leg 3 → home",
+   "px": [
+    533.7,
+    311.6
+   ]
+  },
+  {
+   "id": 1048,
+   "since": 1522,
+   "yield": "corporate-drive-valve",
+   "to": null,
+   "route": "Arrival · bWest · bSouth",
+   "px": [
+    306.4,
+    548.7
+   ]
+  },
+  {
+   "id": "shuttle-2",
+   "since": 1523,
+   "yield": "safe-following",
+   "to": 405,
+   "route": "Shuttle · b · leg 3 → home",
+   "px": [
+    533.7,
+    311.6
+   ]
+  },
+  {
+   "id": 490,
+   "since": 1526,
+   "yield": "clear-occupied-conflict",
+   "to": "shuttle-4",
+   "route": "Departure · bWest · bBanana",
+   "px": [
+    539.8,
+    240.2
+   ]
+  },
+  {
+   "id": 411,
+   "since": 1537,
+   "yield": "safe-following",
+   "to": 490,
+   "route": "Departure · bWest · bSouth",
+   "px": [
+    547,
+    209.5
+   ]
+  },
+  {
+   "id": 1058,
+   "since": 1543,
+   "yield": "safe-following",
+   "to": 1048,
+   "route": "Arrival · bWest · bSouth",
+   "px": [
+    275.1,
+    551.9
+   ]
+  },
+  {
+   "id": 430,
+   "since": 1551,
+   "yield": "safe-following",
+   "to": 411,
+   "route": "Departure · bWest · bSouth",
+   "px": [
+    560.4,
+    181.1
+   ]
+  },
+  {
+   "id": 362,
+   "since": 1551,
+   "yield": "safe-following",
+   "to": 430,
+   "route": "Departure · bWest · bSouth",
+   "px": [
+    575.1,
+    153.3
+   ]
+  },
+  {
+   "id": 517,
+   "since": 1551,
+   "yield": "clear-occupied-conflict",
+   "to": 362,
+   "route": "Departure · bWest · bBanana",
+   "px": [
+    607.4,
+    134
+   ]
+  },
+  {
+   "id": 1068,
+   "since": 1615,
+   "yield": "safe-following",
+   "to": 1058,
+   "route": "Arrival · bWest · bSouth",
+   "px": [
+    243.6,
+    553
+   ]
+  }
+ ]
+}

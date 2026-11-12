@@ -1,0 +1,376 @@
+{
+ "scenario": "eleven",
+ "found": true,
+ "clock": 1350.5,
+ "lockedFor": 30.1,
+ "mainPx": [
+  217.85490056363312,
+  91.57755681363301
+ ],
+ "gate": {
+  "activeSide": "aMain",
+  "passedInBatch": 3,
+  "admittedId": 965,
+  "switchPending": true,
+  "waiting": {
+   "aNorth": 2,
+   "aSouth": 0,
+   "aMain": 19
+  },
+  "ready": {
+   "aNorth": 1,
+   "aSouth": 0,
+   "aMain": 1
+  },
+  "lastHistory": [
+   {
+    "id": 961,
+    "side": "aMain",
+    "phase": "arrival",
+    "clock": 1301.299999999912,
+    "batchCount": 2
+   },
+   {
+    "id": 263,
+    "side": "aSouth",
+    "phase": "departing",
+    "clock": 1307.0999999999067,
+    "batchCount": 1
+   },
+   {
+    "id": 243,
+    "side": "aSouth",
+    "phase": "departing",
+    "clock": 1310.5999999999035,
+    "batchCount": 2
+   },
+   {
+    "id": 962,
+    "side": "aMain",
+    "phase": "arrival",
+    "clock": 1312.199999999902,
+    "batchCount": 1
+   },
+   {
+    "id": 963,
+    "side": "aMain",
+    "phase": "arrival",
+    "clock": 1314.1999999999002,
+    "batchCount": 2
+   },
+   {
+    "id": 964,
+    "side": "aMain",
+    "phase": "arrival",
+    "clock": 1317.1999999998975,
+    "batchCount": 3
+   }
+  ]
+ },
+ "arrival": {
+  "id": 965,
+  "phase": "arrival",
+  "zone": "aNorth",
+  "route": "Arrival · a · aNorth",
+  "px": [
+   198.4,
+   86
+  ],
+  "distance": 100.92,
+  "laneLength": 118.48,
+  "aControl": {
+   "approach": "aMain",
+   "mergeDistance": 102.59,
+   "folds": false,
+   "stopDistance": 100.89,
+   "releaseDistance": 104.29
+  },
+  "aMergePassed": false,
+  "holdForBatch": false,
+  "holdForGate": false,
+  "holdForOfficer": false,
+  "holdForCorridor": false,
+  "yieldReason": "clear-occupied-conflict",
+  "yieldingTo": 179
+ },
+ "heldDeparture": {
+  "id": 179,
+  "phase": "departing",
+  "zone": "aNorth",
+  "route": "Departure · a · aNorth",
+  "px": [
+   238,
+   92.2
+  ],
+  "distance": 4.05,
+  "laneLength": 24.6,
+  "aControl": {
+   "approach": "aNorth",
+   "mergeDistance": 5.75,
+   "folds": false,
+   "stopDistance": 4.05,
+   "releaseDistance": 7.45
+  },
+  "aMergePassed": false,
+  "controlStopDistance": 4.05,
+  "holdForBatch": true,
+  "holdForGate": false,
+  "holdForOfficer": false,
+  "holdForCorridor": false,
+  "yieldReason": "lot-a-main-five-car-batch",
+  "yieldingTo": null
+ },
+ "admitted": {
+  "id": 965,
+  "phase": "arrival",
+  "zone": "aNorth",
+  "route": "Arrival · a · aNorth",
+  "px": [
+   198.4,
+   86
+  ],
+  "distance": 100.92,
+  "laneLength": 118.48,
+  "aControl": {
+   "approach": "aMain",
+   "mergeDistance": 102.59,
+   "folds": false,
+   "stopDistance": 100.89,
+   "releaseDistance": 104.29
+  },
+  "aMergePassed": false,
+  "holdForBatch": false,
+  "holdForGate": false,
+  "holdForOfficer": false,
+  "holdForCorridor": false,
+  "yieldReason": "clear-occupied-conflict",
+  "yieldingTo": 179
+ },
+ "arrivalWindow": [
+  {
+   "rel": -1.27,
+   "px": [
+    184.1,
+    80.3
+   ]
+  },
+  {
+   "rel": 0.18,
+   "px": [
+    200.4,
+    86.8
+   ]
+  },
+  {
+   "rel": 1.64,
+   "px": [
+    217.3,
+    91.4
+   ]
+  },
+  {
+   "rel": 3.09,
+   "px": [
+    232.7,
+    83.4
+   ]
+  },
+  {
+   "rel": 4.55,
+   "px": [
+    246.4,
+    73
+   ]
+  },
+  {
+   "rel": 6,
+   "px": [
+    257,
+    59.1
+   ]
+  }
+ ],
+ "heldWindow": [
+  {
+   "rel": -1.27,
+   "px": [
+    253.2,
+    92.7
+   ]
+  },
+  {
+   "rel": -0.3,
+   "px": [
+    241.6,
+    92.3
+   ]
+  },
+  {
+   "rel": 0.67,
+   "px": [
+    229.9,
+    91.9
+   ]
+  }
+ ],
+ "hit": {
+  "arrivalRel": 2.55,
+  "heldRel": 0.67,
+  "arrivalOccupied": false,
+  "heldOccupied": true,
+  "arrivalHitPx": [
+   227,
+   86.5
+  ],
+  "heldHitPx": [
+   229.9,
+   91.9
+  ]
+ },
+ "controlledNearStop": [
+  {
+   "id": 179,
+   "route": "Departure · a · aNorth",
+   "px": [
+    238,
+    92.2
+   ],
+   "toStop": 0,
+   "holdForBatch": true,
+   "yieldReason": "lot-a-main-five-car-batch",
+   "yieldingTo": null
+  },
+  {
+   "id": 965,
+   "route": "Arrival · a · aNorth",
+   "px": [
+    198.4,
+    86
+   ],
+   "toStop": -0.03,
+   "holdForBatch": false,
+   "yieldReason": "clear-occupied-conflict",
+   "yieldingTo": 179
+  },
+  {
+   "id": 966,
+   "route": "Arrival · a · aNorth",
+   "px": [
+    169.1,
+    74.3
+   ],
+   "toStop": 2.58,
+   "holdForBatch": false,
+   "yieldReason": "safe-following",
+   "yieldingTo": 965
+  },
+  {
+   "id": 13,
+   "route": "Departure · a · aNorth",
+   "px": [
+    269.4,
+    93.2
+   ],
+   "toStop": 2.63,
+   "holdForBatch": false,
+   "yieldReason": "safe-following",
+   "yieldingTo": 179
+  },
+  {
+   "id": 967,
+   "route": "Arrival · a · aNorth",
+   "px": [
+    140.3,
+    61.5
+   ],
+   "toStop": 5.24,
+   "holdForBatch": false,
+   "yieldReason": "safe-following",
+   "yieldingTo": 966
+  },
+  {
+   "id": 970,
+   "route": "Arrival · a · aNorth",
+   "px": [
+    109.9,
+    53.2
+   ],
+   "toStop": 7.85,
+   "holdForBatch": false,
+   "yieldReason": "safe-following",
+   "yieldingTo": 967
+  },
+  {
+   "id": 971,
+   "route": "Arrival · a · aNorth",
+   "px": [
+    78.4,
+    51.4
+   ],
+   "toStop": 10.48,
+   "holdForBatch": false,
+   "yieldReason": "safe-following",
+   "yieldingTo": 970
+  },
+  {
+   "id": 972,
+   "route": "Arrival · a · aNorth",
+   "px": [
+    34.6,
+    84.3
+   ],
+   "toStop": 16.12,
+   "holdForBatch": false,
+   "yieldReason": "feeder-officer-merge",
+   "yieldingTo": null
+  },
+  {
+   "id": 973,
+   "route": "Arrival · a · aNorth",
+   "px": [
+    33.2,
+    115.7
+   ],
+   "toStop": 18.74,
+   "holdForBatch": false,
+   "yieldReason": "safe-following",
+   "yieldingTo": 972
+  },
+  {
+   "id": 974,
+   "route": "Arrival · a · aNorth",
+   "px": [
+    31.7,
+    147.1
+   ],
+   "toStop": 21.35,
+   "holdForBatch": false,
+   "yieldReason": "safe-following",
+   "yieldingTo": 973
+  },
+  {
+   "id": 975,
+   "route": "Arrival · a · aNorth",
+   "px": [
+    30.2,
+    178.5
+   ],
+   "toStop": 23.97,
+   "holdForBatch": false,
+   "yieldReason": "safe-following",
+   "yieldingTo": 974
+  },
+  {
+   "id": 976,
+   "route": "Arrival · a · aNorth",
+   "px": [
+    28.8,
+    210
+   ],
+   "toStop": 26.58,
+   "holdForBatch": false,
+   "yieldReason": "safe-following",
+   "yieldingTo": 975
+  }
+ ]
+}

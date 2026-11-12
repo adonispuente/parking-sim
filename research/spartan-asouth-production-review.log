@@ -1,0 +1,17 @@
+{"case":"applied","direction":"forward","samples":3588,"blocked":0,"slowed":0,"examples":[]}
+{"case":"applied","direction":"reverse","samples":16446,"blocked":0,"slowed":0,"examples":[]}
+{"case":"old1.7","direction":"forward","samples":3588,"blocked":60,"slowed":60,"examples":[{"mover":"out:aNorth","held":"a:aSouth","d":4.149987611017283,"stop":101.22354782979572,"reason":"clear-occupied-conflict"},{"mover":"out:aNorth","held":"a:aSouth","d":4.249987611017283,"stop":101.22354782979572,"reason":"clear-occupied-conflict"},{"mover":"out:aNorth","held":"badgeA:aSouth","d":4.149987611017283,"stop":101.22354782979572,"reason":"clear-occupied-conflict"}]}
+{"case":"oldSouth1.7","direction":"reverse","samples":16446,"blocked":369,"slowed":369,"examples":[{"mover":"a:aSouth","held":"out:aSouth","d":100.72354782979572,"stop":3.9932401171741905,"reason":"clear-occupied-conflict"},{"mover":"a:aSouth","held":"out:aSouth","d":100.82354782979571,"stop":3.9932401171741905,"reason":"clear-occupied-conflict"},{"mover":"a:aSouth","held":"out:aSouth","d":100.92354782979571,"stop":3.9932401171741905,"reason":"clear-occupied-conflict"}]}
+✔ all 26 Main arrivals and two exits are built (0.550333ms)
+✔ production evaluator: applied stops clear held vehicles forward (18.131792ms)
+✔ production evaluator: applied stops clear held vehicles reverse (44.202708ms)
+✔ old arrival stop reproduces production yielding (13.256875ms)
+✔ old South departure stop reproduces production yielding (46.460167ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 964.778416

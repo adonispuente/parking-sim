@@ -1,0 +1,16 @@
+✔ five-car policy and Main anchor unchanged; every general A route passes exactly through Main (0.854833ms)
+✔ held arrival body clears every A departure lane on built lanes (58.770084ms)
+✔ queued arrivals behind the held car clear every A departure lane (57.599166ms)
+✔ held departure body clears every A arrival APPROACH (median side) on built lanes (4925.508209ms)
+✔ held departure body clears the FULL A arrival lane (incl. post-Main aisle) (4840.87025ms)
+✔ arrivals keep right of travel (entrance side), departures right of travel (exit side) (0.349584ms)
+✔ median offsets avoid obstacles and every step-down is recorded (47.562417ms)
+✔ no median offset was silently reduced (0.11525ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10670.793

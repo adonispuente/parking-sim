@@ -1,2 +1,0 @@
-# Ten-car demonstration
-Remove obsolete Lot A comparison panel. Add a replayable ten-car scenario alongside continuous traffic controls. Assign A=2, B north=3, C south=5. Cars use existing directional Corporate Drive lanes, provisional lot access waypoints, and return in the opposite lane. Preserve source geometry. Access paths and widths are illustrative, not approved operational rules. Verify production compilation and a complete numerical scenario run; prioritize visible progress over expanding tests.

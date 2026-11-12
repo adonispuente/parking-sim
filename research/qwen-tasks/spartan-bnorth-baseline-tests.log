@@ -1,0 +1,100 @@
+✔ bWest -> bSouth: entrance-side mouth, no reversal, passes #61 (1.29175ms)
+✔ bWest -> bBanana: entrance-side mouth, no reversal, passes #61 (0.391792ms)
+✔ bWest -> bPocket: entrance-side mouth, no reversal, passes #61 (0.242ms)
+✔ bWest -> bNorth: entrance-side mouth, no reversal, passes #61 (0.508041ms)
+✔ bNorth -> bSouth: entrance-side mouth, no reversal, passes #61 (0.068125ms)
+✔ bNorth -> bBanana: entrance-side mouth, no reversal, passes #61 (0.052834ms)
+✔ bNorth -> bPocket: entrance-side mouth, no reversal, passes #61 (0.061667ms)
+✔ bNorth -> bNorth: entrance-side mouth, no reversal, passes #61 (0.070416ms)
+✔ no C zone stages (parks/launches) inside the median throat (0.782584ms)
+✔ entering and exiting C lanes stay a full conflict width apart through the median throat (1449.395875ms)
+✔ C median is recorded as a provisional model parameter (0.085625ms)
+✔ C car departures split ~50/50 across both exits; west/east policies force one exit (917.412167ms)
+✔ cWest/cFirstNorth enters through #63 and never detours to northeast after admission (1.911125ms)
+✔ cWest/cFirstSouth enters through #63 and never detours to northeast after admission (19.071292ms)
+✔ cWest/cNorth enters through #63 and never detours to northeast after admission (1.081708ms)
+✔ cWest/cSouth enters through #63 and never detours to northeast after admission (18.646875ms)
+✔ eCWest/cFirstNorth enters through #63 and never detours to northeast after admission (0.348ms)
+✔ eCWest/cFirstSouth enters through #63 and never detours to northeast after admission (0.638417ms)
+✔ eCWest/cNorth enters through #63 and never detours to northeast after admission (0.702833ms)
+✔ eCWest/cSouth enters through #63 and never detours to northeast after admission (0.744917ms)
+✔ e2CWest/cFirstNorth enters through #63 and never detours to northeast after admission (1.053584ms)
+✔ e2CWest/cFirstSouth enters through #63 and never detours to northeast after admission (0.521666ms)
+✔ e2CWest/cNorth enters through #63 and never detours to northeast after admission (0.288625ms)
+✔ e2CWest/cSouth enters through #63 and never detours to northeast after admission (0.420584ms)
+✔ actual built C lanes from all origins stay at staffed mouth, not northeast exit (894.701125ms)
+✔ opposing directions on Corporate get separate right-hand lanes (5.505ms)
+✔ same direction on a street stays one physical queue (3.94225ms)
+✔ lot points (Main Position) are never offset (0.852417ms)
+✔ A departures through Main do not double back into the opposing held queue (74.043167ms)
+✖ connectors prefer traced pavement; fallbacks are flagged (45.18475ms)
+✔ mixed A departure drains both North and South through Main (97.331083ms)
+✔ B departures never run against traced B arrival or shuttle circulation (124.603667ms)
+✔ A arrivals cross Lot A Main exactly once (2.002292ms)
+✔ indexed lane sampling preserves Three points and tangents including segment boundaries (4.86ms)
+✔ failed route construction is attempted once per scenario, not once per ready car per tick (173.620042ms)
+✔ B north/pocket departures connect to the labeled north exit (18.457291ms)
+✔ C departure routes start at exits, never retrace the shuttle entrance turnaround (66.939208ms)
+✔ 11am departures clear C entrance and all five shuttles complete repeated trips (2595.019666ms)
+✔ C exit officer holds conflicting arrivals and departures; independent road stays open (2.939958ms)
+✔ occupied Corporate traffic clears before the shuttle, bus-to-bus exception retained (0.720916ms)
+✔ radio releases a stopped physical leader needed by an occupied car (0.546334ms)
+✔ hold continues until shuttle tail clears and inbound/non-C buses do not preempt (0.407583ms)
+✔ all actual C return legs announce on shared radio; C east policy sends ordinary C cars east (772.343667ms)
+✔ B diversions count five actual launches, pause between batches, restore east route when clear (0.214458ms)
+✔ Clay backup requires sustained road waits and resets when cars move (0.1485ms)
+✔ reverse restores private state, never steps negative, and forward resumes identically (0.7715ms)
+✔ reverse retains fractional ticks across rendered frames (0.688125ms)
+✔ real 40-minute eleven transition clears the C radio handoff instead of trapping its physical leader (7906.762375ms)
+✔ playback advances 1–30× time with bounded updates and forwards settings (1.074375ms)
+✔ playback bounds long frame catch-up and rejects invalid frame durations (0.096458ms)
+✔ 5× playback completes the ten-car demo and preserves parking until departure (540.891ms)
+✔ recorded reverse updates earlier cars immediately without any reconstruction (3.028459ms)
+✔ forward resumption restores private state once, then advances identically (1.944792ms)
+✔ history bounds, old-history refill, zero and input invalidation (3.648167ms)
+✔ real traffic recorded rewind restores car poses/counts and deterministic forward state (1216.832834ms)
+✔ Operations mounts compact parked counts and retires requested sections/presets (3.491ms)
+✔ UI speed contract has matching reverse/forward speeds, initially 5; elapsed timeline removed (5.306708ms)
+✔ fixed live ticks and rewind-forward replay preserve private state exactly (1.112375ms)
+✔ live input changes invalidate history; caller mutation cannot change frozen inputs (0.313167ms)
+✔ latest seek wins; cancellation never publishes partial reconstructed state (0.422458ms)
+✔ seek validates targets and chunk-yields with progress (0.534208ms)
+✔ zero-time reconstruction applies live controls without advancing the clock (0.161458ms)
+✔ speed and frame partition change pace, not the sequence of traffic ticks (0.836542ms)
+✔ cancellation during chunking discards partial work and preserves visible state (0.19225ms)
+✔ real demo replay restores queues, reservations, cars and parked records (384.7095ms)
+✔ real service replay preserves seeded shuttles, schedule and controller state (1008.426083ms)
+✔ eleven transition replay preserves departure IDs, gates and initial occupancy (1739.859625ms)
+✔ final transition replay preserves departure IDs, gates and initial occupancy (2026.628916ms)
+✔ 30× advances thirty simulated seconds per real second without enlarging fixed ticks (0.221125ms)
+ℹ tests 69
+ℹ suites 0
+ℹ pass 68
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9718.463084
+
+✖ failing tests:
+
+test at tests/clear-image-runtime.test.js:68:1
+✖ connectors prefer traced pavement; fallbacks are flagged (45.18475ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/clear-image-runtime.test.js:71:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

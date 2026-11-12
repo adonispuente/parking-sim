@@ -1,0 +1,12 @@
+✔ only Lot B west departures take the Feeder middle lane (0.618292ms)
+✔ arrival lanes are unchanged by the optional Feeder offset (7.629084ms)
+✔ B west middle lane stays paved, clear of obstacles and separated past the exit (29.445458ms)
+✔ B west departures pass Alpha arrivals queued north of the exit (416/1172 case) (53.720917ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 802.792417

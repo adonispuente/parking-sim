@@ -1,0 +1,22 @@
+{
+  "state": "applied",
+  "archiveIssues": [],
+  "archivedFiles": 8,
+  "protectedAtPlan": 100,
+  "survivorsChangedSincePlan": [
+    "src/RouteSourcesPanel.jsx",
+    "src/Scene.jsx",
+    "src/SundayControls.jsx",
+    "src/equityClayStop.js",
+    "src/feederOfficer.js",
+    "src/lotAControl.js",
+    "src/trafficPositions.js",
+    "tests/equity-clay-stop.test.js",
+    "tests/feeder-officer.test.js",
+    "tests/lot-a-main-position.test.js",
+    "tests/route-layout-alignment.test.js",
+    "tests/vehicle-routes.test.js"
+  ],
+  "archive": "/Users/adonispuente/Desktop/Developer/parking-sim-archives/2026-11-08-legacy-code/legacy-code.tar.gz",
+  "archiveSha256": "2c20668cdd226e6cc8fd6920285dc6025b7db01784d9186bd2d55c3a2ad1dfff"
+}

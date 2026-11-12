@@ -1,9 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createCampusTraffic } from '../src/traffic.js';
+import { keepRight } from '../src/traffic.js';
 import { buildShuttleCircuits, internalPath, avoidsShuttleObstacles, SHUTTLE_STOPS } from '../src/shuttleRoutes.js';
 import { streetPath, inPolygon, onStreet } from '../src/pavementRouting.js';
-import annotation from '../images/HopeCityLayoutVectors.json' with { type:'json' };
+// Current source pair only (EverythingClearImage.json on Clear Image.png).
+import source from '../src/clearImageSource.js';
 
 const stop=id=>SHUTTLE_STOPS.find(item=>item.id===id).point;
 const segmentSamples=points=>points.slice(1).flatMap((b,i)=>{
@@ -21,8 +23,9 @@ test('ordered B and C circuits include every pickup and home without crossing an
     for(const leg of legs)for(const p of segmentSamples(leg.points))
       assert.ok(avoidsShuttleObstacles(p),`${name} obstacle at ${p}`);
   }
-  const connector=internalPath('b',[305,267],[400,86]);
-  for(const p of segmentSamples(connector))assert.ok(avoidsShuttleObstacles(p));
+  // Old-frame fixture internalPath('b',[305,267],[400,86]) removed: those points
+  // lie on the current source B roof. Every derived pickup connector in the
+  // circuits above is already obstacle-checked by the loop.
 });
 
 test('three active buses serve 2B/1C, retiring buses return home, and departure dispatch retains B',()=>{
@@ -42,15 +45,19 @@ test('three active buses serve 2B/1C, retiring buses return home, and departure 
   assert.equal(departing.shuttleDispatchMode,'four-b-one-c');
 });
 
+// Opposing separation now comes from the runtime right-hand lane builder
+// (keepRight) applied to the shared street centerline, not from streetPath.
 test('Corporate opposing bus centers clear on west, north and vertical cross sections',()=>{
-  const corporate=annotation.shapes.find(shape=>shape.label==='Corporate Drive').points;
+  const corporate=source.shapes.find(shape=>shape.label==='Corporate Drive').points;
+  // Cross sections on the current traced Corporate Drive polygon.
   const sections=[
-    {name:'west horizontal',a:[110,286],b:[250,257],axis:0,at:175},
-    {name:'north horizontal',a:[390,50],b:[620,50],axis:0,at:500},
-    {name:'vertical S',a:[270,120],b:[270,205],axis:1,at:165},
+    {name:'west horizontal',a:[120,540],b:[250,545],axis:0,at:175},
+    {name:'north horizontal',a:[760,62],b:[1000,66],axis:0,at:900},
+    {name:'vertical S',a:[488,240],b:[480,360],axis:1,at:300},
   ];
   for(const {name,a,b,axis,at} of sections) {
-    const outbound=streetPath(a,b),inbound=streetPath(b,a);
+    // a->b is eastbound (axis 0) or southbound (axis 1) in image coordinates.
+    const outbound=keepRight(streetPath(a,b)),inbound=keepRight(streetPath(b,a));
     const samples=[segmentSamples(outbound),segmentSamples(inbound)];
     for(const p of samples.flat())assert.ok(onStreet(p),`${name}: outside approved street at ${p}`);
     const crossing=points=>{
@@ -61,6 +68,7 @@ test('Corporate opposing bus centers clear on west, north and vertical cross sec
     const centers=samples.map(crossing);
     const separation=Math.abs(centers[0]-centers[1]);
     assert.ok(separation>=6,`${name}: ${separation.toFixed(2)}px opposing centers, need >=6px for 5.7px bus bodies`);
+    // Image y points down: eastbound keeps to larger y, southbound to smaller x.
     assert.ok(axis===0 ? centers[0]>centers[1] : centers[0]<centers[1],
       `${name}: travel must keep right-hand side`);
     for(const center of centers)for(const side of [-1,1]) {

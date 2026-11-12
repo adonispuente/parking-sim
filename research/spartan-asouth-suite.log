@@ -1,0 +1,752 @@
+
+> parking-flow@0.1.0 test
+> node --test tests/*.test.js
+
+✔ six/two hysteresis retains diversion through middle band and can be disabled (0.972584ms)
+✔ only pre-Main general cars count; road decision excludes cars past #59 (0.146917ms)
+✔ Bravo diversion route starts at pose and never reverses along Feeder (12.1005ms)
+✔ on-road redirect conserves built pose, ID, cohort and reservations and updates history (105.474709ms)
+✔ new general requests choose Bravo while closed or full Bravo falls back to Alpha (48.772708ms)
+✔ permit arrival is not diverted when Alpha is backed up (18.272917ms)
+✔ arrival demo parks all ten and retains them well beyond the former dwell timer (346.717292ms)
+✔ explicit departure phase releases retained cars without resetting or teleporting (179.568167ms)
+✔ each Equity origin assigns C via its staffed entrance even when A has room (62.087542ms)
+✔ feeder spills into B then C while Equity never enters through a C exit (58.831083ms)
+✔ full campus sends all new arrivals away without queues or overflow parking (7.764584ms)
+✔ C full alone holds Equity upstream instead of inventing a fallback (2.819792ms)
+✔ capacity reservations prevent overbooking and remaining arrivals are sent away (52.055625ms)
+✔ bWest -> bSouth: entrance-side mouth, no reversal, passes #61 (1.844833ms)
+✔ bWest -> bBanana: entrance-side mouth, no reversal, passes #61 (0.4995ms)
+✔ bWest -> bPocket: entrance-side mouth, no reversal, passes #61 (0.238583ms)
+✔ bWest -> bNorth: entrance-side mouth, no reversal, passes #61 (0.209625ms)
+✔ bNorth -> bSouth: entrance-side mouth, no reversal, passes #61 (0.077208ms)
+✔ bNorth -> bBanana: entrance-side mouth, no reversal, passes #61 (0.056916ms)
+✔ bNorth -> bPocket: entrance-side mouth, no reversal, passes #61 (0.102667ms)
+✔ bNorth -> bNorth: entrance-side mouth, no reversal, passes #61 (0.068416ms)
+✔ opposing fleet buses pass through the same connector (reversed=false) (2.010667ms)
+✔ opposing fleet buses pass through the same connector (reversed=true) (0.544833ms)
+✔ same-lane fleet buses pass through a stopped bus (0.274583ms)
+✔ fleet bus still stops behind an ordinary stopped car (0.298584ms)
+✔ ordinary car still stops behind a fleet bus (0.158834ms)
+✔ second shuttle launch ignores bus at its start while retaining 15s HOME spacing (1163.291125ms)
+✔ shuttle launch stays blocked by ordinary car at its start (2.400292ms)
+✖ latest map preserves satellite aspect and has three polygon roofs (2.178916ms)
+✖ curved spine joins both frontage streets in image coordinates (0.333042ms)
+✖ invalid trace coordinates and widths are rejected (0.172917ms)
+✔ opposing directions on Corporate get separate right-hand lanes (7.780167ms)
+✔ same direction on a street stays one physical queue (2.243833ms)
+✔ lot points (Main Position) are never offset (1.079083ms)
+✔ A departures through Main do not double back into the opposing held queue (56.7205ms)
+✔ connectors prefer traced pavement; fallbacks are flagged (201.5895ms)
+✔ mixed A departure drains both North and South through Main (118.412333ms)
+✔ B departures never run against traced B arrival or shuttle circulation (98.636375ms)
+✔ A arrivals cross Lot A Main exactly once (1.533167ms)
+✔ three separate operators, #60 and #61 own opposite ends, #59 records passage only (4.492042ms)
+✔ departure inside the stretch holds an opposing arrival at its stop line (1.094833ms)
+✔ shuttle waiting at #60 outranks a departure waiting at #61 (0.785417ms)
+✔ departure waiting at #61 outranks an arrival waiting at #60 (0.944833ms)
+✔ arrival vs shuttle stays on existing local bus priority (no valve) (0.696375ms)
+✔ same-direction follower is admitted behind a departure already in the stretch (0.958917ms)
+✔ #59 never holds traffic; disabled operators hold nothing (0.778125ms)
+✔ two-way: opposing lanes wider than conflictGap get no valve, passage still counted (0.945666ms)
+✔ every operator counts vehicles passing its point exactly once (0.65725ms)
+✔ indexed lane sampling preserves Three points and tangents including segment boundaries (4.869167ms)
+✔ failed route construction is attempted once per scenario, not once per ready car per tick (98.860042ms)
+✔ B north/pocket departures connect to the labeled north exit (22.378333ms)
+✔ C departure routes start at exits, never retrace the shuttle entrance turnaround (84.784375ms)
+✖ 11am departures clear C entrance and all five shuttles complete repeated trips (1973.786584ms)
+✖ two labeled Equity entrances are distinct inbound origins (5.828875ms)
+✖ both Equity C routes follow pavement then the staffed west entrance, not an exit (3.830583ms)
+✔ officer admits only one ready car, counts clearance, does not overwrite Main Position (8.214792ms)
+✔ occupied feeder merge clears before an A exit is admitted (0.123667ms)
+✔ priority bus holds conflicting A exit but does not trap its physical feeder leader (0.074958ms)
+✔ feeder traffic stays free without waiting Lot A departures; passed traffic is not phantom demand (0.062875ms)
+✔ officer can be disabled without removing physical roads (0.148208ms)
+✔ Lot A Main Position alternates actual five-car passages, then drains partial batches (116.686542ms)
+✔ an empty North does not strand South (67.877958ms)
+✖ badge cars turn east/right inside permit entrance, stay clear of A pickup and roofs (5.938584ms)
+✖ photo boundary contains entire east apron and matches pavement coordinates (1.285083ms)
+✖ revision one boundary migration retains building, custom rows and lot state (0.3235ms)
+✔ aNorth departure is held at the measured setback; mainStopBack itself unchanged (0.897ms)
+✔ Main-inbound arrivals are held at the measured aMain setback (2.2, aSouth repair) (0.214042ms)
+✔ held aNorth departure body clears every admitted arrival path past Main (1.213125ms)
+✔ the old 1.7 hold reproduces the measured lock geometry (guards the diagnosis) (0.2185ms)
+✔ five-car policy and Main anchor unchanged; every general A route passes exactly through Main (1.253541ms)
+✔ held arrival body clears every A departure lane on built lanes (149.828042ms)
+✔ queued arrivals behind the held car clear every A departure lane (110.785083ms)
+✔ held departure body clears every A arrival APPROACH (median side) on built lanes (5461.596916ms)
+✔ held departure body clears the FULL A arrival lane (incl. post-Main aisle) (4791.741917ms) # remaining aSouth shared-aisle conflict; aNorth repaired by MAIN_DEPARTURE_HOLD_BACK
+✔ arrivals keep right of travel (entrance side), departures right of travel (exit side) (0.323667ms)
+✔ median offsets avoid obstacles and every step-down is recorded (46.666667ms)
+✔ no median offset was silently reduced (0.128541ms)
+✔ one position controls all three ready approaches and counts only clearance (2.082208ms)
+✔ five cleared cars switch equally ranked ready roads (0.584959ms)
+✔ priority waits for occupied vehicle, then serves shuttle before departure before arrival (0.148625ms)
+✔ a distant North queue does not starve a ready inbound approach (0.069167ms)
+✔ unadmitted vehicle already in Main Position clears before a new approach (0.087041ms)
+✔ all general A arrival/departure routes traverse the same position; badge stays separate (62.962833ms)
+✔ real general arrivals clear the staffed main approach and stay parked (105.685083ms)
+✖ parking trace renders serializable surfaces and all three parking banks (6.596208ms)
+✖ migration preserves non-A geometry and only applies once (0.278458ms)
+✔ east apron shares the entire main hall east boundary (0.109875ms)
+✔ surface imports reject malformed elevations, colors, and missing polygons (24.172291ms)
+✔ production approaches apply the measured holds (aMain 2.2, aSouth 3.2, aNorth 3.0) (1.73875ms)
+✔ no admitted A departure yields to a batch-held Main-inbound arrival (chord rule) (11.501958ms)
+✔ no admitted arrival yields to a batch-held A departure, full lane incl. post-Main aisle (chord rule) (51.994209ms)
+✔ the pre-repair 1.7 stops reproduce the logged 299/1150 lock (guards the diagnosis) (21.939417ms)
+✔ aSouth hold window is bounded on both sides (3.0 and 3.5 both lock) (40.405209ms)
+✔ Lot A has three separate finite roof masses and serializes (2.845083ms)
+✖ applying Lot A preserves every other object and project name (0.285333ms)
+✖ malformed mass coordinates and heights are rejected (0.186584ms)
+✖ saved-layout update clears current positions only once and preserves other items (4.651ms)
+✖ starter layout round-trips and has three provisional lots (3.6555ms)
+✖ closing a lot reduces capacity and removes its demonstration route (0.569125ms)
+✔ all placement tools create valid serializable objects (8.635458ms)
+✖ deleting a lot unassigns its parking rows rather than leaving dangling references (0.268542ms)
+✖ invalid imports are rejected without mutating input (1.127334ms)
+✔ roles, assignees, geometry and notes survive export/import (0.422ms)
+✔ playback advances 1–20× time with bounded updates and forwards settings (1.245792ms)
+✔ playback bounds long frame catch-up and rejects invalid frame durations (0.139667ms)
+✔ 5× playback completes the ten-car demo and preserves parking until departure (562.473125ms)
+✔ revised traces connect to fixed Main without a grid detour and disclose residual (2.250375ms)
+✔ station adjustment cannot become an unbounded shortcut (0.264792ms)
+✔ revised inbound approach continues forward to Main rather than looping south and back (29.286167ms)
+✔ A departure begins at the labeled exit throat, not the old arrival-end turnaround (1.224667ms)
+✖ resolved Main Position has one shared coordinate and all general approaches attach (4.024917ms)
+✖ road anchoring preserves physical road/entrance; proposals and missing shuttle returns are not invented (53.495167ms)
+✔ controlled A paths avoid roof/blocked centerlines (55.875167ms)
+✔ Lot A mixed North/South departures drain through both staffed controls (120.44325ms)
+✔ UI speed contract is exactly 5, 10, 20, initially 5 (2.191084ms)
+✔ fixed live ticks and rewind-forward replay preserve private state exactly (0.605334ms)
+✔ live input changes invalidate history; caller mutation cannot change frozen inputs (0.206ms)
+✔ latest seek wins; cancellation never publishes partial reconstructed state (0.146583ms)
+✔ seek validates targets and chunk-yields with progress (0.460834ms)
+✔ zero-time reconstruction applies live controls without advancing the clock (0.130375ms)
+✔ speed and frame partition change pace, not the sequence of traffic ticks (0.493708ms)
+✔ cancellation during chunking discards partial work and preserves visible state (0.128709ms)
+✔ real demo replay restores queues, reservations, cars and parked records (384.442667ms)
+✔ real service replay preserves seeded shuttles, schedule and controller state (864.105209ms)
+✔ eleven transition replay preserves departure IDs, gates and initial occupancy (1518.223083ms)
+✔ final transition replay preserves departure IDs, gates and initial occupancy (1557.824959ms)
+✔ 1:15 Equity uses B then C only as fallback; older services and manual keep staffed C (1.525167ms)
+✔ both Equity origins reach B through labeled main entrance on street pavement (38.438042ms)
+✔ all service breaks use actual service +45 to +55, not scenario elapsed45 (1.015334ms)
+✔ home buses hold during service break and resume when it ends (980.39225ms)
+✔ break never removes a moving bus; a remote bus can finish its circuit (1.57925ms)
+✔ nine: 95% arrival target is 45 minutes after actual service start (1.673167ms)
+✔ eleven: 95% arrival target is 45 minutes after actual service start (0.945084ms)
+✔ final: 95% arrival target is 45 minutes after actual service start (0.252375ms)
+✔ large early transition override cannot consume the reserved 5% tail (0.253375ms)
+✔ nine demand 101: 75% on time at service start, the rest late (0.281708ms)
+✔ nine demand 950: 75% on time at service start, the rest late (0.5835ms)
+✔ nine demand 1224: 75% on time at service start, the rest late (0.684417ms)
+✔ nine demand 300: 75% on time at service start, the rest late (0.124542ms)
+✔ eleven demand 101: 75% on time at service start, the rest late (0.088584ms)
+✔ eleven demand 950: 75% on time at service start, the rest late (0.265667ms)
+✔ eleven demand 1224: 75% on time at service start, the rest late (0.291708ms)
+✔ eleven demand 300: 75% on time at service start, the rest late (0.119709ms)
+✔ final demand 101: 75% on time at service start, the rest late (0.062583ms)
+✔ final demand 950: 75% on time at service start, the rest late (0.171667ms)
+✔ final demand 1224: 75% on time at service start, the rest late (1.8145ms)
+✔ final demand 300: 75% on time at service start, the rest late (0.111209ms)
+✔ initial releases are spread over the first 90 seconds and HOME starts obey a 15s headway (896.555666ms)
+✔ a blocked HOME launch retries without losing its ready time or circuit (1.109042ms)
+✔ default pickup dwell is fresh, bounded and reproducible for each bus visit (3.119791ms)
+✔ legacy explicit dwell override remains exact, including zero (2.092542ms)
+✔ remote legs finish during a break and a retired bus then holds at home (1.444416ms)
+✔ all shuttle loops begin/end at exact labeled pickups and avoid roofs/blocked zones (583.97525ms)
+✖ five persistent buses loop with four to B and one cycling all C stops (161.600291ms)
+✖ B full switches to C after current trip completes at home, with no midroute jump (131.096083ms)
+✖ fleet keeps completing trips in traffic in both allocation modes (2245.244542ms)
+✖ badge parking stays available when general campus is full without inflating 1584 (16.243792ms)
+✖ departure releases count-only A/B/C simultaneously through proper exits and buses continue (218.057667ms)
+✔ shared following works for different routes and respects the longer bus body (0.186875ms)
+✔ open capacity decreases for parking/reservations, excludes closed lots and recovers on departure (36.631166ms)
+✖ confirmed section capacities total1584; badge51 stays inside A411 (3.268625ms)
+✔ transition gate excludes badges, latches at50%, and partial B stays open (1.371125ms)
+✔ scheduled old-cohort departures vary, keep lingerers and do not release new-service arrivals (1059.690042ms)
+✔ early transition arrivals use C while A/B held; partly empty B remains reachable (62.160167ms)
+✔ all general-zone routes avoid roof/blocked polygons and B routes visit south before north (64.673167ms)
+✔ badge arrivals cannot exceed their51 slots or claim general spaces (114.624458ms)
+✔ parallel curves cannot mutually deadlock with each vehicle believing the other ahead (0.293709ms)
+✔ occupancy fill cutoff is west-first and respects filled polygon area (0.518417ms)
+✖ three full Sunday scenario runs finish their demands, retain new cohorts and clear previous cohorts (26033.134583ms)
+✔ ordered B and C circuits include every pickup and home without crossing annotated obstacles (572.114375ms)
+✔ three active buses serve 2B/1C, retiring buses return home, and departure dispatch retains B (378.842125ms)
+✔ Corporate opposing bus centers clear on west, north and vertical cross sections (25.821417ms)
+✔ strict class priority: a bus has at least20 car value, then departures, then arrivals (0.958375ms)
+✔ shuttle wins an unoccupied crossing regardless of insertion order (reversed=false) (1.394916ms)
+✔ departure has priority over arriving cars (reversed=false) (2.576542ms)
+✔ shuttle wins an unoccupied crossing regardless of insertion order (reversed=true) (0.312ms)
+✔ departure has priority over arriving cars (reversed=true) (0.258125ms)
+✔ a queue of twenty arrivals cannot outvote one approaching shuttle (0.872917ms)
+✔ a vehicle already crossing clears before the priority bus enters (0.26125ms)
+✔ priority bus follows the slower lead car without overlap or reverse-yield deadlock (1.10325ms)
+✔ opposing separated lanes keep moving without a false shuttle conflict (0.236666ms)
+✔ equally ranked cars resolve crossing ties identically after array reorder (7.386416ms)
+✔ a held shuttle does not reserve an empty crossing it cannot approach (0.283541ms)
+✔ lower-priority traffic resumes once the shuttle clears the crossing (1.917417ms)
+✔ merging arrival yields before taking the shuttle lane (0.304542ms)
+✔ Corporate Drive west stretch: opposing lanes clear bus/bus width (5.9545ms)
+✔ Equity Drive: opposing lanes clear bus/bus width where paved room allows (2.756042ms)
+✔ Feeder Road keeps the original 6 px offset (1.032667ms)
+✔ catalog binds every unified-source shape once (1.581834ms)
+✔ identity registration in the 1374x1118 frame; no affine/legacy size (0.283375ms)
+✔ Main Position is the canonical source point #57 used by the controller (0.059709ms)
+✔ B arrivals use the B entrance, visit B South, avoid roofs and record runtime use (6.92275ms)
+✖ connector provenance is disclosed per mode; untraced joins are not called surveyed (16.695541ms)
+ℹ tests 193
+ℹ suites 0
+ℹ pass 164
+ℹ fail 28
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 1
+ℹ duration_ms 29777.9945
+
+✖ failing tests:
+
+test at tests/campus.test.js:6:1
+✖ latest map preserves satellite aspect and has three polygon roofs (2.178916ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 1.2289803220035778
+  - 1.2322206095791002
+       ^
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/campus.test.js:8:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1.2289803220035778,
+    expected: 1.2322206095791002,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/campus.test.js:11:1
+✖ curved spine joins both frontage streets in image coordinates (0.333042ms)
+  TypeError: Cannot read properties of undefined (reading 'points')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/campus.test.js:14:26)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+
+test at tests/campus.test.js:19:1
+✖ invalid trace coordinates and widths are rejected (0.172917ms)
+  TypeError: Cannot read properties of undefined (reading 'points')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/campus.test.js:21:44)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+
+test at tests/eleven-performance.test.js:59:1
+✖ 11am departures clear C entrance and all five shuttles complete repeated trips (1973.786584ms)
+  AssertionError [ERR_ASSERTION]: C bus must not remain stuck at entrance
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/eleven-performance.test.js:65:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/equity-routing.test.js:18:1
+✖ two labeled Equity entrances are distinct inbound origins (5.828875ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(inPolygon(west[0],ring('Equity Entrance')))
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/equity-routing.test.js:20:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/equity-routing.test.js:30:1
+✖ both Equity C routes follow pavement then the staffed west entrance, not an exit (3.830583ms)
+  AssertionError [ERR_ASSERTION]: eCWest traverses Equity Drive
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/equity-routing.test.js:39:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/lot-a-batch-control.test.js:31:1
+✖ badge cars turn east/right inside permit entrance, stay clear of A pickup and roofs (5.938584ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(internal.some(p=>p[0]===190&&p[1]===250))
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-batch-control.test.js:36:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/lot-a-envelope.test.js:14:1
+✖ photo boundary contains entire east apron and matches pavement coordinates (1.285083ms)
+  TypeError: Cannot read properties of undefined (reading 'points')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-envelope.test.js:19:40)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17)
+
+test at tests/lot-a-envelope.test.js:29:1
+✖ revision one boundary migration retains building, custom rows and lot state (0.3235ms)
+  TypeError: Cannot set properties of undefined (setting 'count')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-envelope.test.js:33:60)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+
+test at tests/lot-a-parking.test.js:6:1
+✖ parking trace renders serializable surfaces and all three parking banks (6.596208ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(layout.items.some(i=>i.id==='a-pavement' && i.type==='surface'))
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-parking.test.js:11:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/lot-a-parking.test.js:17:1
+✖ migration preserves non-A geometry and only applies once (0.278458ms)
+  TypeError: Cannot set properties of undefined (setting 'count')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a-parking.test.js:22:43)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+
+test at tests/lot-a.test.js:25:1
+✖ applying Lot A preserves every other object and project name (0.285333ms)
+  TypeError: Cannot set properties of undefined (setting 'x')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a.test.js:27:43)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+
+test at tests/lot-a.test.js:34:1
+✖ malformed mass coordinates and heights are rejected (0.186584ms)
+  TypeError: Cannot read properties of undefined (reading 'masses')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a.test.js:37:42)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+
+test at tests/lot-a.test.js:42:1
+✖ saved-layout update clears current positions only once and preserves other items (4.651ms)
+  TypeError: Cannot set properties of undefined (setting 'modelRevision')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/lot-a.test.js:49:24)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+
+test at tests/model.test.js:5:1
+✖ starter layout round-trips and has three provisional lots (3.6555ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1584 !== 898
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:11:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1584,
+    expected: 898,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/model.test.js:15:1
+✖ closing a lot reduces capacity and removes its demonstration route (0.569125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1173 !== 487
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:18:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1173,
+    expected: 487,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/model.test.js:34:1
+✖ deleting a lot unassigns its parking rows rather than leaving dangling references (0.268542ms)
+  TypeError: Cannot read properties of undefined (reading 'lotId')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:37:52)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+
+test at tests/model.test.js:41:1
+✖ invalid imports are rejected without mutating input (1.127334ms)
+  TypeError: Cannot set properties of undefined (setting 'lotId')
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/model.test.js:55:82)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7)
+
+test at tests/route-layout-alignment.test.js:16:1
+✖ resolved Main Position has one shared coordinate and all general approaches attach (4.024917ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(onLotGround('a',LOT_A_MAIN_POSITION))
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/route-layout-alignment.test.js:18:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/route-layout-alignment.test.js:26:1
+✖ road anchoring preserves physical road/entrance; proposals and missing shuttle returns are not invented (53.495167ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      [
+  +     21.061927943633087,
+  +     1100.4518497411743
+  -     22.289626814412422,
+  -     1109.9191793417115
+      ],
+      [
+  +     22.259087041507463,
+  +     67.18749713854544
+  -     28.666331396967784,
+  -     71.12712784328511
+      ],
+      [
+  +     48.60269514932481,
+  +     49.865337946852875
+  -     68.13593389933638,
+  -     51.42897431958676
+      ],
+      [
+  +     108.83934322706531,
+  +     52.94374705567271
+  -     111.300848923205,
+  -     56.229826620246264
+      ],
+      [
+  +     145.69301319581754,
+  +     62.96327521685426
+  -     146.04519200874014,
+  -     58.97191533706462
+      ],
+      [
+  +     152.7902666991465,
+  +     65.75940981084871
+  -     177.9203094016778,
+  -     75.77964918379641
+      ],
+      [
+  +     154.4066930590051,
+  +     67.1127797778565
+  -     220.95656034082128,
+  -     100.84010654668145
+      ],
+      [
+  +     156.02311941886373,
+  +     68.46614974486431
+  -     216,
+  -     104
+      ],
+      [
+  +     157.63954577872232,
+  +     69.8195197118721
+  -     217.85490056363312,
+  -     91.57755681363301
+      ]
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/route-layout-alignment.test.js:29:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ [ 21.061927943633087, 1100.4518497411743 ], [ 22.259087041507463, 67.18749713854544 ], [ 48.60269514932481, 49.865337946852875 ], [ 108.83934322706531, 52.94374705567271 ], [ 145.69301319581754, 62.96327521685426 ], [ 152.7902666991465, 65.75940981084871 ], [ 154.4066930590051, 67.1127797778565 ], [ 156.02311941886373, 68.46614974486431 ], [ 157.63954577872232, 69.8195197118721 ] ],
+    expected: [ [ 22.289626814412422, 1109.9191793417115 ], [ 28.666331396967784, 71.12712784328511 ], [ 68.13593389933638, 51.42897431958676 ], [ 111.300848923205, 56.229826620246264 ], [ 146.04519200874014, 58.97191533706462 ], [ 177.9203094016778, 75.77964918379641 ], [ 220.95656034082128, 100.84010654668145 ], [ 216, 104 ], [ 217.85490056363312, 91.57755681363301 ] ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/shuttles.test.js:23:1
+✖ five persistent buses loop with four to B and one cycling all C stops (161.600291ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(s.shuttles.slice(0,4).every(b=>b.stop==='bSouth'))
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:28:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/shuttles.test.js:34:1
+✖ B full switches to C after current trip completes at home, with no midroute jump (131.096083ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'four-b-one-c'
+  - 'all-c'
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:40:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'four-b-one-c',
+    expected: 'all-c',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/shuttles.test.js:45:1
+✖ fleet keeps completing trips in traffic in both allocation modes (2245.244542ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(s.shuttles.every(b=>b.trips>=3))
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:49:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/shuttles.test.js:53:1
+✖ badge parking stays available when general campus is full without inflating 1584 (16.243792ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  51 !== 2
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:56:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 51,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/shuttles.test.js:61:1
+✖ departure releases count-only A/B/C simultaneously through proper exits and buses continue (218.057667ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'a',
+      'b',
+      'c',
+  +   'c'
+    ]
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/shuttles.test.js:64:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'a', 'b', 'c', 'c' ],
+    expected: [ 'a', 'b', 'c' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/sunday-services.test.js:13:1
+✖ confirmed section capacities total1584; badge51 stays inside A411 (3.268625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      aBadge: 51,
+      aNorth: 210,
+      aSouth: 150,
+      bBanana: 100,
+  ...
+      bSouth: 75,
+  +   cFirstNorth: 172,
+  +   cFirstSouth: 171,
+  +   cNorth: 171,
+  +   cSouth: 172
+  -   cNorth: 343,
+  -   cSouth: 343
+    }
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/sunday-services.test.js:17:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { aNorth: 210, aSouth: 150, aBadge: 51, bSouth: 75, bBanana: 100, bPocket: 8, bNorth: 304, cFirstNorth: 172, cFirstSouth: 171, cNorth: 171, cSouth: 172 },
+    expected: { aNorth: 210, aSouth: 150, aBadge: 51, bSouth: 75, bBanana: 100, bPocket: 8, bNorth: 304, cNorth: 343, cSouth: 343 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/sunday-services.test.js:83:1
+✖ three full Sunday scenario runs finish their demands, retain new cohorts and clear previous cohorts (26033.134583ms)
+  AssertionError [ERR_ASSERTION]: eleven
+  
+  231 !== 1224
+  
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/sunday-services.test.js:88:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 231,
+    expected: 1224,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/vehicle-routes.test.js:60:1
+✖ connector provenance is disclosed per mode; untraced joins are not called surveyed (16.695541ms)
+  AssertionError [ERR_ASSERTION]: Lot A approach to Main (aNorth)
+      at TestContext.<anonymous> (file:///Users/adonispuente/Desktop/Developer/parking-sim/tests/vehicle-routes.test.js:65:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

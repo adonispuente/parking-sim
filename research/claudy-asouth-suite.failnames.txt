@@ -1,0 +1,28 @@
+11am departures clear C entrance and all five shuttles complete repeated trips
+applying Lot A preserves every other object and project name
+B full switches to C after current trip completes at home, with no midroute jump
+badge cars turn east/right inside permit entrance, stay clear of A pickup and roofs
+badge parking stays available when general campus is full without inflating 1584
+both Equity C routes follow pavement then the staffed west entrance, not an exit
+closing a lot reduces capacity and removes its demonstration route
+confirmed section capacities total1584; badge51 stays inside A411
+connector provenance is disclosed per mode; untraced joins are not called surveyed
+curved spine joins both frontage streets in image coordinates
+deleting a lot unassigns its parking rows rather than leaving dangling references
+departure releases count-only A/B/C simultaneously through proper exits and buses continue
+five persistent buses loop with four to B and one cycling all C stops
+fleet keeps completing trips in traffic in both allocation modes
+invalid imports are rejected without mutating input
+invalid trace coordinates and widths are rejected
+latest map preserves satellite aspect and has three polygon roofs
+malformed mass coordinates and heights are rejected
+migration preserves non-A geometry and only applies once
+parking trace renders serializable surfaces and all three parking banks
+photo boundary contains entire east apron and matches pavement coordinates
+resolved Main Position has one shared coordinate and all general approaches attach
+revision one boundary migration retains building, custom rows and lot state
+road anchoring preserves physical road/entrance; proposals and missing shuttle returns are not invented
+saved-layout update clears current positions only once and preserves other items
+starter layout round-trips and has three provisional lots
+three full Sunday scenario runs finish their demands, retain new cohorts and clear previous cohorts
+two labeled Equity entrances are distinct inbound origins

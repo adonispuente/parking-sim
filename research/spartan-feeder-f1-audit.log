@@ -1,0 +1,209 @@
+{
+  "manifests": {
+    "claudy-feeder-middle-after.sha256": {
+      "entries": 77,
+      "mismatches": []
+    },
+    "claudy-equity-exit2-before.sha256": {
+      "entries": 84,
+      "mismatches": []
+    },
+    "spartan-feeder-f1-inputs-before.sha256": {
+      "entries": 89,
+      "mismatches": []
+    }
+  },
+  "tests": {
+    "focused": {
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "todo": 0
+    },
+    "targeted": {
+      "tests": 33,
+      "pass": 32,
+      "fail": 1,
+      "todo": 0
+    },
+    "suite": {
+      "tests": 197,
+      "pass": 169,
+      "fail": 28,
+      "todo": 0
+    }
+  },
+  "failureNames": {
+    "count": 28,
+    "names": [
+      "11am departures clear C entrance and all five shuttles complete repeated trips",
+      "B full switches to C after current trip completes at home, with no midroute jump",
+      "applying Lot A preserves every other object and project name",
+      "badge cars turn east/right inside permit entrance, stay clear of A pickup and roofs",
+      "badge parking stays available when general campus is full without inflating 1584",
+      "both Equity C routes follow pavement then the staffed west entrance, not an exit",
+      "closing a lot reduces capacity and removes its demonstration route",
+      "confirmed section capacities total1584; badge51 stays inside A411",
+      "connector provenance is disclosed per mode; untraced joins are not called surveyed",
+      "curved spine joins both frontage streets in image coordinates",
+      "deleting a lot unassigns its parking rows rather than leaving dangling references",
+      "departure releases count-only A/B/C simultaneously through proper exits and buses continue",
+      "five persistent buses loop with four to B and one cycling all C stops",
+      "fleet keeps completing trips in traffic in both allocation modes",
+      "invalid imports are rejected without mutating input",
+      "invalid trace coordinates and widths are rejected",
+      "latest map preserves satellite aspect and has three polygon roofs",
+      "malformed mass coordinates and heights are rejected",
+      "migration preserves non-A geometry and only applies once",
+      "parking trace renders serializable surfaces and all three parking banks",
+      "photo boundary contains entire east apron and matches pavement coordinates",
+      "resolved Main Position has one shared coordinate and all general approaches attach",
+      "revision one boundary migration retains building, custom rows and lot state",
+      "road anchoring preserves physical road/entrance; proposals and missing shuttle returns are not invented",
+      "saved-layout update clears current positions only once and preserves other items",
+      "starter layout round-trips and has three provisional lots",
+      "three full Sunday scenario runs finish their demands, retain new cohorts and clear previous cohorts",
+      "two labeled Equity entrances are distinct inbound origins"
+    ],
+    "comparisons": {
+      "claudy-feeder-middle-npm.log": {
+        "added": [],
+        "removed": []
+      },
+      "spartan-asouth-final-suite.log": {
+        "added": [],
+        "removed": []
+      }
+    }
+  },
+  "traffic": [
+    {
+      "scenario": "nine",
+      "demand": 950,
+      "entered": 950,
+      "stalled": 0,
+      "west": 0,
+      "shuttleTrips": 174,
+      "departed": {
+        "a": 0,
+        "b": 0,
+        "c": 0
+      },
+      "previous": {
+        "entered": 950,
+        "stalled": 0,
+        "west": 0,
+        "shuttleTrips": 174,
+        "departed": {
+          "a": 0,
+          "b": 0,
+          "c": 0
+        }
+      },
+      "matchesOwnerExceptWallMs": true,
+      "issues": [],
+      "relief": {
+        "operatorIndex": 59,
+        "enabled": true,
+        "high": 6,
+        "low": 2,
+        "active": false,
+        "queued": 0,
+        "redirected": 0,
+        "assigned": 0,
+        "transitions": [],
+        "provisional": true,
+        "reason": "Alpha queue clear"
+      }
+    },
+    {
+      "scenario": "eleven",
+      "demand": 1224,
+      "entered": 251,
+      "stalled": 73,
+      "west": 2,
+      "shuttleTrips": 54,
+      "departed": {
+        "a": 360,
+        "b": 298,
+        "c": 103
+      },
+      "previous": {
+        "entered": 231,
+        "stalled": 70,
+        "west": 3,
+        "shuttleTrips": 58,
+        "departed": {
+          "a": 360,
+          "b": 298,
+          "c": 103
+        }
+      },
+      "matchesOwnerExceptWallMs": true,
+      "issues": [],
+      "relief": {
+        "operatorIndex": 59,
+        "enabled": true,
+        "high": 6,
+        "low": 2,
+        "active": false,
+        "queued": 0,
+        "redirected": 0,
+        "assigned": 0,
+        "transitions": [],
+        "provisional": true,
+        "reason": "Alpha queue clear"
+      }
+    },
+    {
+      "scenario": "final",
+      "demand": 300,
+      "entered": 300,
+      "stalled": 0,
+      "west": 0,
+      "shuttleTrips": 282,
+      "departed": {
+        "a": 360,
+        "b": 487,
+        "c": 377
+      },
+      "previous": {
+        "entered": 300,
+        "stalled": 0,
+        "west": 0,
+        "shuttleTrips": 289,
+        "departed": {
+          "a": 360,
+          "b": 487,
+          "c": 377
+        }
+      },
+      "matchesOwnerExceptWallMs": true,
+      "issues": [],
+      "relief": {
+        "operatorIndex": 59,
+        "enabled": true,
+        "high": 6,
+        "low": 2,
+        "active": false,
+        "queued": 0,
+        "redirected": 0,
+        "assigned": 0,
+        "transitions": [],
+        "provisional": true,
+        "reason": "Alpha queue clear"
+      }
+    }
+  ],
+  "allStalls": {
+    "total": 73,
+    "terminals": {
+      "405": 45,
+      "1048": 28
+    },
+    "missing": 0,
+    "cycles": 0,
+    "matchesOwnerEntireDocument": true,
+    "bWestDeparturesOnFeeder": []
+  }
+}

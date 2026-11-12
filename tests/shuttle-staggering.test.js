@@ -87,7 +87,7 @@ test('remote legs finish during a break and a retired bus then holds at home',()
   const state=setup({activeCount:1});
   state.serviceController={preset:SUNDAY_SERVICES.eleven};
   const bus=state.shuttles[0];state.prepareShuttles(live);
-  state.clock=5400;finish(state,bus);
+  state.clock=(SUNDAY_SERVICES.eleven.startMinute-SUNDAY_SERVICES.eleven.beginMinute+45)*60;finish(state,bus);
   assert.equal(bus.phase,'remote-dwell');
   state.clock=bus.readyAt;
   state.prepareShuttles(live);

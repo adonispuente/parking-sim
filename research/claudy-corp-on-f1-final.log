@@ -1,0 +1,44 @@
+{
+ "out": "research/claudy-corp-on-f1-final-all-stalls.json",
+ "stalledCount": 0,
+ "reasons": {},
+ "terminals": {},
+ "corporate": {
+  "shared": {
+   "occupants": [
+    "shuttle-4",
+    "shuttle-3"
+   ],
+   "direction": "both",
+   "lastDirection": "ne"
+  },
+  "operators": [
+   {
+    "index": 59,
+    "reason": "record passage",
+    "waiting": 0,
+    "admitted": 0,
+    "admittedInRow": 0,
+    "request": null
+   },
+   {
+    "index": 60,
+    "reason": "clear",
+    "waiting": 0,
+    "admitted": 320,
+    "admittedInRow": 1,
+    "request": null
+   },
+   {
+    "index": 61,
+    "reason": "clear",
+    "waiting": 0,
+    "admitted": 462,
+    "admittedInRow": 1,
+    "request": null
+   }
+  ]
+ },
+ "earliest": []
+}
+final exit 0

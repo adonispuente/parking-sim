@@ -1,0 +1,169 @@
+{
+ "scenario": "final",
+ "clock": 7200.000000008662,
+ "entered": 300,
+ "stalledCount": 0,
+ "reasons": {},
+ "snapshots": [
+  {
+   "clock": 300,
+   "stalled": 0,
+   "entered": 0
+  },
+  {
+   "clock": 600,
+   "stalled": 0,
+   "entered": 0
+  },
+  {
+   "clock": 900,
+   "stalled": 0,
+   "entered": 0
+  },
+  {
+   "clock": 1200,
+   "stalled": 0,
+   "entered": 0
+  },
+  {
+   "clock": 1500,
+   "stalled": 0,
+   "entered": 24
+  },
+  {
+   "clock": 1800,
+   "stalled": 0,
+   "entered": 63
+  },
+  {
+   "clock": 2100,
+   "stalled": 0,
+   "entered": 111
+  },
+  {
+   "clock": 2400,
+   "stalled": 0,
+   "entered": 165
+  },
+  {
+   "clock": 2700,
+   "stalled": 0,
+   "entered": 225
+  },
+  {
+   "clock": 3000,
+   "stalled": 0,
+   "entered": 228
+  },
+  {
+   "clock": 3300,
+   "stalled": 0,
+   "entered": 232
+  },
+  {
+   "clock": 3600,
+   "stalled": 0,
+   "entered": 238
+  },
+  {
+   "clock": 3900,
+   "stalled": 0,
+   "entered": 244
+  },
+  {
+   "clock": 4200,
+   "stalled": 0,
+   "entered": 252
+  },
+  {
+   "clock": 4500,
+   "stalled": 0,
+   "entered": 259
+  },
+  {
+   "clock": 4800,
+   "stalled": 0,
+   "entered": 267
+  },
+  {
+   "clock": 5100,
+   "stalled": 0,
+   "entered": 276
+  },
+  {
+   "clock": 5400,
+   "stalled": 0,
+   "entered": 285
+  },
+  {
+   "clock": 5700,
+   "stalled": 0,
+   "entered": 288
+  },
+  {
+   "clock": 6000,
+   "stalled": 0,
+   "entered": 294
+  },
+  {
+   "clock": 6300,
+   "stalled": 0,
+   "entered": 300
+  },
+  {
+   "clock": 6600,
+   "stalled": 0,
+   "entered": 300
+  },
+  {
+   "clock": 6900,
+   "stalled": 0,
+   "entered": 300
+  },
+  {
+   "clock": 7200,
+   "stalled": 0,
+   "entered": 300
+  }
+ ],
+ "terminals": {},
+ "terminalCars": [],
+ "corporate": {
+  "shared": {
+   "occupants": [
+    "shuttle-4",
+    "shuttle-3"
+   ],
+   "direction": "both",
+   "lastDirection": "ne"
+  },
+  "operators": [
+   {
+    "index": 59,
+    "reason": "record passage",
+    "waiting": 0,
+    "admitted": 0,
+    "admittedInRow": 0,
+    "request": null
+   },
+   {
+    "index": 60,
+    "reason": "clear",
+    "waiting": 0,
+    "admitted": 320,
+    "admittedInRow": 1,
+    "request": null
+   },
+   {
+    "index": 61,
+    "reason": "clear",
+    "waiting": 0,
+    "admitted": 462,
+    "admittedInRow": 1,
+    "request": null
+   }
+  ]
+ },
+ "earliest": [],
+ "stalled": []
+}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1374 1118" width="1374" height="1118">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>
+<image href="../../images/Clear%20Image.png" xlink:href="../../images/Clear%20Image.png" width="1374" height="1118"/>
+<g><title>stage:c-throat [runtime]</title><polygon points="955,0 1015,0 1015,140 955,140" fill="#e3a21a" fill-opacity=".18" stroke="#e3a21a" stroke-width="2" stroke-dasharray="6 4"/><text x="961" y="16" text-anchor="start" font-size="12" fill="#e3a21a" stroke="#fff" stroke-width="3" paint-order="stroke">stage:c-throat [runtime]</text></g>
+<g><title>stage:c-staging-target [runtime]</title><circle cx="986" cy="162" r="5" fill="#e3a21a"/><text x="992" y="156" text-anchor="start" font-size="12" fill="#e3a21a" stroke="#fff" stroke-width="3" paint-order="stroke">stage:c-staging-target [runtime]</text></g>
+<g><title>oneway:feeder-north [runtime]</title><polygon points="0,0 52,0 52,1118 0,1118" fill="#e3a21a" fill-opacity=".18" stroke="#e3a21a" stroke-width="2" stroke-dasharray="6 4"/><text x="6" y="16" text-anchor="start" font-size="12" fill="#e3a21a" stroke="#fff" stroke-width="3" paint-order="stroke">oneway:feeder-north [runtime]</text></g>
+<g><title>pos:c-layout-demo [advisory]</title><circle cx="1060" cy="200" r="5" fill="#8a8a8a"/><text x="1066" y="194" text-anchor="start" font-size="12" fill="#8a8a8a" stroke="#fff" stroke-width="3" paint-order="stroke">pos:c-layout-demo [advisory]</text></g>
+<text x="10" y="1106" font-size="14" fill="#000" stroke="#fff" stroke-width="3" paint-order="stroke">images/layout-overlay.json · 648f9235a065 · green confirmed · amber estimated · grey unknown · red problem · dashed = rule area</text>
+</svg>

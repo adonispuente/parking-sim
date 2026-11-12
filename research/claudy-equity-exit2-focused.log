@@ -1,0 +1,17 @@
+✔ connector box covers the unmapped driveway stretch only (0.624791ms)
+✔ control: un-offset traces meet head-on on the driveway (312.048333ms)
+✔ built e2CWest cFirstSouth arrival clears bNorth bNorth departure on the driveway (54.86575ms)
+✔ built e2CWest cFirstSouth arrival clears cWest cFirstNorth departure on the driveway (51.71ms)
+✔ built e2CWest cFirstSouth arrival clears cEast cFirstSouth departure on the driveway (66.926917ms)
+✔ built e2CWest cFirstNorth arrival clears bNorth bNorth departure on the driveway (74.896666ms)
+✔ built e2CWest cFirstNorth arrival clears cWest cFirstNorth departure on the driveway (51.752ms)
+✔ built e2CWest cFirstNorth arrival clears cEast cFirstSouth departure on the driveway (46.737042ms)
+✔ built driveway points stay inside the connector or on street and avoid obstacles (121.999208ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1570.905333

@@ -1,0 +1,39 @@
+{
+  "initial": {
+    "count": 28,
+    "added": [],
+    "removed": [],
+    "summary": [
+      "ℹ tests 193",
+      "ℹ suites 0",
+      "ℹ pass 164",
+      "ℹ fail 28",
+      "ℹ cancelled 0",
+      "ℹ skipped 0",
+      "ℹ todo 1",
+      "ℹ duration_ms 29777.9945"
+    ]
+  },
+  "final": {
+    "count": 28,
+    "added": [],
+    "removed": [],
+    "summary": [
+      "ℹ tests 193",
+      "ℹ suites 0",
+      "ℹ pass 165",
+      "ℹ fail 28",
+      "ℹ cancelled 0",
+      "ℹ skipped 0",
+      "ℹ todo 0",
+      "ℹ duration_ms 29699.984834"
+    ]
+  },
+  "equalsOwner": true,
+  "equalsPrior": true,
+  "inputCount": 85,
+  "changedInputs": [
+    "tests/lot-a-main-median.test.js"
+  ],
+  "addedInputs": []
+}
