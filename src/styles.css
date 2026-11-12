@@ -254,3 +254,14 @@
   .zoom-controls { flex-direction:row; }
   .zoom-controls button + button { border-top:0; border-left:1px solid #46644d; }
 }
+
+.map-quick-controls { grid-column:1/-1; display:flex; flex-wrap:wrap; gap:8px; }
+.map-quick-controls button { min-height:44px; padding:10px 16px; border:1px solid #bbc9b2; border-radius:7px; background:#fffefa; font-size:12px; font-weight:600; touch-action:manipulation; }
+.map-quick-controls button[aria-pressed=true] { background:#dce7c7; border-color:#56704e; color:#243e39; }
+.map-area,.world-app .map-area { height:calc(100svh - 231px); }
+@media(max-width:950px) { .map-area,.world-app .map-area { height:calc(100svh - 321px); } }
+@media(max-width:700px) {
+  .map-quick-controls { display:grid; grid-template-columns:minmax(0,1.4fr) repeat(2,minmax(0,1fr)); gap:8px; }
+  .map-quick-controls button { padding:10px 8px; font-size:12px; }
+  .map-area,.world-app .map-area { height:calc(100svh - 361px - env(safe-area-inset-top,0px)); }
+}

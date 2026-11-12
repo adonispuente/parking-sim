@@ -4,7 +4,7 @@ import { PLAYBACK_SPEEDS } from './playback.js';
 import { formatServiceClock } from './sundayServices.js';
 import { LOT_CAPACITY } from './parkingZones.js';
 
-export default function SimulationControls({options,setOptions,stats,running,onToggle,speed,onSpeed,onReset}) {
+export default function SimulationControls({options,setOptions,stats,running,onToggle,speed,onSpeed,onReset,children}) {
   const service=options.service;
   return <section className="simulation-controls" aria-label="Start and configure traffic">
     <div className="simulation-primary">
@@ -29,5 +29,6 @@ export default function SimulationControls({options,setOptions,stats,running,onT
           onReset();
         }}/></label>)}
     </fieldset>
+    {children}
   </section>;
 }

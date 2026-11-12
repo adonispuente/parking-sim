@@ -45,6 +45,7 @@ function App() {
   const [showPhoto,setShowPhoto]=useState(false);
   const [cameraFocus,setCameraFocus]=useState('campus'), [cameraReset,setCameraReset]=useState(0);
   function setTraced(value) { setPresentation(value?'trace':'draft'); }
+  function toggleSatellite() { if(!reference)setView('top');setReference(v=>!v); }
   function changePresentation(mode) { setPresentation(mode);setReference(false);setSelectedId(null);setTool('select');setView(mode==='world'?'3d':'top');setZoom(1);setCameraFocus('campus');setCameraReset(v=>v+1); }
   const [trafficRates,setTrafficRates]=useState([18,18,0]), [trafficReset,setTrafficReset]=useState(0);
   const [trafficMode,setTrafficMode]=useState('continuous');
@@ -110,7 +111,13 @@ function App() {
 
     <SimulationControls options={trafficOptions} setOptions={setTrafficOptions} stats={trafficStats}
       running={running} onToggle={()=>setRunning(v=>!v)} speed={playbackSpeed} onSpeed={setPlaybackSpeed}
-      onReset={()=>{setRunning(false);setTrafficMode('continuous');setTrafficReset(v=>v+1);}}/>
+      onReset={()=>{setRunning(false);setTrafficMode('continuous');setTrafficReset(v=>v+1);}}>
+      <div className="map-quick-controls" role="group" aria-label="Map visibility">
+        <button aria-pressed={reference} onClick={toggleSatellite}>Satellite overlay</button>
+        <button aria-pressed={showRoutes} onClick={()=>setShowRoutes(v=>!v)}>Routes</button>
+        <button aria-pressed={showOccupancy} onClick={()=>setShowOccupancy(v=>!v)}>Lot fullness</button>
+      </div>
+    </SimulationControls>
 
     <div className="workspace">
       <aside className="sidebar" hidden={world}>
@@ -124,7 +131,7 @@ function App() {
             {item.type==='lot'&&<button className={`status ${item.open?'open':'closed'}`} aria-label={`${item.open?'Close':'Open'} ${item.name}`} onClick={()=>update(item.id,{open:!item.open})}><i/>{item.open?'Open':'Closed'}</button>}
           </div>)}
         </div>
-        <div className="sidebar-foot"><span className="tiny-label">LABELME · UPDATED TRACE</span><p>{tracedFeatures.length} source-pixel annotations: roof outlines, parking regions, Corporate Drive, roundabouts and shuttle pickup points.<br/><strong>These regions are not counted parking stalls. Capacities remain A 411 · B 487 · C 686 (1,584 total).</strong></p><button className="text-button" onClick={()=>setTraced(!traced)}>{traced?'View editable draft':'View updated trace'} <span>↗</span></button><button className="text-button" onClick={()=>setReference(!reference)}>{reference?'Hide source image':'Compare with source image'} <span>↗</span></button><button className="text-button" onClick={()=>setConfirmation({title:'Apply updated LabelMe map?',description:'Replaces the old generated map geometry with the updated source trace. Existing custom objects and lot operating settings remain. Undo can restore this draft.',action:()=>{commit(tracedLayout(layout));setTraced(false);setSelectedId(null);setRunning(false);notify('Updated LabelMe geometry applied. Undo restores the previous draft.');}})}>Apply updated trace to editable map</button></div>
+        <div className="sidebar-foot"><span className="tiny-label">LABELME · UPDATED TRACE</span><p>{tracedFeatures.length} source-pixel annotations: roof outlines, parking regions, Corporate Drive, roundabouts and shuttle pickup points.<br/><strong>These regions are not counted parking stalls. Capacities remain A 411 · B 487 · C 686 (1,584 total).</strong></p><button className="text-button" onClick={()=>setTraced(!traced)}>{traced?'View editable draft':'View updated trace'} <span>↗</span></button><button className="text-button" onClick={toggleSatellite}>{reference?'Hide source image':'Compare with source image'} <span>↗</span></button><button className="text-button" onClick={()=>setConfirmation({title:'Apply updated LabelMe map?',description:'Replaces the old generated map geometry with the updated source trace. Existing custom objects and lot operating settings remain. Undo can restore this draft.',action:()=>{commit(tracedLayout(layout));setTraced(false);setSelectedId(null);setRunning(false);notify('Updated LabelMe geometry applied. Undo restores the previous draft.');}})}>Apply updated trace to editable map</button></div>
       </aside>
 
       <main className="map-area">
@@ -146,7 +153,7 @@ function App() {
       <aside className="traffic-dashboard" aria-label="Traffic control dashboard">
         <details className="dashboard-details"><summary>Flow details & advanced settings</summary>
           <div className="traffic-controls" aria-label="Corporate Drive traffic controls">
-            <section className="map-settings" aria-label="Map display settings"><strong>Map display</strong><div className="presentation-switch" role="group" aria-label="Presentation mode">{[['world','3D World'],['trace','Source trace'],['draft','Layout editor']].map(([id,title])=><button key={id} aria-pressed={presentation===id} onClick={()=>changePresentation(id)}>{title}</button>)}</div><div className="world-options"><button aria-pressed={showLabels} onClick={()=>setShowLabels(v=>!v)}>Labels</button><button aria-pressed={showOccupancy} onClick={()=>setShowOccupancy(v=>!v)}>Occupancy</button><button aria-pressed={reference} onClick={()=>setReference(v=>!v)}>Satellite comparison</button><button aria-pressed={showPhoto} aria-controls="clear-photo" onClick={()=>setShowPhoto(v=>!v)}>Clear photo</button></div><div className="segmented"><button aria-pressed={showRoutes} title="Vehicle Routes overlay: green candidate (geometric only), orange provisional, purple proposal, red open. Also shows the layout overlay (filled/dashed areas, diamonds, chevrons) coloured by confidence. Actual route sources: dashboard › Route sources" onClick={()=>setShowRoutes(v=>!v)}>Routes</button></div></section>
+            <section className="map-settings" aria-label="Map display settings"><strong>Map display</strong><div className="presentation-switch" role="group" aria-label="Presentation mode">{[['world','3D World'],['trace','Source trace'],['draft','Layout editor']].map(([id,title])=><button key={id} aria-pressed={presentation===id} onClick={()=>changePresentation(id)}>{title}</button>)}</div><div className="world-options"><button aria-pressed={showLabels} onClick={()=>setShowLabels(v=>!v)}>Labels</button><button aria-pressed={showPhoto} aria-controls="clear-photo" onClick={()=>setShowPhoto(v=>!v)}>Clear photo</button></div></section>
             <SundayControls options={trafficOptions} setOptions={setTrafficOptions} stats={trafficStats} onReset={()=>{setRunning(false);setTrafficMode('continuous');setTrafficReset(v=>v+1);}} onRun={()=>setRunning(true)}/>
             <small role="status" aria-label="Playback status">{playbackState.error?`Playback failed: ${playbackState.error}`:playbackState.seeking?`Restoring engine state · ${Math.floor(100*playbackState.completed/Math.max(.05,playbackState.target))}% · pause cancels`:playbackSpeed<0?playbackState.clock<=0?'At the beginning of this scenario.':'Rewinding recorded traffic states. Older history may need reconstruction.':'Forward playback · arrival rates are per simulated minute.'}</small>
             <div className="traffic-phase" role="group" aria-label="Traffic phase">

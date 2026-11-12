@@ -551,8 +551,10 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
       if(o.userData.isLabel)o.visible=showLabels;
     });
     e.occupancyFills.visible=showOccupancy;
-    e.parkedMarkers.visible=showOccupancy;
-  },[showLabels,showOccupancy,world,layout,selectedId]);
+    e.renderer.domElement.dataset.occupancyVisible=String(showOccupancy);
+    e.parkedMarkers.visible=showRoutes;
+    e.renderer.domElement.dataset.hubsVisible=String(showRoutes);
+  },[showLabels,showOccupancy,showRoutes,world,layout,selectedId]);
   useEffect(() => {
     const e=engine.current; if(!e) return;
     const focus=layout.items.find(i=>i.id===`lot-${cameraFocus}`);
