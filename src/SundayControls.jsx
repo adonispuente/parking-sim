@@ -2,6 +2,7 @@ import React from 'react';
 import { SUNDAY_SERVICES, NEXT_SERVICE, serviceOptions, formatServiceClock } from './sundayServices.js';
 
 const SERVICE_MENU_LABELS={nine:'9:00 AM',eleven:'11:00 AM',easter:'Easter',final:'1:15 PM'};
+const SERVICE_MENU_ORDER=['nine','eleven','final','easter'];
 import { PARKING_ZONES } from './parkingZones.js';
 import { serviceCarryOptions } from './serviceCarry.js';
 
@@ -16,7 +17,7 @@ export function ServiceSelect({options,setOptions,onReset}) {
   return <label>Service time<select aria-label="Sunday service scenario" value={config.enabled?config.id:'manual'} onChange={e=>{
       if(e.target.value==='manual'){setOptions(o=>({...o,service:{...o.service,enabled:false}}));onReset();}
       else preset(e.target.value);
-    }}><option value="manual">Manual</option>{Object.values(SUNDAY_SERVICES).map(s=><option key={s.id} value={s.id}>{SERVICE_MENU_LABELS[s.id]??s.label}</option>)}</select></label>;
+    }}><option value="manual">Manual</option>{SERVICE_MENU_ORDER.map(id=><option key={id} value={id}>{SERVICE_MENU_LABELS[id]}</option>)}</select></label>;
 }
 
 export default function SundayControls({options,setOptions,stats,onReset,onRun}) {

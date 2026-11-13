@@ -42,3 +42,31 @@ test('entrance marshal does not add a second stop before the roundabout exit str
   assert.equal(s.cars[1].cEntranceStopDistance,undefined);
   assert.ok(s.cEntrance.clearing.includes('exit'));
 });
+
+test('C apron pull-around clears the captured Easter following cycle across route lanes',()=>{
+  // Local route windows from the 11:05 freeze: shuttle-2 -> 1589 -> 383 ->
+  // 1112 -> shuttle-2. Stations are relative to these trimmed route windows.
+  const paths=[
+    [[1004.006852041,80.746867234],[1004.944608162,74.597061286],[1001.88786279,68.890748949],[986.568173072,54.55102574],[918.534452679,52.501129663]],
+    [[1006.356618082,55.147263247],[983.157874795,54.448271444],[966.757602674,62.420085759],[969.274913984,71.44697124],[976.069979646,78.245600745],[976.307162533,77.437954675],[978.764228582,86.575789718],[980.112177511,89.822070478],[977.352215745,115.759494216]],
+    [[954.613471343,77.599103508],[1016.648422055,79.468253121],[1020.535509728,79.564574499],[1024.546874606,79.653079262],[1028.441913024,79.737088637],[1057.482758144,80.362884983]],
+    [[995.709179949,113.800535228],[996.233747478,90.521739757],[997.958832654,87.595958015],[1001.780560019,85.999914847],[1005.358649673,84.250640236],[1005.112074967,78.6803307],[1005.892125901,76.783695613],[1008.971994076,79.236957824],[1019.09780187,79.533638136],[1023.023677699,79.620331984],[1064.654549507,80.517428724]],
+  ];
+  const run=allowPullAround=>{
+    const s={lanes:paths.map(lane),cars:[
+      {id:'shuttle-2',lane:0,distance:2.5,speed:2.5,phase:'shuttle',fleetBus:true,bodyLength:2.9},
+      {id:1589,lane:1,distance:2.5,speed:2.87454082317563,phase:'arrival'},
+      {id:383,lane:2,distance:2.5,speed:2.663455365057962,phase:'departing'},
+      {id:1112,lane:3,distance:2.5,speed:3.0275865191330014,phase:'departing'},
+    ]};
+    attachWideAisles(s);
+    if(!allowPullAround)s.canPullAroundInWideAisle=()=>false;
+    for(let i=0;i<200;i++) {
+      advanceSharedTraffic(s,.05);
+      s.cars=s.cars.filter(c=>c.distance<s.lanes[c.lane].length);
+    }
+    return s.cars.length;
+  };
+  assert.equal(run(false),4,'captured queue stays locked without the local apron maneuver');
+  assert.equal(run(true),0,'all four vehicles clear when the shuttle can pull around');
+});

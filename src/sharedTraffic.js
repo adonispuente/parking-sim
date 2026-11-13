@@ -209,7 +209,11 @@ export function advanceSharedTraffic(state, dt) {
       while(current&&!visited.has(current.id)) {
         if(indices.has(current.id)) {
           const cycle=chain.slice(indices.get(current.id));
-          const candidate=cycle.filter(car=>car.yieldReason!=='safe-following'&&!car.holdForCEntrance&&!car.holdForCRoundabout&&!car.holdForNorthern&&!car.holdForGate&&!car.holdForBatch&&!car.holdForOfficer&&!car.holdForCorridor&&!car.holdForCorporateJunction&&!car.holdForPermit&&!car.holdForEquityStop&&
+          // C's staffed apron already allows a shuttle to pull around. Apply
+          // that allowance to a following cycle across different route lanes
+          // too; a bus following its own lane's leader must still stay queued.
+          const candidate=cycle.filter(car=>(car.yieldReason!=='safe-following'||
+            (car.fleetBus&&car.lane!==byId.get(car.yieldingTo)?.lane&&wideAisle(car)))&&!car.holdForCEntrance&&!car.holdForCRoundabout&&!car.holdForNorthern&&!car.holdForGate&&!car.holdForBatch&&!car.holdForOfficer&&!car.holdForCorridor&&!car.holdForCorporateJunction&&!car.holdForPermit&&!car.holdForEquityStop&&
             (wideAisle(car)||nearby(car).every(other=>other===car||sweepClear(car,other))))
             .sort(compareTrafficPriority)[0];
           if(candidate) {

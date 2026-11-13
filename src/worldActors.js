@@ -3,7 +3,7 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 // Factories own their geometry, materials and generated textures. Scene's release()
 // traverses and disposes these resources when an actor leaves the scene.
-const colors = ['#788b82', '#668c98', '#a17870', '#b4a17f', '#7c8294', '#9aaca1'];
+const colors = ['#4caaa0', '#4c9fbd', '#cd806b', '#cda052', '#7e97c6', '#91aa73'];
 
 function hashId(value) {
   let hash = 2166136261;
@@ -80,6 +80,7 @@ function mergeActorMeshes(group) {
       part.material.dispose();
     }
     group.add(mesh);
+    return mesh;
   } finally {
     for (const geometry of geometries) geometry.dispose();
   }
@@ -158,8 +159,8 @@ export function createVehicleVisual(car = {}) {
   const depth = bus ? 2.9 : 1.35;
   // Leave the exact existing simulation footprint untouched, including wheels and lights.
   // Buses: vivid violet matching the pink shuttle-stop rings, so they stand out
-  // from the muted car palette and the cream ground.
-  const paint = bus ? '#8e24c9' : car.badge ? '#c6aa6b' : colors[hashId(car.id) % colors.length];
+  // from the softer car palette and the cream ground.
+  const paint = bus ? '#8e24c9' : car.badge ? '#d8af58' : colors[hashId(car.id) % colors.length];
   block(visual, [width, bus ? 0.48 : 0.3, depth], paint, [0, bus ? 0.31 : 0.27, 0]);
   if (bus) {
     block(visual, [0.76, 0.12, 2.67], '#ffffff', [0, 0.6, 0]);
@@ -174,13 +175,19 @@ export function createVehicleVisual(car = {}) {
     busMarking(visual, car.busNumber);
   } else {
     block(visual, [0.53, 0.21, 0.76], '#344b52', [0, 0.51, -0.07], 0.35);
-    block(visual, [0.49, 0.055, 0.61], '#c4c6b4', [0, 0.645, -0.07]);
+    block(visual, [0.49, 0.055, 0.61], paint, [0, 0.645, -0.07]);
     // Body-colored hood and boot keep the glazing below the vehicle footprint.
     block(visual, [0.54, 0.025, 0.23], paint, [0, 0.435, 0.535]);
     wheels(visual, width, depth, 0.13, 0.48, -0.46, 0.13);
     lights(visual, width, depth, 0.30);
   }
-  mergeActorMeshes(visual);
+  const body = mergeActorMeshes(visual);
+  if (!bus) {
+    // Keep the painted roof readable from the map camera without adding a
+    // label or extra draw call. Buses retain the stronger, unlit roof signs.
+    body.material.emissive.set(paint);
+    body.material.emissiveIntensity = 0.16;
+  }
   return group;
 }
 

@@ -6,6 +6,33 @@ import { C_ENTRANCE_AREA } from '../src/cEntranceControl.js';
 import { inPolygon } from '../src/sourceRouting.js';
 import { fromWorld } from '../src/clearImageSource.js';
 
+test('Easter full-lot traffic keeps moving past the 11:05 C entrance deadlock',context=>{
+  const service=serviceOptions('easter');
+  const s=createCampusTraffic({initialOccupancy:service.initialOccupancy,badgePercent:5,phase:'arrival',
+    service:{enabled:true,...service},zonePreferences:{a:'auto',b:'auto',c:'auto'},
+    shuttles:{enabled:true,activeCount:5,bFullPercent:100,randomDwell:true,dwellSeconds:45,
+      cDirection:'auto',bStop:'circuit',dispatchMode:'demand',dispatchDuringDepartures:true}});
+  const lots=['a','b','c'].map(id=>({id:`lot-${id}`,open:true}));
+  let nextSample=650,prior=null,departedBefore=null,samples=0;
+  while(s.serviceStatus.minute<670) {
+    s.step(.05,[18,18,0],lots);
+    if(s.serviceStatus.minute<nextSample)continue;
+    const cars=s.cars.filter(c=>!c.fleetBus);
+    const current=new Map(cars.map(c=>[c.id,{lane:c.lane,distance:c.distance}]));
+    if(prior?.size) {
+      const progressed=[...prior].some(([id,p])=>!current.has(id)||current.get(id).lane!==p.lane||current.get(id).distance>p.distance+1e-6);
+      assert.ok(progressed,`all on-road cars frozen at ${s.serviceStatus.clock}`);
+      samples++;
+    }
+    if(departedBefore===null)departedBefore=s.departed.c;
+    prior=current;nextSample+=5;
+  }
+  assert.ok(samples>=3,'observe traffic across the reported freeze window');
+  assert.ok(s.departed.c>departedBefore,'C departures continue after 10:50');
+  assert.deepEqual(s.routingIssues,[]);
+  context.diagnostic(JSON.stringify({minute:s.serviceStatus.minute,departed:s.departed,occupancy:s.occupancy}));
+});
+
 test('11:00 UI scenario keeps shuttle turns moving through the reported 11:02 C entrance block',context=>{
   const service=serviceOptions('eleven');
   const s=createCampusTraffic({initialOccupancy:service.initialOccupancy,badgePercent:5,phase:'arrival',
