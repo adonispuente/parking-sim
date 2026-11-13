@@ -74,6 +74,8 @@ test('unadmitted vehicle already in Main Position clears before a new approach',
 test('all general A arrival/departure routes traverse the same position; badge stays separate', () => {
   for(const zone of ['aNorth','aSouth'])for(const out of [false,true]) {
     const points=out?zoneDepartureRoute('a',zone):zoneArrivalRoute('a',zone),lane={length:100};
+    // 2026-11-12: North arrivals use AddNorthRoute and bypass Main; exits still pass it.
+    if(!out&&zone==='aNorth'){assert.equal(attachMainPositionToLane(lane,points,'aMain'),false);continue;}
     assert.ok(attachMainPositionToLane(lane,points,out?zone:'aMain'));
     assert.ok(lane.aControl.stopDistance<lane.aControl.releaseDistance);
   }
@@ -88,6 +90,7 @@ test('real general arrivals clear the staffed main approach and stay parked', ()
   for(let i=0;i<2400;i++)s.step(.1,[0,0,0]);
   assert.deepEqual(s.routingIssues,[]);
   assert.equal(s.zoneOccupancy.aNorth,6);
-  assert.equal(s.aMainControl.totalPassed.aMain,6);
+  // North arrivals no longer take turns at Main (AddNorthRoute, 2026-11-12).
+  assert.equal(s.aMainControl.totalPassed.aMain,0);
   assert.equal(s.departed.a,0);
 });

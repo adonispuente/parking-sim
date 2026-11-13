@@ -8,6 +8,7 @@ import { roadAnchoredRoute } from '../src/roadAnchoredRoutes.js';
 import { createCampusTraffic } from '../src/traffic.js';
 import { onLotGround, avoidsShuttleObstacles } from '../src/shuttleRoutes.js';
 import { shapeAt, pointAt } from '../src/clearImageSource.js';
+import { aNorthEntryTrace } from '../src/abHubSource.js';
 import { inPolygon, segmentDistance, onDrivable, isDisclosedUntraced, untracedGapPoints } from '../src/sourceRouting.js';
 
 const near=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1])<.001;
@@ -32,6 +33,8 @@ test('resolved Main Position has one shared coordinate and all general approache
   assert.match(MAIN_POSITION_RESOLUTION.source,/#57/);
   for(const zone of ['aNorth','aSouth'])for(const out of [false,true]) {
     const points=out?zoneDepartureRoute('a',zone):zoneArrivalRoute('a',zone);
+    // 2026-11-12: North arrivals enter on AddNorthRoute and do not pass Main.
+    if(!out&&zone==='aNorth'){assert.ok(!points.some(p=>near(p,LOT_A_MAIN_POSITION)));continue;}
     const lane={length:100};assert.ok(attachMainPositionToLane(lane,points,out?zone:'aMain'));
     assert.ok(points.some(p=>near(p,LOT_A_MAIN_POSITION)));
   }
@@ -42,8 +45,12 @@ test('road anchoring preserves physical road/entrance; proposals and missing shu
   // The anchored route IS the live keep-right zone lane, not the raw centerline.
   assert.deepEqual(route.points,zoneArrivalRoute('a','aNorth'));
   assert.ok(inPolygon(route.points[0],shapeAt(54).points),'starts on Feeder Road #54');
-  const mainIndex=route.points.findIndex(p=>near(p,LOT_A_MAIN_POSITION));
-  assert.ok(mainIndex>0,'passes exactly through Main');
+  // 2026-11-12: North arrivals leave the Feeder approach onto the drawn AddNorthRoute
+  // before Main. The approach up to that turn-off must still follow the centerline.
+  assert.ok(!route.points.some(p=>near(p,LOT_A_MAIN_POSITION)),'North entry bypasses Main');
+  const entryStart=aNorthEntryTrace()[0];
+  const mainIndex=route.points.findIndex(p=>near(p,entryStart));
+  assert.ok(mainIndex>0,'joins AddNorthRoute exactly at its drawn start');
   // Lane offsets never exceed the recorded A median separation (inPx+outPx) from
   // the traced centerline on the way to Main.
   const centerline=VECTOR_ROUTES.arrival.a,limit=A_MEDIAN.inPx+A_MEDIAN.outPx;

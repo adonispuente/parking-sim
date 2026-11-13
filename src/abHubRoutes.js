@@ -1,5 +1,5 @@
 // Derived lanes on the drawn A/B aisle network. Short joins and widths are estimates.
-import { AB_HUBS, A_HUB_TRACES, abHubTrace, abHubById } from './abHubSource.js';
+import { AB_HUBS, A_HUB_TRACES, abHubTrace, abHubById, aNorthEntryTrace } from './abHubSource.js';
 import { routeAt } from './clearImageSource.js';
 import { clearSegment, distance, drivingPrefix, join, drivableAllowed } from './sourceRouting.js';
 
@@ -12,6 +12,10 @@ const entries = {
   aNorth: routeAt(1)[10],
   aSouth: drivingPrefix(0).at(-1),
 };
+// End of the Commander-drawn AddNorthRoute (ABHubs #77): the two-way North entry
+// that bypasses the Main position. Arrivals continue from here to their hub.
+export const A_NORTH_TWO_WAY_ENTRY = Object.freeze([...aNorthEntryTrace().at(-1)]);
+const extraArrivalAnchors = [A_NORTH_TWO_WAY_ENTRY];
 const graphs = new Map(), cache = new Map();
 
 function project(p, a, b) {
@@ -59,7 +63,7 @@ function graph(departure = false) {
     }
   }
   const hubs = AB_HUBS.filter(h => h.lot === 'a');
-  const anchors = [...Object.values(A_HUB_DEPARTURE_JOINS), ...Object.values(entries), ...hubs.map(h => h.point)];
+  const anchors = [...Object.values(A_HUB_DEPARTURE_JOINS), ...Object.values(entries), ...extraArrivalAnchors, ...hubs.map(h => h.point)];
   for (const p of anchors) {
     const candidates = segments.map(s => ({ s, ...project(p, s.a, s.b) }))
       .sort((a, b) => a.gap - b.gap);
@@ -154,13 +158,16 @@ function splitLane(raw) {
   return join(shifted);
 }
 
-export function aHubRoute(hubId, access = null) {
-  const key = `${hubId}:${access ?? 'arrival'}`;
+// from: optional arrival start; only 'aNorthTwoWay' (A_NORTH_TWO_WAY_ENTRY) is valid.
+export function aHubRoute(hubId, access = null, from = null) {
+  const key = `${hubId}:${access ?? 'arrival'}:${from ?? ''}`;
   if (!cache.has(key)) {
     const hub = abHubById(hubId);
     if (hub.lot !== 'a') throw new Error(`Not a Lot A hub: ${hubId}`);
+    if (from && (access || from !== 'aNorthTwoWay' || hub.zone !== 'aNorth'))
+      throw new Error(`Invalid Lot A arrival start ${from} for ${hubId}`);
     const end = access ? A_HUB_DEPARTURE_JOINS[hub.zone] : hub.point;
-    const start = access ? hub.point : entries[hub.zone];
+    const start = access ? hub.point : from ? A_NORTH_TWO_WAY_ENTRY : entries[hub.zone];
     if (!end || access && access !== 'a') throw new Error(`Invalid hub access ${access} for ${hubId}`);
     const path = walk(start, end, !!access);
     cache.set(key, splitLane(path.points));

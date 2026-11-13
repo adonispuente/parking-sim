@@ -6,7 +6,8 @@ import { feederReliefRoute } from '../src/parkingRoutes.js';
 import { fromWorld } from '../src/clearImageSource.js';
 
 function queue(s, n = 6) {
-  const lead=s.cars.find(c=>c.target==='a'&&!c.badgePool);
+  // Main-queued Alpha lane: North arrivals bypass Main on AddNorthRoute (2026-11-12).
+  const lead=s.cars.find(c=>c.target==='a'&&!c.badgePool&&s.lanes[c.lane].aControl);
   assert.ok(lead,'fixture needs one real Alpha lane');
   const control=s.lanes[lead.lane].aControl;
   for(let i=0;i<n;i++) {

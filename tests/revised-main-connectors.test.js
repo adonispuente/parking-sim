@@ -18,7 +18,8 @@ test('station adjustment cannot become an unbounded shortcut',()=>{
   assert.equal(mainStationCorridorJoin([400,400],[500,400],0,'reject remote'),null);
 });
 test('revised inbound approach continues forward to Main rather than looping south and back',()=>{
-  for(const zone of ['aNorth','aSouth']) {
+  // aNorth arrivals take AddNorthRoute and bypass Main (2026-11-12).
+  for(const zone of ['aSouth']) {
     const route=zoneArrivalRoute('a',zone),k=route.findIndex(p=>Math.hypot(p[0]-main[0],p[1]-main[1])<.001);
     assert.ok(k>0);
     assert.ok(route.slice(0,k).every(p=>p[0]<=main[0]+1),'no east overshoot before staffed position');

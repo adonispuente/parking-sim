@@ -6,7 +6,13 @@ import { compareTrafficPriority } from './trafficPriority.js';
 import { WORLD_SCALE } from './clearImageSource.js';
 
 const SCALE=WORLD_SCALE;
-export const FEEDER_OFFICER_DEFAULTS=Object.freeze({enabled:true,stopAhead:3.4,clearAfter:3.4,busLookahead:12,conflictRadius:2.8,exitRoomGap:.5});
+// separationGap: a lane passing the officer whose built path stays at least this
+// far (world) from every Lot A exit lane inside the officer area is the opposite
+// lane of the two-way Lot A access road (Commander 2026-11-12: "that section all
+// allows for 2 directions of traffic"). It is not held for exits. Measured: Lot A
+// North arrivals stay 2.77 world from all A exits there (research/runs/
+// lot-a-north-two-way-claud/separation.mjs). 1.6 = 0.9 conflict width + one body.
+export const FEEDER_OFFICER_DEFAULTS=Object.freeze({enabled:true,stopAhead:3.4,clearAfter:3.4,busLookahead:12,conflictRadius:2.8,exitRoomGap:.5,separationGap:1.6});
 export function attachFeederOfficer(state,options={}) {
   const config={...FEEDER_OFFICER_DEFAULTS,...options};
   const station={x:FEEDER_OFFICER_POSITION[0]*SCALE,z:FEEDER_OFFICER_POSITION[1]*SCALE};
@@ -32,8 +38,42 @@ export function attachFeederOfficer(state,options={}) {
     return laneControls.get(lane);
   };
   const isExit=car=>car.phase==='departing'&&car.access==='a';
-  const remaining=()=>state.cars.filter(c=>!c.fleetBus&&control(c)&&!c.feederMergePassed);
+  // Lanes that have carried a Lot A exit. Lanes are built lazily, so a lane's
+  // separation is re-checked whenever a new exit lane appears.
+  const exitLanes=new Set(),regions=new WeakMap(),separation=new WeakMap();
+  const region=lane=>{
+    if(!regions.has(lane)) {
+      const reach=config.conflictRadius+config.clearAfter,n=Math.max(1,Math.ceil(lane.length/.2)),points=[];
+      for(let i=0;i<=n;i++) {
+        const p=lane.path.getPointAt(i/n);
+        if(Math.hypot(p.x-station.x,p.z-station.z)<reach)points.push(p);
+      }
+      regions.set(lane,points);
+    }
+    return regions.get(lane);
+  };
+  // True when this lane is the opposite side of the two-way access road: it never
+  // comes within separationGap of any known Lot A exit lane near the officer.
+  const separated=lane=>{
+    if(!lane||!exitLanes.size||exitLanes.has(lane))return false;
+    const cached=separation.get(lane);
+    if(cached&&cached.exits===exitLanes.size)return cached.value;
+    const mine=region(lane);
+    let value=mine.length>0;
+    for(const exit of exitLanes) {
+      if(!value)break;
+      for(const q of region(exit)) {
+        if(mine.some(p=>Math.hypot(p.x-q.x,p.z-q.z)<config.separationGap)){value=false;break;}
+      }
+    }
+    separation.set(lane,{exits:exitLanes.size,value});
+    return value;
+  };
+  const controlled=car=>!car.fleetBus&&!!control(car)&&!separated(state.lanes[car.lane]);
+  const remaining=()=>state.cars.filter(c=>controlled(c)&&!c.feederMergePassed);
   const inZone=car=>{
+    // Buses still occupy the merge; only separated (opposite-lane) traffic does not.
+    if(separated(state.lanes[car.lane]))return false;
     const c=control(car);if(!c)return false;
     const half=(car.bodyLength??1.35)/2;
     return car.distance+half>c.merge-1.7&&car.distance-half<c.release;
@@ -56,10 +96,13 @@ export function attachFeederOfficer(state,options={}) {
     }
     return !blocked(end);
   };
+  // Read-only, for tests/diagnostics. Not stored on the gate (gate is saved state).
+  state.feederOfficerSeparatedLane=lane=>separated(lane);
   state.prepareFeederOfficer=()=>{
     for(const car of state.cars){delete car.feederStopDistance;car.holdForOfficer=false;}
     if(!config.enabled)return;
     if(admitted&&!state.cars.includes(admitted)){admitted=null;gate.admittedId=null;}
+    for(const car of state.cars)if(isExit(car)&&state.lanes[car.lane])exitLanes.add(state.lanes[car.lane]);
     for(const car of state.cars) {
       const c=control(car);
       if(c&&car!==admitted&&(car.distance>=state.lanes[car.lane].length||

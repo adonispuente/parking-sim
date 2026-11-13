@@ -9,7 +9,7 @@ export function advancePlayback(simulation, realDelta, speed, rates, lots) {
 }
 
 // UI playback reconstructs private gate/service/shuttle state from its origin.
-export const PLAYBACK_SPEEDS = Object.freeze([-30, -20, -10, -5, 5, 10, 20, 30, 40]);
+export const PLAYBACK_SPEEDS = Object.freeze([5, 10, 20, 30, 40]);
 export const PLAYBACK_STEP = .05;
 const copy = value => structuredClone(value);
 const yieldToUI = () => new Promise(resolve => setTimeout(resolve, 0));
@@ -71,7 +71,10 @@ export function createSeekablePlayback(factory, initialInputs = {}, options = {}
     advance(realDelta, speed = 5) {
       if (seeking) return;
       const delta = Number.isFinite(realDelta) ? Math.max(0, Math.min(.1, realDelta)) : 0;
-      const multiplier = PLAYBACK_SPEEDS.includes(Number(speed)) ? Number(speed) : 5;
+      // The Speed control offers only forward values (PLAYBACK_SPEEDS is forward-only).
+      // advance() still honours an explicit negative as a rewind so the deterministic
+      // rewind path stays available to programmatic callers and the rewind tests.
+      const multiplier = PLAYBACK_SPEEDS.includes(Number(speed)) ? Number(speed) : (Number(speed) < 0 ? Number(speed) : 5);
       if(multiplier<0) {
         accumulator+=delta*Math.abs(multiplier);
         const count=Math.floor((accumulator+1e-10)/PLAYBACK_STEP);

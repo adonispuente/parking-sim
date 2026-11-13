@@ -133,6 +133,8 @@ test('A arrivals cross Lot A Main exactly once', () => {
   for (const key of ['a', 'eA']) for (const zone of ['aNorth', 'aSouth']) {
     const route = zoneArrivalRoute(key, zone);
     const hits = route.map((p, i) => [i, d(p, main)]).filter(([, v]) => v < .001);
+    // 2026-11-12: a/aNorth enters on the Commander's AddNorthRoute and never visits Main.
+    if (key === 'a' && zone === 'aNorth') { assert.equal(hits.length, 0, 'a/aNorth bypasses Main'); continue; }
     assert.equal(hits.length, 1, `${key}/${zone} visits Main ${hits.length} times`);
     const k = hits[0][0];
     // Sample segments after Main: once the car is 10px past, it never comes back within 8px.

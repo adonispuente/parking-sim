@@ -3,8 +3,10 @@ import drawing from '../images/ABHubs.json' with { type: 'json' };
 import { IMAGE_SIZE } from './clearImageSource.js';
 
 export const AB_HUB_SOURCE = 'images/ABHubs.json';
-if (drawing.imageWidth !== IMAGE_SIZE.width || drawing.imageHeight !== IMAGE_SIZE.height || drawing.shapes.length !== 77)
-  throw new Error(`${AB_HUB_SOURCE}: expected the registered 1374x1118, 77-shape drawing`);
+// 78 shapes: Commander added #77 "AddNorthRoute" (2026-11-12, also saved as
+// images/NewARoute.json). Shapes #0-#76 are unchanged from the 77-shape revision.
+if (drawing.imageWidth !== IMAGE_SIZE.width || drawing.imageHeight !== IMAGE_SIZE.height || drawing.shapes.length !== 78)
+  throw new Error(`${AB_HUB_SOURCE}: expected the registered 1374x1118, 78-shape drawing`);
 
 const zones = {
   aNorth: [73, 74, 75], aSouth: [71, 72, 76],
@@ -45,5 +47,17 @@ export function abHubTrace(index) {
       shape.points.some(p => p.length !== 2 || !p.every(Number.isFinite) ||
         p[0] < 0 || p[0] > IMAGE_SIZE.width || p[1] < 0 || p[1] > IMAGE_SIZE.height))
     throw new Error(`Invalid A/B aisle trace #${index}`);
+  return shape.points;
+}
+
+// Commander-drawn Lot A North inbound lane (2026-11-12). It runs beside the
+// drawn North exit through the Main section, which carries both directions.
+export const A_NORTH_ENTRY_TRACE = 77;
+export function aNorthEntryTrace() {
+  const shape = drawing.shapes[A_NORTH_ENTRY_TRACE];
+  if (shape?.label !== 'AddNorthRoute' || shape.shape_type !== 'linestrip' || shape.points.length < 2 ||
+      shape.points.some(p => p.length !== 2 || !p.every(Number.isFinite) ||
+        p[0] < 0 || p[0] > IMAGE_SIZE.width || p[1] < 0 || p[1] > IMAGE_SIZE.height))
+    throw new Error(`${AB_HUB_SOURCE}: #${A_NORTH_ENTRY_TRACE} is not the AddNorthRoute linestrip`);
   return shape.points;
 }

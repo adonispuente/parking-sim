@@ -8,7 +8,7 @@ import { recordRouteUse } from './vehicleRouteCatalog.js';
 import { C_THROAT, C_STAGING_TARGET, B_NORTH_DIRECT_PATH } from './layoutOverlay.js';
 import { A_SOUTH_CENTRELINE, A_SOUTH_CENTRELINE_PROVENANCE } from './aSouthCentreline.js';
 import { aHubRoute, A_HUB_DEPARTURE_JOINS, AB_HUB_ROUTE_PROVENANCE } from './abHubRoutes.js';
-import { abHubById } from './abHubSource.js';
+import { abHubById, aNorthEntryTrace, AB_HUB_SOURCE, A_NORTH_ENTRY_TRACE } from './abHubSource.js';
 import { cHubForCar } from './cHubSource.js';
 import { cHubArrival, cHubDeparture } from './cHubRoutes.js';
 const ZONE_SOURCE={aNorth:39,aSouth:38,aBadge:37,bSouth:40,bBanana:41,bPocket:42,bNorth:44,cFirstNorth:51,cFirstSouth:52,cNorth:51,cSouth:52};
@@ -400,9 +400,38 @@ function parkAtHub(points,hub,from=0) {
   if(!best)throw new Error(`No local arrival spur for ${hub.id}`);
   return join(points.slice(0,best.i),[best.point],connect(hub.lot,best.point,hub.point));
 }
+// Lot A North two-way entry (Commander 2026-11-12: cars leaving Lot A North were
+// stopping cars entering it at Main; "that section all allows for 2 directions of
+// traffic"). Feeder-origin North arrivals leave the Feeder approach at the start
+// of his drawn AddNorthRoute (ABHubs #77, = images/NewARoute.json), follow it as
+// drawn past Main on the inbound side and into North from the south aisle, then
+// take the aisle graph to their hub. They do not take turns at the Main position.
+// Exits and Lot A South traffic still use Main. Only the 1-2 px join from the
+// Feeder approach vertex to the trace start is derived; the rest is his drawing.
+export const A_NORTH_TWO_WAY_PROVENANCE=[];
+export const arrivalBypassesMain=(key,zone)=>key==='a'&&zone==='aNorth';
+function aNorthTwoWayArrival(hubId) {
+  const raw=drivingPrefix(ARRIVAL_SOURCE.aNorth),entry=aNorthEntryTrace().map(p=>[...p]);
+  const k=nearestIndex(raw,entry[0]),gap=distance(raw[k],entry[0]);
+  if(gap>8)throw new Error(`AddNorthRoute start ${entry[0]} is ${gap.toFixed(1)}px from the Feeder approach`);
+  const drawn=[raw[k],...entry];
+  for(let i=1;i<drawn.length;i++)
+    if(!clearSegment(drawn[i-1],drawn[i]))throw new Error(`AddNorthRoute segment ${i} touches a source obstacle`);
+  const tail=hubId?aHubRoute(hubId,null,'aNorthTwoWay'):connect('a',entry.at(-1),ZONE_STAGING.aNorth);
+  A_NORTH_TWO_WAY_PROVENANCE.push({context:'Lot A North two-way entry',source:`${AB_HUB_SOURCE} #${A_NORTH_ENTRY_TRACE} AddNorthRoute`,
+    hub:hubId??null,joinPx:+gap.toFixed(2),bypassesMain:true});
+  return join(raw.slice(0,k+1),entry,tail);
+}
 export function zoneArrivalRoute(key,zone,hubId) {
   const id=`in:${key}:${zone}:${hubId??''}`;if(cache.has(id))return cache.get(id);
   const lot=ZONE_BY_ID[zone].lot,end=ZONE_STAGING[zone];let points;
+  if(arrivalBypassesMain(key,zone)) {
+    if(hubId&&abHubById(hubId).zone!==zone)throw new Error('A/B hub does not match section');
+    points=aNorthTwoWayArrival(hubId);
+    recordRouteUse(key,zone,{source:`ABHubs.json #${A_NORTH_ENTRY_TRACE} AddNorthRoute${hubId?` · ${hubId}`:''}; EverythingClearImage Feeder approach`,routeId:ARRIVAL_SOURCE[zone],
+      reason:'Commander-drawn two-way North entry; bypasses Lot A Main position'});
+    cache.set(id,points);return points;
+  }
   if(lot==='a'&&zone!=='aBadge') {
     const source=ARRIVAL_SOURCE[zone],raw=drivingPrefix(source),{road:rawRoad,rest}=mainCrossing(raw);
     // eA's road may end at or beside Main; trim any tail within the station
@@ -489,6 +518,35 @@ function aNorthDepartureApproach(start) {
     source:'derived waypoints (not a traced aisle); Commander-approved separate departure lane',start,end:main,points:pts.length});
   return pts;
 }
+// Lot A North two-way section, exit side (Commander 2026-11-12). With inbound cars
+// on his AddNorthRoute (east side of the section), the old exit swung east to the
+// #1 prefix end [286,94] and back west, crossing the inbound lane head-on (0.1 px),
+// and ran 5-9 px beside it (< CONFLICT_WIDTH ~10.9 px). Queued exits sat on it.
+// Exits now leave the hub graph where they reach the top of the section and come
+// down the west side to the existing [248,95] approach. DERIVED, PROVISIONAL
+// waypoints, not traced: offset ~14-17 px west of the drawn inbound line.
+export const A_NORTH_TWO_WAY_EXIT=Object.freeze({cutRadiusPx:26,minGapPx:12,waypoints:Object.freeze([[278,62],[266,82]]),provisional:true});
+export const A_NORTH_TWO_WAY_EXIT_PROVENANCE=[];
+function aNorthTwoWayExit(hubPart,approachRest,hubId) {
+  const entry=aNorthEntryTrace(),top=entry.at(-1);
+  const cut=hubPart.findIndex(p=>distance(p,top)<=A_NORTH_TWO_WAY_EXIT.cutRadiusPx);
+  if(cut<1)throw new Error(`Lot A North exit from ${hubId} never reaches the two-way section`);
+  const lane=[hubPart[cut],...A_NORTH_TWO_WAY_EXIT.waypoints,approachRest[0]];
+  let minGap=Infinity;
+  for(let i=1;i<lane.length;i++) {
+    if(!clearSegment(lane[i-1],lane[i])||!clearSegment(lane[i-1],lane[i],drivableAllowed))
+      throw new Error(`Lot A North two-way exit segment ${i} is not clear drivable ground`);
+    const n=Math.ceil(distance(lane[i-1],lane[i]));
+    for(let j=0;j<=n;j++) {
+      const p=[lane[i-1][0]+(lane[i][0]-lane[i-1][0])*j/n,lane[i-1][1]+(lane[i][1]-lane[i-1][1])*j/n];
+      for(let k=1;k<entry.length;k++)minGap=Math.min(minGap,segmentDistance(p,entry[k-1],entry[k]));
+    }
+  }
+  if(minGap<A_NORTH_TWO_WAY_EXIT.minGapPx)throw new Error(`Lot A North two-way exit is ${minGap.toFixed(1)} px from the inbound lane`);
+  A_NORTH_TWO_WAY_EXIT_PROVENANCE.push({context:'Lot A North two-way exit side',hub:hubId,mode:'derived-west-side-lane',provisional:true,
+    cutAt:hubPart[cut],minGapToInboundPx:+minGap.toFixed(1),waypoints:A_NORTH_TWO_WAY_EXIT.waypoints});
+  return join(hubPart.slice(0,cut+1),A_NORTH_TWO_WAY_EXIT.waypoints,approachRest);
+}
 export function zoneDepartureRoute(access,zone,hubId) {
   const id=`out:${access}:${zone}:${hubId??''}`;if(cache.has(id))return cache.get(id);
   const lot=ZONE_BY_ID[zone].lot,start=ZONE_STAGING[zone];let result;
@@ -528,8 +586,14 @@ export function zoneDepartureRoute(access,zone,hubId) {
   }
   if(lot==='a'&&hubId) {
     if(abHubById(hubId).zone!==zone)throw new Error('A/B hub does not match section');
-    const anchor=A_HUB_DEPARTURE_JOINS[zone],k=nearestIndex(result,anchor);
-    result=join(aHubRoute(hubId,access),connect(lot,anchor,result[k]),result.slice(k));
+    if(access==='a'&&zone==='aNorth') {
+      const k=nearestIndex(result,A_NORTH_DEPARTURE_WAYPOINTS[0]);
+      if(distance(result[k],A_NORTH_DEPARTURE_WAYPOINTS[0])>.001)throw new Error('Lot A North exit lost its [248,95] approach');
+      result=aNorthTwoWayExit(aHubRoute(hubId,access),result.slice(k),hubId);
+    } else {
+      const anchor=A_HUB_DEPARTURE_JOINS[zone],k=nearestIndex(result,anchor);
+      result=join(aHubRoute(hubId,access),connect(lot,anchor,result[k]),result.slice(k));
+    }
   }
   cache.set(id,result);return result;
 }

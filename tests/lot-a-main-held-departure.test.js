@@ -29,6 +29,8 @@ const sample = (l, a, b) => { const n = Math.max(1, Math.ceil((b - a) / .05)); r
 const gap = (A, B) => { let g = Infinity; for (const p of A) for (const q of B) g = Math.min(g, Math.hypot(p.x - q.x, p.z - q.z)); return g; };
 const arrivals = [];
 for (const key of ['a', 'eA']) for (const zone of ['aNorth', 'aSouth']) {
+  // a/aNorth enters on AddNorthRoute and never passes Main (2026-11-12).
+  if (key === 'a' && zone === 'aNorth') continue;
   let raw; try { raw = zoneArrivalRoute(key, zone); } catch { continue; }
   arrivals.push({ key, zone, raw, lane: build(raw, 'aMain') });
 }

@@ -3,7 +3,7 @@ import { attachShuttles } from './shuttles.js';
 import { advanceSharedTraffic } from './sharedTraffic.js';
 import { ZONE_BY_ID, GENERAL_CAPACITY, blankZones, distributeInitialOccupancy, lotTotals, chooseZone } from './parkingZones.js';
 import { createServiceController, seededFraction, serviceArrivalPriorities } from './sundayServices.js';
-import { zoneArrivalRoute, zoneDepartureRoute, redirectedArrivalRoute, feederReliefRoute } from './parkingRoutes.js';
+import { zoneArrivalRoute, zoneDepartureRoute, redirectedArrivalRoute, feederReliefRoute, arrivalBypassesMain } from './parkingRoutes.js';
 import { attachAlphaQueueRelief, beforeAlphaDecision } from './alphaQueueRelief.js';
 import { onStreet } from './pavementRouting.js';
 import { attachLotAControl, attachMainPositionToLane } from './lotAControl.js';
@@ -118,7 +118,8 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
       try {
         const points=out?zoneDepartureRoute(key,zone,hubId):zoneArrivalRoute(key,zone,hubId);
         const index=state.lanes.length,lane=makeLane(points,name);
-        if(['aNorth','aSouth'].includes(zone) &&
+        // North arrivals on the two-way AddNorthRoute entry never pass Main.
+        if(['aNorth','aSouth'].includes(zone) && (out||!arrivalBypassesMain(key,zone)) &&
           !attachMainPositionToLane(lane,points,out?zone:'aMain'))
           throw new Error('Lot A route misses Lot A Main Position');
         state.lanes.push(lane);routeLanes.set(name,index);
@@ -245,7 +246,7 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
         const lane=makeLane(route,`Redirected · ${next.zone}`,{startPoint:pixel,phase:'arrival',source:car.source,access:selection.access});
         const start=lane.path.getPointAt(0);
         if(Math.hypot(start.x-p.x,start.z-p.z)>1e-6)throw new Error('Redirect changed vehicle position');
-        if(['aNorth','aSouth'].includes(next.zone)&&!attachMainPositionToLane(lane,route,'aMain'))
+        if(['aNorth','aSouth'].includes(next.zone)&&!arrivalBypassesMain(selection.route,next.zone)&&!attachMainPositionToLane(lane,route,'aMain'))
           throw new Error('Redirected Lot A route misses Lot A Main Position');
         state.lanes.push(lane);
         const previous={target:car.target,zone:car.zone,access:car.access,routeName:car.routeName};

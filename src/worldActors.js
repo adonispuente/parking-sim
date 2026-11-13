@@ -101,30 +101,48 @@ function wheels(group, width, depth, radius, frontZ, rearZ, y) {
     [0, 0, Math.PI / 2]);
 }
 
-function busMarking(group, busNumber) {
-  if (typeof document === 'undefined' || !document.createElement) return;
+function busSignTexture(busNumber, width, height, fontPx) {
   const canvas = document.createElement('canvas');
-  canvas.width = 256;
-  canvas.height = 80;
+  canvas.width = width;
+  canvas.height = height;
   const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-  ctx.fillStyle = '#f8f2e9';
-  ctx.fillRect(0, 0, 256, 80);
-  ctx.fillStyle = '#493754';
-  ctx.font = 'bold 44px system-ui, sans-serif';
+  if (!ctx) return null;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, width, height);
+  const border = Math.round(height * 0.08);
+  ctx.fillStyle = '#6a1b9a';
+  ctx.fillRect(border, border, width - border * 2, height - border * 2);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = `bold ${fontPx}px system-ui, sans-serif`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   const suffix = busNumber == null ? '' : ` ${String(busNumber).slice(0, 8)}`;
-  ctx.fillText(`BUS${suffix}`, 128, 42, 246);
+  ctx.fillText(`BUS${suffix}`, width / 2, height / 2 + 2, width - border * 4);
   const map = new THREE.CanvasTexture(canvas);
   map.colorSpace = THREE.SRGBColorSpace;
   map.userData.generated = true;
-  // One material and one plane means release() disposes the generated map once.
+  return map;
+}
+
+function busMarking(group, busNumber) {
+  if (typeof document === 'undefined' || !document.createElement) return;
+  const map = busSignTexture(busNumber, 256, 80, 44);
+  if (!map) return;
+  // Each sign owns one material and one plane, so release() disposes each generated map once.
   const sign = new THREE.Mesh(new THREE.PlaneGeometry(0.49, 0.15),
     new THREE.MeshBasicMaterial({ map, side: THREE.DoubleSide }));
   sign.rotation.y = Math.PI / 2;
   sign.position.set(0.43, 0.43, 0.36);
   group.add(sign);
+  // Roof plate: the map camera looks down, so the roof is what identifies a bus.
+  // Unlit so it reads the same under any scene lighting. Visual only.
+  const roofMap = busSignTexture(busNumber, 512, 160, 96);
+  if (!roofMap) return;
+  const roof = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 0.6),
+    new THREE.MeshBasicMaterial({ map: roofMap, side: THREE.DoubleSide }));
+  roof.rotation.set(-Math.PI / 2, 0, Math.PI / 2);
+  roof.position.set(0, 0.96, -0.08);
+  group.add(roof);
 }
 
 /** Local +Z is forward; root origin matches Scene's existing body-centred vehicle anchor. */
@@ -139,14 +157,16 @@ export function createVehicleVisual(car = {}) {
   const width = bus ? 0.88 : 0.65;
   const depth = bus ? 2.9 : 1.35;
   // Leave the exact existing simulation footprint untouched, including wheels and lights.
-  const paint = bus ? '#735875' : car.badge ? '#c6aa6b' : colors[hashId(car.id) % colors.length];
+  // Buses: vivid violet matching the pink shuttle-stop rings, so they stand out
+  // from the muted car palette and the cream ground.
+  const paint = bus ? '#8e24c9' : car.badge ? '#c6aa6b' : colors[hashId(car.id) % colors.length];
   block(visual, [width, bus ? 0.48 : 0.3, depth], paint, [0, bus ? 0.31 : 0.27, 0]);
   if (bus) {
-    block(visual, [0.76, 0.12, 2.67], '#e5d9dc', [0, 0.6, 0]);
+    block(visual, [0.76, 0.12, 2.67], '#ffffff', [0, 0.6, 0]);
     block(visual, [0.75, 0.26, 2.15], '#344750', [0, 0.77, -0.08], 0.34);
-    block(visual, [0.76, 0.055, 2.32], '#eee4d9', [0, 0.925, -0.08]);
+    block(visual, [0.76, 0.055, 2.32], '#b84ef0', [0, 0.925, -0.08]);
     // Window dividers repeat on both sides; baked with the body below.
-    instances(visual, new THREE.BoxGeometry(0.015, 0.23, 0.035), '#e5d9dc',
+    instances(visual, new THREE.BoxGeometry(0.015, 0.23, 0.035), '#ffffff',
       [-0.94, -0.32, 0.3, 0.91].flatMap(z => [[-0.385, 0.78, z], [0.385, 0.78, z]]), [0, 0, 0]);
     block(visual, [0.65, 0.23, 0.013], '#344750', [0, 0.75, 1.443], 0.34);
     wheels(visual, width, depth, 0.17, 1.2, -1.16, 0.17);

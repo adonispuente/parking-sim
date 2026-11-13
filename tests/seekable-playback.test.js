@@ -15,7 +15,7 @@ function counter() {
 }
 const inputs = { rates: [2,0,0], phase:'arrival', lots: [] };
 test('UI speed contract includes 40× forward playback, initially 5; elapsed timeline removed', () => {
-  assert.deepEqual(PLAYBACK_SPEEDS, [-30,-20,-10,-5,5,10,20,30,40]);
+  assert.deepEqual(PLAYBACK_SPEEDS, [5,10,20,30,40]);
   const ui = readFileSync(new URL('../src/main.jsx', import.meta.url), 'utf8');
   assert.match(ui, /playbackSpeed,setPlaybackSpeed\]=useState\(5\)/);
   const controls=readFileSync(new URL('../src/SimulationControls.jsx', import.meta.url), 'utf8');
