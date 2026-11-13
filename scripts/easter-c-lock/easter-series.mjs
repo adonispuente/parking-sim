@@ -19,8 +19,8 @@ while(s.serviceStatus.minute<700){
       const held=cars.slice(0,400);
       const lanes={};for(const c of held){const L=s.lanes[c.lane];const k=`${c.lane}:${L?.name??L?.id??L?.kind??''}:${c.phase}`;lanes[k]=lanes[k]??[];lanes[k].push(+(c.distance??0).toFixed(1)+'/'+(L?.length??0).toFixed(0));}
       console.log('FROZEN lanes',JSON.stringify(Object.fromEntries(Object.entries(lanes).map(([k,v])=>[k,v.length+' cars, front '+v.sort().at(-1)]))));
-      console.log('cEntrance',JSON.stringify(s.cEntrance,null,0)?.slice(0,700));
-      console.log('cRoundabout',JSON.stringify(s.cRoundabout,null,0)?.slice(0,700));
+      console.log('cEntrance',JSON.stringify(s.cEntrance,null,0)?.slice(0,process.env.FULL?1e6:700));
+      console.log('cRoundabout',JSON.stringify(s.cRoundabout,null,0)?.slice(0,process.env.FULL?1e6:700));
       console.log('clay',JSON.stringify(s.equityClayStop)?.slice(0,400));
       break;}
   }
