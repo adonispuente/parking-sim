@@ -27,7 +27,8 @@ for(const id of ['nine','eleven','final'])test(`${id}: 95% arrival target is 45 
     assert.ok(controller.arrivals.slice(10,targetCount).every(a=>a.due>earlyEnd));
   }
   // Exactly one of Equity and Corporate applies; neither quota can steal the other.
-  assert.equal(controller.arrivals.filter(a=>a.source!==0).length,Math.ceil(demand*.1));
+  // 11:00 defaults to 15% Equity (Commander 2026-11-13); other services 10%.
+  assert.equal(controller.arrivals.filter(a=>a.source!==0).length,Math.ceil(demand*(preset.equityPercent??10)/100));
   assert.equal(controller.arrivals.filter(a=>a.source===0&&a.parkingIntent==='corporate').length,Math.ceil(demand*.1));
   const before=makeState(target-1);controller.tick(before);
   assert.ok(Math.abs(before.serviceStatus.serviceOffsetMinutes-(SERVICE_ARRIVAL_TARGET_MINUTES-1/60))<1e-9);

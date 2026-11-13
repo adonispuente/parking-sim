@@ -1,12 +1,23 @@
-import { GENERAL_CAPACITY, lotTotals } from './parkingZones.js';
+import { GENERAL_CAPACITY, LOT_CAPACITY, lotTotals } from './parkingZones.js';
 
 // Service start times are fixed. Demand/readiness distributions are illustrative,
 // adjustable training inputs, not attendance forecasts or measured probabilities.
 export const SUNDAY_SERVICES = Object.freeze({
   nine: {id:'nine',label:'9:00 · arrivals',startMinute:540,beginMinute:495,demand:950,activeBuses:3,transition:false,initialOccupancy:{a:0,b:0,c:0}},
-  eleven: {id:'eleven',label:'11:00 · service transition',startMinute:660,beginMinute:605,arrivalBeginMinute:615,demand:1224,activeBuses:5,transition:true,initialOccupancy:{a:360,b:487,c:103}},
+  // Commander (2026-11-13): 11:00 defaults to 15% Equity arrivals.
+  eleven: {id:'eleven',label:'11:00 · service transition',startMinute:660,beginMinute:605,arrivalBeginMinute:615,demand:1224,equityPercent:15,activeBuses:5,transition:true,initialOccupancy:{a:360,b:487,c:103}},
+  // Commander (2026-11-13): Easter = the 11:00 transition with every lot full
+  // before service (from 9:00) and refilled to full by the 11:00 arrivals.
+  easter: {id:'easter',label:'Easter 11:00 · full lots',startMinute:660,beginMinute:605,arrivalBeginMinute:615,
+    demand:GENERAL_CAPACITY.a+GENERAL_CAPACITY.b+GENERAL_CAPACITY.c,equityPercent:15,activeBuses:5,transition:true,
+    // "Full" = general capacity (A 360, badge stalls empty), as the 11:00 preset uses;
+    // also filling A's 51 badge stalls froze badge arrivals (measured 2026-11-13).
+    initialOccupancy:{a:GENERAL_CAPACITY.a,b:GENERAL_CAPACITY.b,c:GENERAL_CAPACITY.c}},
   final: {id:'final',label:'1:15 · service transition',startMinute:795,beginMinute:725,arrivalBeginMinute:750,demand:300,activeBuses:5,transition:true,initialOccupancy:{a:360,b:487,c:377}},
 });
+// Sunday order for carry-forward. Easter replaces the 11:00 and continues to 1:15.
+export const NEXT_SERVICE = Object.freeze({nine:'eleven',eleven:'final',easter:'final'});
+export const PREVIOUS_SERVICE = Object.freeze({eleven:'nine',easter:'nine',final:'eleven'});
 export const DEFAULT_SERVICE_OPTIONS = Object.freeze({demand:950,earlyPercent:0,equityPercent:10,corporatePercent:10,departureWindowMinutes:25,lingerMinutes:5});
 // Operational timing: 75% of each service's people are on time (due at or before
 // service start); the rest come late (Commander, 2026-11-06). The confirmed 95%
@@ -21,7 +32,7 @@ export const SERVICE_DURATION_MINUTES=75;
 // In particular, the 11:00 congregation dismisses at 12:15, not 12:30.
 export function serviceTimeline(config={}) {
   const preset=SUNDAY_SERVICES[config.id]??SUNDAY_SERVICES.nine;
-  const previous={eleven:'nine',final:'eleven'}[preset.id];
+  const previous=PREVIOUS_SERVICE[preset.id];
   return {startMinute:preset.startMinute,beginMinute:config.beginMinute??preset.beginMinute,
     dismissalMinute:preset.startMinute+SERVICE_DURATION_MINUTES,
     previousDismissalMinute:previous?SUNDAY_SERVICES[previous].startMinute+SERVICE_DURATION_MINUTES:null};
@@ -35,8 +46,9 @@ export function serviceArrivalPriorities(serviceId, source, parkingIntent, arriv
   return arrivalPriority?.[source] ?? ['a','b','c'];
 }
 export function serviceOptions(id, overrides={}) {
+  const presetEquity=SUNDAY_SERVICES[id]?.equityPercent??DEFAULT_SERVICE_OPTIONS.equityPercent;
   return {...DEFAULT_SERVICE_OPTIONS,...SUNDAY_SERVICES[id],...overrides,id,
-    equityPercent:Math.max(10,Math.min(90,Number(overrides.equityPercent??DEFAULT_SERVICE_OPTIONS.equityPercent)||10)),corporatePercent:10};
+    equityPercent:Math.max(10,Math.min(90,Number(overrides.equityPercent??presetEquity)||10)),corporatePercent:10};
 }
 export function formatServiceClock(minute) {
   // Fixed ticks accumulate sub-nanosecond error at exact minute boundaries.
@@ -125,7 +137,7 @@ export function createServiceController(config, initialZones) {
   return {
     settings,preset,gated,reopenedAt:initialGate?.reopenedMinute!=null?{a:(initialGate.reopenedMinute-preset.beginMinute)*60}:{},arrivals,
     isTransition:preset.transition,
-    departureMetadata(ordinal,lot,serviceId=({eleven:'nine',final:'eleven'}[preset.id]??preset.id)) {
+    departureMetadata(ordinal,lot,serviceId=(PREVIOUS_SERVICE[preset.id]??preset.id)) {
       const schedule=departureSchedule(serviceId,lot,ordinal,settings);
       return {...schedule,readyAt:(schedule.readinessMinute-preset.beginMinute)*60};
     },

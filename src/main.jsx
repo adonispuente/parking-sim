@@ -5,7 +5,8 @@ import { openParkingCapacity } from './parkingAvailability.js';
 import SundayControls from './SundayControls.jsx';
 import SimulationControls from './SimulationControls.jsx';
 import RouteSourcesPanel from './RouteSourcesPanel.jsx';
-import { serviceOptions } from './sundayServices.js';
+import { serviceOptions, NEXT_SERVICE, formatServiceClock } from './sundayServices.js';
+import { serviceCarryOptions } from './serviceCarry.js';
 import { SHUTTLE_CAR_EQUIVALENT, TRAFFIC_PRIORITY_ORDER } from './trafficPriority.js';
 import { initialLayout, makeItem, validateLayout, deleteItem, stats, STORAGE_KEY, ROLES, WORLD } from './model.js';
 import './styles.css';
@@ -72,6 +73,24 @@ function App() {
     catch { setSaved('Local saving unavailable'); }
   },[layout]);
   useEffect(()=>()=>clearTimeout(messageTimer.current),[]);
+
+  // Commander (2026-11-13): pressing play at 9:00 rolls into 11:00 and then 1:15.
+  // The first idle carry checkpoint (arrivals issued, car roads clear) starts the
+  // next service at that same minute, keeping parked cars and A's latch.
+  const autoCarried=useRef(null);
+  useEffect(()=>{
+    const service=trafficOptions.service,carry=trafficStats.serviceCarry,currentId=trafficStats.serviceStatus?.id;
+    const nextId=NEXT_SERVICE[currentId];
+    if(!running||!service?.enabled||trafficOptions.autoContinue===false||!nextId||!carry||service.id!==currentId)return;
+    const key=`${currentId}@${carry.minute}`;
+    if(autoCarried.current===key)return;
+    let patch;
+    try { patch=serviceCarryOptions(trafficOptions,trafficStats,nextId,{continuous:true}); } catch { return; }
+    autoCarried.current=key;
+    setTrafficOptions(o=>({...o,...patch}));
+    setTrafficMode('continuous');setTrafficReset(v=>v+1);
+    notify(`Continuing into the ${nextId==='final'?'1:15':'11:00'} service at ${formatServiceClock(patch.service.beginMinute)} with parked cars carried.`);
+  },[trafficStats,running,trafficOptions]);
 
   function notify(text) {
     setMessage(text); clearTimeout(messageTimer.current);

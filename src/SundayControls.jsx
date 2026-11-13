@@ -1,5 +1,7 @@
 import React from 'react';
-import { SUNDAY_SERVICES, serviceOptions, formatServiceClock } from './sundayServices.js';
+import { SUNDAY_SERVICES, NEXT_SERVICE, serviceOptions, formatServiceClock } from './sundayServices.js';
+
+const SERVICE_MENU_LABELS={nine:'9:00 AM',eleven:'11:00 AM',easter:'Easter',final:'1:15 PM'};
 import { PARKING_ZONES } from './parkingZones.js';
 import { serviceCarryOptions } from './serviceCarry.js';
 
@@ -14,13 +16,13 @@ export function ServiceSelect({options,setOptions,onReset}) {
   return <label>Service time<select aria-label="Sunday service scenario" value={config.enabled?config.id:'manual'} onChange={e=>{
       if(e.target.value==='manual'){setOptions(o=>({...o,service:{...o.service,enabled:false}}));onReset();}
       else preset(e.target.value);
-    }}><option value="manual">Manual</option>{Object.values(SUNDAY_SERVICES).map(s=><option key={s.id} value={s.id}>{{nine:'9:00 AM',eleven:'11:00 AM',final:'1:15 PM'}[s.id]}</option>)}</select></label>;
+    }}><option value="manual">Manual</option>{Object.values(SUNDAY_SERVICES).map(s=><option key={s.id} value={s.id}>{SERVICE_MENU_LABELS[s.id]??s.label}</option>)}</select></label>;
 }
 
 export default function SundayControls({options,setOptions,stats,onReset,onRun}) {
   const config=options.service??{},status=stats.serviceStatus;
   const change=patch=>setOptions(o=>({...o,service:{...o.service,...patch}}));
-  const nextService=config.id==='nine'?'eleven':config.id==='eleven'?'final':null;
+  const nextService=NEXT_SERVICE[config.id]??null;
   const carryReady=!!nextService&&!!stats.serviceCarry;
   function carryForward() {
     const patch=serviceCarryOptions(options,stats,nextService);
@@ -45,6 +47,8 @@ export default function SundayControls({options,setOptions,stats,onReset,onRun})
         <small>Vary “initial parked” below to represent the previous service. Initial totals distribute using the stated fill order; section values can be set individually.</small>
       </>}
       <div className="traffic-actions"><button onClick={()=>{onReset();onRun();}}>Apply inputs & restart service</button></div>
+      {config.id==='easter'&&<small>Easter: the 11:00 transition with Lots A, B and C full when it begins and enough arrivals ({config.demand} cars) to refill every lot after the 9:00 cars leave.</small>}
+      {nextService&&<label className="auto-continue"><input type="checkbox" aria-label="Auto-continue to next service" checked={options.autoContinue!==false} onChange={e=>setOptions(o=>({...o,autoContinue:e.target.checked}))}/> Keep playing into the {SERVICE_MENU_LABELS[nextService]} service (carries parked cars automatically, clock keeps running)</label>}
       {nextService&&<><button disabled={!carryReady} onClick={carryForward}>Next service · carry current parked cars</button><small>Available after scheduled arrivals and car road legs finish. Preserves each car's service/readiness and A's latch; the clock never moves backward. Buses stage at home for the new scenario.</small></>}
       <small aria-label="Departure cohort timing">Vehicle-cohort proxy: about 5% per lot are ready 5–10 minutes before dismissal; about 2% in A linger late. Provisional main readiness spread: 25 minutes after dismissal; A late tail: the next 5 minutes. Integer rounding is under one car per lot/cohort. Readiness is not a completed road exit.</small>
       <small>Final service: 2:30 dismissal, ordinary vehicle readiness by 3:00. Near-empty church is the observation target, not zero parked cars. People, return transport and residual cleanup/serve-team headcounts are not modeled yet. No queued cars are removed to meet the clock. Changes apply on restart.</small>

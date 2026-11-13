@@ -92,7 +92,10 @@ test('UI-faithful eleven service keeps Main progressing through10:50',()=>{
   const preset=SUNDAY_SERVICES.eleven;
   const shuttles={enabled:true,activeCount:preset.activeBuses,bFullPercent:100,randomDwell:true,dwellSeconds:45,cDirection:'auto',bStop:'circuit',dispatchMode:'demand',dispatchDuringDepartures:preset.transition};
   const preferences={a:'auto',b:'auto',c:'auto'};
-  const state=createCampusTraffic({initialOccupancy:{...preset.initialOccupancy},badgePercent:5,phase:'arrival',service:{enabled:true,...serviceOptions('eleven')},zonePreferences:preferences,shuttles});
+  const state=createCampusTraffic({initialOccupancy:{...preset.initialOccupancy},badgePercent:5,phase:'arrival',service:{enabled:true,...serviceOptions('eleven',{equityPercent:10})},zonePreferences:preferences,shuttles});
+  // Pinned to the 10% Equity mix the lock IDs and the >100 aMain floor were measured
+  // on. At the 15% default, 61 extra Equity cars move ~20 cars off Main (97 vs 117
+  // by 10:50, measured 2026-11-13) with no freeze; that is volume, not a lock.
   const lots=['a','b','c'].map(id=>({id:`lot-${id}`,open:true}));
   const passed=()=>Object.values(state.aMainControl.totalPassed).reduce((a,b)=>a+b,0);
   let prior=null,frozenSince=null,at1045=null;

@@ -17,7 +17,7 @@ export const PARKING_ZONES = Object.freeze([
 export const ZONE_BY_ID = Object.fromEntries(PARKING_ZONES.map(z=>[z.id,z]));
 export const GENERAL_CAPACITY = Object.freeze({a:360,b:487,c:686});
 export const LOT_CAPACITY = Object.freeze({a:411,b:487,c:686});
-export const DEFAULT_ZONE_PRIORITY = Object.freeze({a:['aNorth','aSouth'],b:['bSouth','bBanana','bPocket','bNorth'],c:['cFirstNorth','cFirstSouth','cNorth','cSouth']});
+export const DEFAULT_ZONE_PRIORITY = Object.freeze({a:['aNorth','aSouth'],b:['bSouth','bNorth','bBanana','bPocket'],c:['cFirstNorth','cFirstSouth','cNorth','cSouth']});
 export const blankZones = () => Object.fromEntries(PARKING_ZONES.map(z=>[z.id,0]));
 export function distributeInitialOccupancy(lots={}, supplied={}) {
   const result=blankZones();
