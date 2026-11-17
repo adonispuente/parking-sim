@@ -4,12 +4,12 @@ import { GENERAL_CAPACITY, LOT_CAPACITY, lotTotals } from './parkingZones.js';
 // adjustable training inputs, not attendance forecasts or measured probabilities.
 export const SUNDAY_SERVICES = Object.freeze({
   nine: {id:'nine',label:'9:00 · arrivals',startMinute:540,beginMinute:495,demand:950,activeBuses:3,transition:false,initialOccupancy:{a:0,b:0,c:0}},
-  // Commander (2026-11-13): 11:00 defaults to 15% Equity arrivals.
-  eleven: {id:'eleven',label:'11:00 · service transition',startMinute:660,beginMinute:605,arrivalBeginMinute:615,demand:1224,equityPercent:15,activeBuses:5,transition:true,initialOccupancy:{a:360,b:487,c:103}},
+  // All service presets default to 10% Equity arrivals.
+  eleven: {id:'eleven',label:'11:00 · service transition',startMinute:660,beginMinute:605,arrivalBeginMinute:615,demand:1224,equityPercent:10,activeBuses:5,transition:true,initialOccupancy:{a:360,b:487,c:103}},
   // Commander (2026-11-13): Easter = the 11:00 transition with every lot full
   // before service (from 9:00) and refilled to full by the 11:00 arrivals.
   easter: {id:'easter',label:'Easter 11:00 · full lots',startMinute:660,beginMinute:605,arrivalBeginMinute:615,
-    demand:GENERAL_CAPACITY.a+GENERAL_CAPACITY.b+GENERAL_CAPACITY.c,equityPercent:15,activeBuses:5,transition:true,
+    demand:GENERAL_CAPACITY.a+GENERAL_CAPACITY.b+GENERAL_CAPACITY.c,equityPercent:10,activeBuses:5,transition:true,
     // "Full" = general capacity (A 360, badge stalls empty), as the 11:00 preset uses;
     // also filling A's 51 badge stalls froze badge arrivals (measured 2026-11-13).
     initialOccupancy:{a:GENERAL_CAPACITY.a,b:GENERAL_CAPACITY.b,c:GENERAL_CAPACITY.c}},

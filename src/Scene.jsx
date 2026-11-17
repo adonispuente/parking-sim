@@ -288,7 +288,7 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
       }
       const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
       const plane=new THREE.Plane(new THREE.Vector3(-1,0,0),0);
-      const material=new THREE.MeshBasicMaterial({color:zone.half==='first'?'#e5d16b':zone.general?'#83ce71':'#d0a1ee',transparent:true,opacity:.46,depthWrite:false,side:THREE.DoubleSide,clippingPlanes:[plane]});
+      const material=new THREE.MeshBasicMaterial({color:zone.general?'#83ce71':'#d0a1ee',transparent:true,opacity:.46,depthWrite:false,side:THREE.DoubleSide,clippingPlanes:[plane]});
       const mesh=new THREE.Mesh(geometry,material);mesh.position.y=.47;mesh.visible=false;occupancyFills.add(mesh);
       zoneFills.push({zone,mesh,plane,cutoff:makeOccupancyFillPieces(pieces)});
     }

@@ -5,10 +5,10 @@ import { createCampusTraffic } from '../src/traffic.js';
 import { SUNDAY_SERVICES, NEXT_SERVICE, PREVIOUS_SERVICE, serviceOptions, serviceTimeline } from '../src/sundayServices.js';
 import { serviceCarryOptions } from '../src/serviceCarry.js';
 
-// Commander 2026-11-13: 11:00 Equity defaults to 15%; 9:00 and 1:15 keep 10%.
-test('11:00 and Easter default to 15% Equity; other services keep 10%; overrides still win',()=>{
-  assert.equal(serviceOptions('eleven').equityPercent,15);
-  assert.equal(serviceOptions('easter').equityPercent,15);
+// All presets share the 10% Equity default.
+test('all services default to 10% Equity; overrides still win',()=>{
+  assert.equal(serviceOptions('eleven').equityPercent,10);
+  assert.equal(serviceOptions('easter').equityPercent,10);
   assert.equal(serviceOptions('nine').equityPercent,10);
   assert.equal(serviceOptions('final').equityPercent,10);
   assert.equal(serviceOptions('eleven',{equityPercent:22}).equityPercent,22);
@@ -42,7 +42,7 @@ test('continuous carry starts the next service at the carry minute (no clock jum
   assert.ok(minute<SUNDAY_SERVICES.eleven.beginMinute);
   const auto=serviceCarryOptions(options,stats,'eleven',{continuous:true});
   assert.equal(auto.service.beginMinute,minute);
-  assert.equal(auto.service.equityPercent,15);
+  assert.equal(auto.service.equityPercent,10);
   assert.equal(serviceCarryOptions(options,stats,'eleven').service.beginMinute,605,'manual button keeps its old behavior');
   const next=createCampusTraffic({...options,...auto});
   assert.ok(Math.abs(next.serviceStatus.minute-minute)<1e-6,'new service resumes at the same clock');
