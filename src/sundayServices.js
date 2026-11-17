@@ -50,6 +50,20 @@ export function serviceOptions(id, overrides={}) {
   return {...DEFAULT_SERVICE_OPTIONS,...SUNDAY_SERVICES[id],...overrides,id,
     equityPercent:Math.max(10,Math.min(90,Number(overrides.equityPercent??presetEquity)||10)),corporatePercent:10};
 }
+// Keep each service's user inputs when selecting or continuing a scenario.
+export function configuredServiceOptions(options, id, overrides={}) {
+  return serviceOptions(id, {
+    ...options.servicePlan?.[id],
+    ...(options.service?.id===id?options.service:{}),
+    ...overrides,
+  });
+}
+export function updateServiceInputs(options, id, patch) {
+  return {...options,
+    servicePlan:{...options.servicePlan,[id]:{...options.servicePlan?.[id],...patch}},
+    service:options.service?.id===id?{...options.service,...patch}:options.service};
+}
+
 export function formatServiceClock(minute) {
   // Fixed ticks accumulate sub-nanosecond error at exact minute boundaries.
   const m=Math.floor(minute+1e-8),hour=Math.floor(m/60)%24;
@@ -127,7 +141,7 @@ export function createServiceController(config, initialZones) {
     // Alternate the Equity entrances independently of the overall arrival index;
     // a regular ten-percent cadence must not accidentally select only one origin.
     const source=equity?(equityIndex++%2?2:1):0;
-    return {due,source,parkingIntent:corporate?'corporate':'general'};
+    return {due,source,serviceId:preset.id,parkingIntent:corporate?'corporate':'general'};
   }).sort((a,b)=>a.due-b.due);
   const started=lotTotals(initialZones,false);
   const initialGate=config.initialGate;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SUNDAY_SERVICES, NEXT_SERVICE, serviceOptions, formatServiceClock } from './sundayServices.js';
+import { SUNDAY_SERVICES, NEXT_SERVICE, configuredServiceOptions, updateServiceInputs, formatServiceClock } from './sundayServices.js';
 
 const SERVICE_MENU_LABELS={nine:'9:00 AM',eleven:'11:00 AM',easter:'Easter',final:'1:15 PM'};
 const SERVICE_MENU_ORDER=['nine','eleven','final','easter'];
@@ -10,7 +10,7 @@ export function ServiceSelect({options,setOptions,onReset}) {
   const config=options.service??{};
   function preset(id) {
     const s=SUNDAY_SERVICES[id];
-    setOptions(o=>({...o,phase:'arrival',service:{enabled:true,...serviceOptions(id)},initialOccupancy:{...s.initialOccupancy},initialZoneOccupancy:undefined,initialServiceCarry:undefined,
+    setOptions(o=>({...o,phase:'arrival',service:{...configuredServiceOptions(o,id),beginMinute:s.beginMinute,enabled:true},initialOccupancy:{...s.initialOccupancy},initialZoneOccupancy:undefined,initialServiceCarry:undefined,
       shuttles:{...o.shuttles,activeCount:s.activeBuses,dispatchDuringDepartures:s.transition}}));
     onReset();
   }
@@ -21,9 +21,10 @@ export function ServiceSelect({options,setOptions,onReset}) {
 }
 
 export default function SundayControls({options,setOptions,stats,onReset,onRun}) {
-  const config=options.service??{},status=stats.serviceStatus;
-  const change=patch=>setOptions(o=>({...o,service:{...o.service,...patch}}));
-  const nextService=NEXT_SERVICE[config.id]??null;
+  const status=stats.serviceStatus;
+  const config=options.service?.enabled?{enabled:true,...configuredServiceOptions(options,status?.id??options.service.id)}:options.service??{};
+  const change=patch=>setOptions(o=>updateServiceInputs(o,config.id,patch));
+  const nextService=NEXT_SERVICE[status?.id??config.id]??null;
   const carryReady=!!nextService&&!!stats.serviceCarry;
   function carryForward() {
     const patch=serviceCarryOptions(options,stats,nextService);
@@ -33,7 +34,7 @@ export default function SundayControls({options,setOptions,stats,onReset,onRun})
   return <section className="sunday-panel" aria-label="Service settings and flow">
     <small className="service-parked" aria-label="Current parked cars">{['a','b','c'].map(lot=><span key={lot}>Lot {lot.toUpperCase()}: <b>{stats.occupancy?.[lot]??options.initialOccupancy?.[lot]??0}</b> parked</span>)}</small>
     {config.enabled&&<>
-      <div className="service-clock" role="status"><strong>{status?.clock??formatServiceClock(config.beginMinute??SUNDAY_SERVICES[config.id].beginMinute)}</strong><span>{status?.phase??'Ready to start'}</span><small>{status?.issued??0} / {config.demand} arrivals issued · {status?.remaining??config.demand} scheduled</small></div>
+      <div className="service-clock" role="status"><strong>{status?.clock??formatServiceClock(config.beginMinute??SUNDAY_SERVICES[config.id].beginMinute)}</strong><span>{status?.phase??'Ready to start'}</span><small>{status?.issued??0} / {status?.demand??config.demand} arrivals issued · {status?.remaining??config.demand} scheduled</small></div>
       <small>Arrival timing: 75% arrive by service start; the rest come late, with about 95% by 45 minutes after service starts. Late-arrival spacing is provisional, not a measured distribution.</small>
       <small aria-label="Service dismissal times">Current service dismisses {formatServiceClock(status?.dismissalMinute??((SUNDAY_SERVICES[config.id]?.startMinute??540)+75))}.{status?.previousDismissalMinute!=null&&` Previous service dismisses ${formatServiceClock(status.previousDismissalMinute)}.`} Dismissal is 75 minutes after service start.</small>
       {stats.shuttleBreak?.enabled&&<small role="status" aria-label="Service shuttle break">Shuttle break {formatServiceClock(stats.shuttleBreak.startMinute)}–{formatServiceClock(stats.shuttleBreak.endMinute)} · {stats.shuttleBreak.active?'finishing circuits, then holding at A home':(status?.minute??0)>=stats.shuttleBreak.endMinute?'complete · buses running':'scheduled'}. Buses never stop in the roadway for the break.</small>}
@@ -47,9 +48,9 @@ export default function SundayControls({options,setOptions,stats,onReset,onRun})
         <small>Once A closes, early vacancies do not reopen it. Reopening requires dismissal and ≤180 general parked/inbound (badge excluded). B and C have no half-full hold. Manual closures still apply.</small>
         <small>Vary “initial parked” below to represent the previous service. Initial totals distribute using the stated fill order; section values can be set individually.</small>
       </>}
-      <div className="traffic-actions"><button onClick={()=>{onReset();onRun();}}>Apply inputs & restart service</button></div>
+      <div className="traffic-actions"><button onClick={()=>{onReset();onRun();}}>Apply inputs & restart simulation</button></div>
       {config.id==='easter'&&<small>Easter: the 11:00 transition with Lots A, B and C full when it begins and enough arrivals ({config.demand} cars) to refill every lot after the 9:00 cars leave.</small>}
-      {nextService&&<label className="auto-continue"><input type="checkbox" aria-label="Auto-continue to next service" checked={options.autoContinue!==false} onChange={e=>setOptions(o=>({...o,autoContinue:e.target.checked}))}/> Keep playing into the {SERVICE_MENU_LABELS[nextService]} service (carries parked cars automatically, clock keeps running)</label>}
+      {nextService&&<label className="auto-continue"><input type="checkbox" aria-label="Auto-continue to next service" checked={options.autoContinue!==false} onChange={e=>{setOptions(o=>({...o,autoContinue:e.target.checked}));onReset();}}/> Keep playing into the {SERVICE_MENU_LABELS[nextService]} service (continuous clock, cars and buses stay in place)</label>}
       {nextService&&<><button disabled={!carryReady} onClick={carryForward}>Next service · carry current parked cars</button><small>Available after scheduled arrivals and car road legs finish. Preserves each car's service/readiness and A's latch; the clock never moves backward. Buses stage at home for the new scenario.</small></>}
       <small aria-label="Departure cohort timing">Vehicle-cohort proxy: about 5% per lot are ready 5–10 minutes before dismissal; about 2% in A linger late. Provisional main readiness spread: 25 minutes after dismissal; A late tail: the next 5 minutes. Integer rounding is under one car per lot/cohort. Readiness is not a completed road exit.</small>
       <small>Final service: 2:30 dismissal, ordinary vehicle readiness by 3:00. Near-empty church is the observation target, not zero parked cars. People, return transport and residual cleanup/serve-team headcounts are not modeled yet. No queued cars are removed to meet the clock. Changes apply on restart.</small>

@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ServiceSelect } from './SundayControls.jsx';
 import { PLAYBACK_SPEEDS } from './playback.js';
-import { formatServiceClock } from './sundayServices.js';
+import { configuredServiceOptions, updateServiceInputs, formatServiceClock } from './sundayServices.js';
 import { LOT_CAPACITY } from './parkingZones.js';
 
 export default function SimulationControls({options,setOptions,stats,running,onToggle,speed,onSpeed,onReset,children}) {
   const service=options.service;
+  const [editService,setEditService]=useState(service?.id??'nine');
+  const activeId=stats.serviceStatus?.id??service?.id;
+  useEffect(()=>{if(activeId)setEditService(activeId);},[activeId]);
+  const arrivals=configuredServiceOptions(options,editService);
+  const changeArrivals=patch=>{
+    setOptions(o=>updateServiceInputs(o,editService,patch));
+    onReset();
+  };
   return <section className="simulation-controls" aria-label="Start and configure traffic">
     <div className="simulation-primary">
       <ServiceSelect options={options} setOptions={setOptions} onReset={onReset}/>
@@ -29,6 +37,14 @@ export default function SimulationControls({options,setOptions,stats,running,onT
           onReset();
         }}/></label>)}
     </fieldset>
+    {service?.enabled&&<fieldset className="arrival-settings"><legend>Incoming traffic · changes restart the simulation</legend>
+      <label>Service to configure<select aria-label="Arrival settings service" value={editService} onChange={e=>setEditService(e.target.value)}>
+        <option value="nine">9:00 AM</option><option value="eleven">11:00 AM</option><option value="final">1:15 PM</option><option value="easter">Easter</option>
+      </select></label>
+      <label>Total incoming cars <strong>{arrivals.demand}</strong><input aria-label="Total incoming cars" type="range" min="0" max="2500" step="1" value={arrivals.demand} onChange={e=>changeArrivals({demand:Number(e.target.value)})}/></label>
+      <label>Equity arrivals <strong>{arrivals.equityPercent}% · {Math.ceil(arrivals.demand*arrivals.equityPercent/100)} cars</strong><input aria-label="Equity arrivals percentage" type="range" min="10" max="90" step="1" value={arrivals.equityPercent} onChange={e=>changeArrivals({equityPercent:Number(e.target.value)})}/></label>
+      <small role="status">{stats.serviceStatus?.label??service.label}: {stats.serviceStatus?.issued??0} / {stats.serviceStatus?.demand??service.demand} issued · {stats.entered?.[0]??0} Feeder / {(stats.entered?.[1]??0)+(stats.entered?.[2]??0)} Equity entered this run. Settings carry into each service.</small>
+    </fieldset>}
     {children}
   </section>;
 }

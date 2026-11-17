@@ -5,8 +5,7 @@ import { openParkingCapacity } from './parkingAvailability.js';
 import SundayControls from './SundayControls.jsx';
 import SimulationControls from './SimulationControls.jsx';
 import RouteSourcesPanel from './RouteSourcesPanel.jsx';
-import { serviceOptions, NEXT_SERVICE, formatServiceClock } from './sundayServices.js';
-import { serviceCarryOptions } from './serviceCarry.js';
+import { serviceOptions } from './sundayServices.js';
 import { SHUTTLE_CAR_EQUIVALENT, TRAFFIC_PRIORITY_ORDER } from './trafficPriority.js';
 import { initialLayout, makeItem, validateLayout, deleteItem, stats, STORAGE_KEY, ROLES, WORLD } from './model.js';
 import './styles.css';
@@ -57,8 +56,9 @@ function App() {
   function invalidateReplay() {
     setRunning(false);
   }
-  const [trafficOptions,setTrafficOptions]=useState(()=>{const service=serviceOptions('eleven');return {initialOccupancy:{...service.initialOccupancy},badgePercent:5,phase:'arrival',service:{enabled:true,...service},zonePreferences:{a:'auto',b:'auto',c:'auto'},shuttles:{enabled:true,activeCount:service.activeBuses,bFullPercent:100,randomDwell:true,dwellSeconds:45,cDirection:'auto',bStop:'circuit',dispatchMode:'demand',dispatchDuringDepartures:service.transition}};});
+  const [trafficOptions,setTrafficOptions]=useState(()=>{const service=serviceOptions('eleven');return {autoContinue:true,initialOccupancy:{...service.initialOccupancy},badgePercent:5,phase:'arrival',service:{enabled:true,...service},zonePreferences:{a:'auto',b:'auto',c:'auto'},shuttles:{enabled:true,activeCount:service.activeBuses,bFullPercent:100,randomDwell:true,dwellSeconds:45,cDirection:'auto',bStop:'circuit',dispatchMode:'demand',dispatchDuringDepartures:service.transition}};});
   const [trafficStats,setTrafficStats]=useState({active:0,entered:[0,0],exited:[0,0],waiting:[0,0]});
+  const currentServiceId=trafficStats.serviceStatus?.id??trafficOptions.service?.id;
   const [view,setView]=useState('3d'), [zoom,setZoom]=useState(1), [tab,setTab]=useState('lots'), [showRoutes,setShowRoutes]=useState(false);
   const [message,setMessage]=useState(''), [saved,setSaved]=useState('Saving…');
   const [history,setHistory]=useState([]), [confirmation,setConfirmation]=useState(null);
@@ -73,24 +73,6 @@ function App() {
     catch { setSaved('Local saving unavailable'); }
   },[layout]);
   useEffect(()=>()=>clearTimeout(messageTimer.current),[]);
-
-  // Commander (2026-11-13): pressing play at 9:00 rolls into 11:00 and then 1:15.
-  // The first idle carry checkpoint (arrivals issued, car roads clear) starts the
-  // next service at that same minute, keeping parked cars and A's latch.
-  const autoCarried=useRef(null);
-  useEffect(()=>{
-    const service=trafficOptions.service,carry=trafficStats.serviceCarry,currentId=trafficStats.serviceStatus?.id;
-    const nextId=NEXT_SERVICE[currentId];
-    if(!running||!service?.enabled||trafficOptions.autoContinue===false||!nextId||!carry||service.id!==currentId)return;
-    const key=`${currentId}@${carry.minute}`;
-    if(autoCarried.current===key)return;
-    let patch;
-    try { patch=serviceCarryOptions(trafficOptions,trafficStats,nextId,{continuous:true}); } catch { return; }
-    autoCarried.current=key;
-    setTrafficOptions(o=>({...o,...patch}));
-    setTrafficMode('continuous');setTrafficReset(v=>v+1);
-    notify(`Continuing into the ${nextId==='final'?'1:15':'11:00'} service at ${formatServiceClock(patch.service.beginMinute)} with parked cars carried.`);
-  },[trafficStats,running,trafficOptions]);
 
   function notify(text) {
     setMessage(text); clearTimeout(messageTimer.current);
@@ -178,9 +160,9 @@ function App() {
             <div className="traffic-phase" role="group" aria-label="Traffic phase">
               {['arrival','departure','mixed'].map(phase=><button disabled={trafficOptions.service?.enabled} key={phase} aria-pressed={!trafficOptions.service?.enabled&&trafficOptions.phase===phase} onClick={()=>setTrafficOptions(o=>({...o,phase}))}>{phase==='arrival'?'Arrivals · stay parked':phase==='departure'?'Departures · release cars':'Mixed manual traffic'}</button>)}
             </div>
-            <div className="traffic-rates">{['Feeder · south → north',`Equity Entrance → ${trafficOptions.service?.enabled&&trafficOptions.service.id==='final'?'B (C fallback)':'Lot C'}`,`Equity entrance/exit 2 → ${trafficOptions.service?.enabled&&trafficOptions.service.id==='final'?'B (C fallback)':'Lot C'}`].map((name,index)=><label key={name}>{name}<input disabled={trafficOptions.service?.enabled} aria-label={`${name} arrival rate`} type="range" min="0" max="90" step="6" value={trafficRates[index]} onChange={e=>setTrafficRates(r=>r.map((v,i)=>i===index?Number(e.target.value):v))}/><span>{trafficOptions.service?.enabled?'Scheduled':`${trafficRates[index]} cars/min`}</span></label>)}</div>
+            <div className="traffic-rates">{['Feeder · south → north',`Equity Entrance → ${trafficOptions.service?.enabled&&currentServiceId==='final'?'B (C fallback)':'Lot C'}`,`Equity entrance/exit 2 → ${trafficOptions.service?.enabled&&currentServiceId==='final'?'B (C fallback)':'Lot C'}`].map((name,index)=><label key={name}>{name}<input disabled={trafficOptions.service?.enabled} aria-label={`${name} arrival rate`} type="range" min="0" max="90" step="6" value={trafficRates[index]} onChange={e=>setTrafficRates(r=>r.map((v,i)=>i===index?Number(e.target.value):v))}/><span>{trafficOptions.service?.enabled?'Scheduled':`${trafficRates[index]} cars/min`}</span></label>)}</div>
             <small>{trafficStats.active} on road · {trafficStats.entered.reduce((a,b)=>a+b,0)} entered · {trafficStats.exited.reduce((a,b)=>a+b,0)} reached lot · {trafficStats.waiting.reduce((a,b)=>a+b,0)} waiting off-map</small>
-            <small>Feeder arrivals normally fill A → B → C, with 10% continuing along Corporate to B, then C, even while A is open. {trafficOptions.service?.enabled&&trafficOptions.service.id==='final'?'At 1:15, both Equity approaches use B’s main entrance; C is fallback only.':'Both Equity approaches enter staffed Lot C. If C is unavailable, Equity cars wait outside campus.'}</small>
+            <small>Feeder arrivals normally fill A → B → C, with 10% continuing along Corporate to B, then C, even while A is open. {trafficOptions.service?.enabled&&currentServiceId==='final'?'At 1:15, both Equity approaches use B’s main entrance; C is fallback only.':'Both Equity approaches enter staffed Lot C. If C is unavailable, Equity cars wait outside campus.'}</small>
             <div className={`capacity-status ${trafficStats.atCapacity?'at-capacity':''}`} role="status"><strong>{trafficStats.atCapacity?'General parking at capacity · send arrivals away':'Parking allocation active'}</strong><small>{trafficStats.sentAway??0} sent away · no overflow parking configured. Authorized badge parking is separate.</small></div>
             <small>{Object.values(trafficStats.departed??{}).reduce((a,b)=>a+b,0)} departed campus · {trafficStats.departing??0} exiting now. Cars become ready around their own service dismissal, including the final service. Lots A, B, and C use parking hubs; black permit parking uses its section staging point.</small>
             <small>Lot B exits: North splits between the north and west exits. South uses north; Banana uses west; Pocket uses north.</small>

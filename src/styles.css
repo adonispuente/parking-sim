@@ -265,3 +265,10 @@
   .map-quick-controls button { padding:10px 8px; font-size:12px; }
   .map-area,.world-app .map-area { height:calc(100svh - 361px - env(safe-area-inset-top,0px)); }
 }
+
+.arrival-settings { grid-column:1 / -1; display:grid; grid-template-columns:minmax(120px,.65fr) repeat(2,minmax(180px,1fr)); gap:8px 24px; margin:0; padding:10px 0 0; border:0; border-top:1px solid var(--line); }
+.arrival-settings legend { padding:0 0 4px; font-size:12px; }
+.arrival-settings label strong { font-variant-numeric:tabular-nums; }
+.arrival-settings input[type=range] { width:100%; padding:0; min-height:24px; accent-color:var(--ink); }
+.arrival-settings small { grid-column:1 / -1; color:#63745e; font-size:11px; }
+@media(max-width:700px) { .arrival-settings { grid-template-columns:1fr; gap:8px; } }

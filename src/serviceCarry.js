@@ -1,4 +1,4 @@
-import { SUNDAY_SERVICES, NEXT_SERVICE, serviceOptions } from './sundayServices.js';
+import { SUNDAY_SERVICES, NEXT_SERVICE, configuredServiceOptions } from './sundayServices.js';
 
 // A UI-ready options patch; no engine/controller objects cross a restart.
 // continuous:true starts the next service at the carry minute, so auto-play
@@ -12,7 +12,7 @@ export function serviceCarryOptions(options,stats,nextId,{continuous=false}={}) 
     throw new Error('Carry-forward requires completed arrivals and clear car routes');
   }
   const beginMinute=continuous?carry.minute:Math.max(next.beginMinute,carry.minute);
-  return {phase:'arrival',service:{enabled:true,...serviceOptions(nextId,{beginMinute})},
+  return {phase:'arrival',service:{enabled:true,...configuredServiceOptions(options,nextId,{beginMinute})},
     initialOccupancy:{...stats.occupancy},initialZoneOccupancy:{...stats.zoneOccupancy},
     initialServiceCarry:structuredClone(carry),
     shuttles:{...options.shuttles,activeCount:next.activeBuses,dispatchDuringDepartures:true}};

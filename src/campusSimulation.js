@@ -2,7 +2,7 @@ import { selectArrivalAccess, selectBDepartureAccess } from './trafficPolicy.js'
 import { attachShuttles } from './shuttles.js';
 import { advanceSharedTraffic } from './sharedTraffic.js';
 import { ZONE_BY_ID, GENERAL_CAPACITY, blankZones, distributeInitialOccupancy, lotTotals, chooseZone } from './parkingZones.js';
-import { createServiceController, seededFraction, serviceArrivalPriorities } from './sundayServices.js';
+import { createServiceController, seededFraction, serviceArrivalPriorities, NEXT_SERVICE, SUNDAY_SERVICES, configuredServiceOptions } from './sundayServices.js';
 import { zoneArrivalRoute, zoneDepartureRoute, redirectedArrivalRoute, feederReliefRoute, arrivalBypassesMain } from './parkingRoutes.js';
 import { attachAlphaQueueRelief, beforeAlphaDecision } from './alphaQueueRelief.js';
 import { onStreet } from './pavementRouting.js';
@@ -33,7 +33,10 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
     zonePreferences:{a:'auto',b:'auto',c:'auto',...options.zonePreferences},closedZones:[],gateStatus:{a:false,b:false,c:false},routingIssues:[],redirected:0,
   };
   const carry=options.service?.enabled?options.initialServiceCarry:null;
-  const service=options.service?.enabled?createServiceController({...options.service,initialGate:carry?.gate},state.zoneOccupancy):null;
+  let service=options.service?.enabled?createServiceController({...options.service,initialGate:carry?.gate},state.zoneOccupancy):null;
+  const originMinute=service?.preset.beginMinute;
+  const autoContinue=options.autoContinue===true;
+  const controllers=new Map(service?[[service.preset.id,service]]:[]);
   state.serviceController=service;state.transitionActive=service?.isTransition??false;
   const sync=()=>{
     state.occupancy=lotTotals(state.zoneOccupancy);state.parked={...state.occupancy};
@@ -86,7 +89,7 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
     const count=hub=>(state.cHubOccupancy[hub.id]??state.abHubOccupancy[hub.id]??0)+state.cars.filter(car=>car.phase==='arrival'&&(car.cHubId??car.abHubId)===hub.id).length;
     return hubs.reduce((best,hub)=>count(hub)<count(best)?hub:best).id;
   };
-  const currentOrdinals={a:0,b:0,c:0};
+  const currentOrdinals={};
   const updateServiceCarry=()=>{
     if(!service)return;
     const status=state.serviceStatus;
@@ -157,7 +160,19 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
       const item=(lotSettings??options.lotSettings??[]).find(x=>x.id===id||x.id===`lot-${id}`);
       return {id,capacity:GENERAL_CAPACITY[id],open:item?.open!==false};
     });
-    sync();service?.tick(state,live);
+    sync();
+    // Switch on the Sunday clock, even when previous-service roads are busy.
+    // All controllers share the engine origin; vehicles and buses keep moving.
+    while(service&&autoContinue&&NEXT_SERVICE[service.preset.id]&&
+      originMinute+state.clock/60+1e-8>=SUNDAY_SERVICES[NEXT_SERVICE[service.preset.id]].beginMinute) {
+      const nextId=NEXT_SERVICE[service.preset.id];
+      const gate={closed:service.gated.a,releaseMinute:state.serviceStatus.gates.a.releaseMinute,
+        reopenedMinute:service.reopenedAt.a==null?null:originMinute+service.reopenedAt.a/60};
+      service=createServiceController({...configuredServiceOptions(options,nextId),beginMinute:originMinute,initialGate:gate},state.zoneOccupancy);
+      controllers.set(nextId,service);
+      state.serviceController=service;state.transitionActive=service.isTransition;
+    }
+    service?.tick(state,live);
     state.gateStatus={...(service?.gated??{a:false,b:false,c:false})};
     const open=id=>live.find(s=>s.id===id).open&&!state.gateStatus[id];
     const zoneFor=(lot,badge=false)=>chooseZone(lot,state.zoneOccupancy,state.zoneReserved,{category:badge?'badge':'general',preferred:state.zonePreferences[lot],closed:state.closedZones});
@@ -210,10 +225,10 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
       state.cars.push({...parked,lane:index,access:key,routeName:state.lanes[index].name,phase:'departing',distance:0,
         speed:2.6+seededFraction(parked.id)*.5,exitDirection:['a','badgeA','bWest'].includes(key)?'feeder-north':'equity-east'});
     }
-    const choose=(source,badge,parkingIntent='general')=>{
+    const choose=(source,badge,parkingIntent='general',serviceId=state.arrivalQueues[source][0]?.serviceId??service?.preset.id)=>{
       if(badge&&(options.accessPolicy?.blackPermit?.badge??true)&&live[0].open&&zoneFor('a',true))return {target:'a',zone:'aBadge',badgePool:true};
       if(badge)return null; // Badge permission never creates general spaces in a full badge zone.
-      const priorities=serviceArrivalPriorities(service?.preset.id,source,parkingIntent,options.arrivalPriority);
+      const priorities=serviceArrivalPriorities(serviceId,source,parkingIntent,options.arrivalPriority);
       if(source===0&&parkingIntent==='general'&&state.alphaQueueRelief.active&&priorities[0]==='a'&&open('b')) {
         const zone=zoneFor('b');if(zone)return {target:'b',zone,badgePool:false,alphaDiverted:true};
       }
@@ -237,7 +252,7 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
       if((open(car.target)||reservedBeforeLatch)&&!relief){car.holdForGate=false;continue;}
       const pixel=fromWorld([p.x,p.z]);if(!onStreet(pixel))continue;
       state.zoneReserved[car.zone]--;sync();
-      const next=relief?{target:'b',zone:relief,badgePool:false,alphaDiverted:true}:choose(car.source,false,car.parkingIntent);
+      const next=relief?{target:'b',zone:relief,badgePool:false,alphaDiverted:true}:choose(car.source,false,car.parkingIntent,car.serviceId);
       if(!next){state.zoneReserved[car.zone]++;car.holdForGate=true;continue;}
       const selection=selectArrivalAccess({target:next.target,source:car.source,policy:options.accessPolicy});
       const assignedHub=arrivalHub(next.zone),cHubId=next.target==='c'?assignedHub:undefined,abHubId=next.target!=='c'?assignedHub:undefined;
@@ -286,10 +301,10 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
       try{index=getLane(selection.route,next.zone,false,assignedHub);}catch(error){logIssue(error);continue;}
       if(!startClear(index))continue;
       const car={id:sequence++,lane:index,routeName:state.lanes[index].name,phase:'arrival',distance:0,source,...next,cHubId,abHubId,access:selection.access,badge,
-        parkingIntent,cohort:'current',speed:2.5+seededFraction(sequence)*.65};
+        parkingIntent,serviceId:request?.serviceId??service?.preset.id,cohort:'current',speed:2.5+seededFraction(sequence)*.65};
       state.zoneReserved[next.zone]++;state.assignments[next.target]++;state.cars.push(car);
       if(next.alphaDiverted)state.alphaQueueRelief.assigned++;
-      state.routeHistory.push({id:car.id,source,target:car.target,zone:car.zone,cHubId,abHubId,access:car.access,arrivalRoute:car.routeName,badge,badgePool:car.badgePool,parkingIntent});
+      state.routeHistory.push({id:car.id,source,target:car.target,zone:car.zone,cHubId,abHubId,access:car.access,arrivalRoute:car.routeName,badge,badgePool:car.badgePool,parkingIntent,serviceId:car.serviceId});
       state.waiting[source]--;state.entered[source]++;state.arrivalQueues[source].shift();state.pendingCategory[source]=null;state.pendingIntent[source]=null;
       if(source===0&&!request&&!badge)manualFeederCount++;
       sync();
@@ -313,7 +328,9 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
         // parkedRecord strips it from transferable carry checkpoints.
         // Assign the quota at the actual parked lot, not an earlier reservation:
         // a manually closed lot may have redirected this arrival en route.
-        const timing=service?service.departureMetadata(currentOrdinals[car.target]++,car.target,service.preset.id):{readyAt:Infinity};
+        const controller=controllers.get(car.serviceId)??service;
+        const ordinals=currentOrdinals[car.serviceId]??={a:0,b:0,c:0};
+        const timing=controller?controller.departureMetadata(ordinals[car.target]++,car.target,car.serviceId??controller.preset.id):{readyAt:Infinity};
         state.parkedVehicles.push({...parkedRecord(car),...timing,lane:car.lane,phase:'parked',parkedAt:state.clock});
         state.observeShuttleParking?.(state.parkedVehicles.at(-1));
       } else {state.departed[car.target]++;if(car.source!==null)state.departedBySource[car.source]++;}
