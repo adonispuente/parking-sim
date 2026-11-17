@@ -13,6 +13,12 @@ npm run dev
 
 Open the local URL printed by Vite (usually `http://localhost:5173`). `npm run build` creates `dist/`; `npm run preview` serves that build. The app runs locally in the browser, without an API server or database. Layout edits persist in browser local storage on the current device.
 
+## Deploy to GitHub Pages
+
+In the repository's **Settings → Pages**, set **Build and deployment → Source** to **GitHub Actions**. The **Deploy to GitHub Pages** workflow builds and publishes `dist/` on pushes to `main`. You can also run it manually from the **Actions** tab.
+
+The workflow reports the deployed URL, which is [adonispuente.github.io/parking-sim/](https://adonispuente.github.io/parking-sim/) for this repository's default Pages domain. Vite generates relative asset URLs so the build works under the repository path.
+
 ## Using the simulator
 
 The page opens on the 11:00 service. Choose the service time, playback speed (up to 40×), and initial parked counts above the map, then press **Start**. **Reset** sits beside Start and keeps the selected inputs. The same controls appear first on mobile. Satellite overlay, Routes, and Lot fullness toggles sit at the top too; enabling the satellite overlay switches to Top view. Routes shows or hides both route lines and parking hubs together. Lot fullness independently toggles occupancy shading. Flow explanations and advanced settings are in the expandable section below the map. The dashboard shows arrivals, occupied and reserved parking, departures, and shuttle status. Change lot availability and section preferences to explore routing. Playback supports speed changes and seeking; Top/3D, labels, occupancy, photo, and Routes controls help inspect the map. Routes also shows source geometry and provisional joins; the Route sources panel reports what the engine actually uses.
