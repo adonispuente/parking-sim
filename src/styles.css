@@ -251,8 +251,7 @@
   .world-bottom { bottom:calc(14px + env(safe-area-inset-bottom,0px)); }
 }
 @media(max-width:700px) {
-  .zoom-controls { flex-direction:row; }
-  .zoom-controls button + button { border-top:0; border-left:1px solid #46644d; }
+  .zoom-controls { display:none; }
 }
 
 .map-quick-controls { grid-column:1/-1; display:flex; flex-wrap:wrap; gap:8px; }
