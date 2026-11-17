@@ -141,3 +141,17 @@ test('demand frames and seek reconstruction reproduce ledger, assignment and veh
   assert.deepEqual(captureTrafficFrame(playback.simulation), first);
   assert.equal(first.shuttleDemand.source, 'controlled demand override');
 });
+
+test('a blocked bus still at home follows changed demand before leaving',()=>{
+  const state=setup({b:{toHome:40}},{activeCount:1});
+  state.cars.push({id:'block',lane:state.shuttleLaneIds.b[0],distance:0});
+  state.prepareShuttles(live);
+  assert.equal(state.shuttles[0].circuit,'b');
+  assert.ok(!state.cars.some(car=>car.fleetBus));
+  state.setShuttleConfig({demandOverride:{cSouth:{toHome:80}}});
+  state.prepareShuttles(live);
+  assert.equal(state.shuttles[0].circuit,'cSouth');
+  assert.equal(state.shuttleDemand.areas.b.committed.buses,0);
+  assert.equal(state.shuttleDemand.areas.cSouth.committed.buses,1);
+  assert.ok(!state.cars.some(car=>car.fleetBus));
+});

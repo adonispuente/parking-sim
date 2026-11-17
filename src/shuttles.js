@@ -118,11 +118,11 @@ export function attachShuttles(state, makeLane, options={}) {
       }
       if(state.clock<bus.readyAt)continue;
       if(state.clock<nextHomeLaunch)continue;
-      if(bus.circuit) {launch(bus);continue;}
+      if(bus.circuit&&!demandMode()) {launch(bus);continue;}
       if(demandMode()) {
         const requested=state.shuttleConfig.cDirection;
         const allowed=requested==='north'?['b','cNorth']:requested==='south'?['b','cSouth']:undefined;
-        const decision=demand.choose(allowed);
+        const decision=demand.choose(allowed,bus);
         demand.reserve(bus,decision);
         if(!decision.area){bus.phase='demand-hold';bus.dwellStop='home';bus.stationary=stopPoints.home;continue;}
         bus.circuit=decision.area;bus.stop=decision.area==='b'?'bSouth':decision.area;
