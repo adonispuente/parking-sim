@@ -47,7 +47,9 @@ test('incoming cars create an early reservation, become waiting riders once, and
   assert.equal(state.shuttleDemand.areas.cNorth.incomingCars,1);
   const bus={number:1};state.shuttles.push(bus);demand.reserve(bus,demand.choose());
   assert.equal(bus.demandAssignment.toHome,1.25);
-  assert.equal(demand.choose().area,null,'one car must not attract the whole fleet');
+  assert.equal(demand.choose().area,'cNorth','an exclusive C arrival stream stages the whole available fleet');
+  const stagingBus={number:2};state.shuttles.push(stagingBus);demand.reserve(stagingBus,demand.choose());
+  assert.equal(stagingBus.demandAssignment.toHome,0,'staging another bus must not invent riders');
   const car=state.cars[0];
   demand.register(car,true);demand.register(car,true);demand.publish();
   const row=state.shuttleDemand.areas.cNorth;
@@ -57,7 +59,7 @@ test('incoming cars create an early reservation, become waiting riders once, and
   assert.equal(row.served.toHome,0);
   state.cars=[];demand.update();demand.pickup(bus,'cNorth');demand.publish();
   assert.equal(state.shuttleDemand.areas.cNorth.served.toHome,1.25);
-  assert.equal(demand.choose().area,null);
+  demand.update();assert.equal(demand.choose().area,null);
 });
 
 test('a canceled or redirected arrival updates the forecast without inventing a rider queue',()=>{
@@ -89,4 +91,40 @@ test('the real bus state machine sends four of five buses toward C before those 
   assert.equal(state.shuttles.filter(bus=>bus.circuit?.startsWith('c')).length,4);
   assert.equal(state.cars.filter(car=>car.fleetBus).length,5);
   assert.ok(Object.values(state.shuttleDemand.areas).every(area=>area.waiting.toHome===0));
+});
+
+test('an exclusive C stream sends all five available buses, even with older B demand and enough buses already assigned',()=>{
+  const makeLane=points=>{
+    const path=new THREE.CurvePath();
+    for(let i=1;i<points.length;i++)path.add(new THREE.LineCurve3(new THREE.Vector3(points[i-1][0],0,points[i-1][1]),new THREE.Vector3(points[i][0],0,points[i][1])));
+    return {path,length:path.getLength()};
+  };
+  const state={clock:0,cars:[],lanes:[],occupancy:{b:100},zoneOccupancy:{},parkedVehicles:[],phase:'arrival'};
+  attachShuttles(state,makeLane,{activeCount:5,dispatchMode:'demand',dwellSeconds:0});
+  for(let i=0;i<100;i++)state.observeShuttleParking({id:`old-b-${i}`,target:'b',zone:'bNorth'});
+  const lane=state.shuttleLaneIds.cNorth[1];
+  state.cars=arrivals(0,1,1).map(car=>({...car,lane,distance:state.lanes[lane].length/2}));
+  for(let i=0;i<5;i++){state.clock=300+i*30;state.prepareShuttles([{id:'b',open:true,capacity:487}]);}
+  assert.equal(state.shuttles.filter(bus=>bus.circuit?.startsWith('c')).length,5);
+  assert.equal(state.cars.filter(car=>car.fleetBus).length,5);
+  assert.equal(state.shuttleDemand.arrivalFocus,'c');
+  assert.equal(state.shuttleDemand.areas.b.waiting.toHome,125,'B riders remain accounted for');
+  const reserved=state.shuttles.reduce((sum,bus)=>sum+bus.demandAssignment.toHome,0);
+  assert.equal(reserved,2.5,'five staged buses do not duplicate the two arriving cars’ rider estimate');
+});
+
+test('C-only focus clears when other lots receive cars or C pickups finish',()=>{
+  const {state,demand}=setup(0,3,0);
+  demand.publish();assert.equal(state.shuttleDemand.arrivalFocus,'c');
+  state.cars.push({id:'a-car',target:'a',phase:'arrival'});
+  demand.update();demand.publish();assert.equal(state.shuttleDemand.arrivalFocus,null);
+  state.cars=state.cars.filter(car=>car.target==='c');
+  demand.update();
+  for(const car of state.cars)demand.register(car,true);
+  state.cars=[];demand.update();demand.publish();
+  assert.equal(state.shuttleDemand.arrivalFocus,'c','focus lasts while newly parked C riders still wait');
+  const bus={number:1};state.shuttles.push(bus);demand.reserve(bus,demand.choose());demand.pickup(bus,'cNorth');
+  demand.update();demand.publish();
+  assert.equal(state.shuttleDemand.arrivalFocus,null);
+  assert.equal(demand.choose().area,null);
 });

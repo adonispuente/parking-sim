@@ -44,9 +44,9 @@ export default function SimulationControls({options,setOptions,stats,running,onT
       <label>Total incoming cars <strong>{arrivals.demand}</strong><input aria-label="Total incoming cars" type="range" min="0" max="2500" step="1" value={arrivals.demand} onChange={e=>changeArrivals({demand:Number(e.target.value)})}/></label>
       <label>Equity arrivals <strong>{arrivals.equityPercent}%{arrivals.equityPercent===10?' (default)':''} · {Math.ceil(arrivals.demand*arrivals.equityPercent/100)} cars</strong><input aria-label="Equity arrivals percentage" type="range" min="10" max="90" step="1" value={arrivals.equityPercent} onChange={e=>changeArrivals({equityPercent:Number(e.target.value)})}/></label>
       {Object.values(stats.serviceTraffic??{}).map(totals=><small key={totals.id} aria-label={`${totals.label} arrival accounting`}>
-        <strong>{totals.label}: {totals.demand} incoming cars</strong> · {totals.scheduled} still scheduled · {totals.waiting} waiting off-map · {totals.onRoad} on road · {totals.reachedParking} reached parking · {totals.turnedAway} turned away
+        <strong>{totals.label}: {totals.demand} incoming cars</strong> · {totals.scheduled} still scheduled · {totals.waiting} waiting off-map · {totals.onRoad} heading to parking · {totals.reachedParking} reached parking · {totals.turnedAway} redirected past campus ({totals.passingThrough??0} passing through · {totals.waitingToPass??0} waiting to join Feeder)
       </small>)}
-      {arrivals.demand>Object.values(LOT_CAPACITY).reduce((sum,n)=>sum+n,0)&&<small>Campus has {Object.values(LOT_CAPACITY).reduce((sum,n)=>sum+n,0).toLocaleString()} parking spaces. Excess demand is counted as waiting or turned away; it cannot all park at once.</small>}
+      {arrivals.demand>Object.values(LOT_CAPACITY).reduce((sum,n)=>sum+n,0)&&<small>Campus has {Object.values(LOT_CAPACITY).reduce((sum,n)=>sum+n,0).toLocaleString()} parking spaces. Excess cars queue or continue past campus via Feeder; they cannot all park at once.</small>}
       <small role="status">{stats.serviceStatus?.label??service.label}: {stats.serviceStatus?.issued??0} / {stats.serviceStatus?.demand??service.demand} issued · {stats.entered?.[0]??0} Feeder / {(stats.entered?.[1]??0)+(stats.entered?.[2]??0)} Equity entered this run. Settings carry into each service.</small>
     </fieldset>}
     {children}

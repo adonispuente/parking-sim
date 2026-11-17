@@ -68,7 +68,8 @@ test('all general-zone routes avoid roof/blocked polygons and B routes visit sou
 test('badge arrivals cannot exceed their51 slots or claim general spaces',()=>{
   const s=createCampusTraffic({badgePercent:100,initialOccupancy:{a:360,b:487,c:686}});
   s.waiting[0]=52;advance(s,500);
-  assert.equal(s.zoneOccupancy.aBadge,51);assert.equal(s.waiting[0],1);assert.equal(s.occupancy.a,411);
+  assert.equal(s.zoneOccupancy.aBadge,51);assert.equal(s.waiting[0],0);assert.equal(s.occupancy.a,411);
+  assert.equal(s.sentAway,1);assert.equal(s.throughExited[0],1);
   assert.ok(s.routeHistory.every(c=>c.access==='badgeA'));
 });
 

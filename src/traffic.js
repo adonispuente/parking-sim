@@ -43,7 +43,7 @@ export const onTwoWayStreet=p=>TWO_WAY_STREETS.some(r=>inPolygon(p,r));
 export const FEEDER_MIDDLE_OUTBOUND_PX=-6;
 const FEEDER_STREET=shapeAt(54).points;
 export const onFeederStreet=p=>inPolygon(p,FEEDER_STREET);
-export const usesFeederMiddleLane=name=>/^Departure · bWest · /.test(name);
+export const usesFeederMiddleLane=name=>/^Departure · bWest · |^Through · /.test(name);
 const edgeAt=(p,nx,ny,sign)=>{for(let s=1;s<=30;s++)if(!onStreet([p[0]+nx*s*sign,p[1]+ny*s*sign]))return s-.5;return null;};
 const unit=(a,b)=>{const dx=b[0]-a[0],dy=b[1]-a[1],n=Math.hypot(dx,dy);return n<1e-9?null:[dx/n,dy/n];};
 function resampleStreets(coords) {

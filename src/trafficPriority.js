@@ -5,7 +5,7 @@ export const TRAFFIC_PRIORITY_ORDER = Object.freeze(['Shuttles', 'Departures', '
 
 export function trafficClass(vehicle) {
   if (vehicle.fleetBus || vehicle.shuttle) return 'shuttle';
-  if (['departing', 'departure', 'exiting'].includes(vehicle.phase)) return 'departure';
+  if (['departing', 'departure', 'exiting', 'through'].includes(vehicle.phase)) return 'departure';
   return 'arrival';
 }
 

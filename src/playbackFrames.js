@@ -1,6 +1,7 @@
 // Public presentation only: never restore engine closures from these fields.
 const FIELDS = [
   'staffing', 'clock', 'cars', 'entered', 'exited', 'waiting', 'occupancy', 'reserved',
+  'overflowWaiting', 'throughEntered', 'throughExited',
   'assignments', 'parked', 'overflow', 'sentAway', 'atCapacity', 'departed',
   'badgeParking', 'badgeReserved', 'zoneOccupancy', 'zoneReserved',
   'serviceStatus', 'serviceTraffic', 'serviceCarry', 'shuttleBreak', 'gateStatus', 'routingIssues',

@@ -11,7 +11,7 @@ export function createShuttleDemand(state, tripSeconds) {
     lastService: null, lastAssigned: null, incomingCars: 0, incomingUnits: 0,
   }]));
   const events = [], known = new Set(), inbound = new Map();
-  let overrideSignature = '', source = 'estimated vehicle events';
+  let overrideSignature = '', source = 'estimated vehicle events', allArrivalsToC=false;
   let lastDecision = { area: null, reason: 'Waiting for pickup demand', clock: 0 };
   const config = () => state.shuttleConfig ?? {};
   const unitsPerCar = () => Math.min(8, nonnegative(config().estimatedPeoplePerCar ?? 2.5))
@@ -59,12 +59,20 @@ export function createShuttleDemand(state, tripSeconds) {
     // already parked are registered once, so this forecast never duplicates them.
     inbound.clear();
     for(const area of Object.values(areas)){area.incomingCars=0;area.incomingUnits=0;}
+    let incomingC=0,incomingElsewhere=0;
     if(!override)for(const car of state.cars??[]) {
+      if(car.phase!=='arrival'||car.fleetBus||known.has(car.id))continue;
+      if(car.target==='c')incomingC++;else incomingElsewhere++;
       const id=areaOf(car);
-      if(!id||car.phase!=='arrival'||car.fleetBus||known.has(car.id))continue;
+      if(!id)continue;
       const units=unitsPerCar();
       inbound.set(car.id,{id,units});areas[id].incomingCars++;areas[id].incomingUnits+=units;
     }
+    const cWaiting=areas.cNorth.waiting.toHome+areas.cSouth.waiting.toHome;
+    // Keep the whole available fleet following an exclusive C arrival stream,
+    // including the short gap after cars park and before their pickups clear.
+    allArrivalsToC=!override&&incomingElsewhere===0&&
+      (incomingC>0||(allArrivalsToC&&cWaiting>1e-8));
     while (events.length && events[0].at <= state.clock + 1e-8) {
       const event = events.shift();
       if (!override) add(event.id, 'toLot', event.units);
@@ -91,6 +99,11 @@ export function createShuttleDemand(state, tripSeconds) {
   }));
   const choose = (allowed = DEMAND_AREAS, exclude = null) => {
     const snapshot = rows(exclude);
+    if(allArrivalsToC) {
+      const branches=allowed.filter(id=>id==='cNorth'||id==='cSouth');
+      branches.sort((a,b)=>snapshot[b].score-snapshot[a].score||DEMAND_AREAS.indexOf(a)-DEMAND_AREAS.indexOf(b));
+      if(branches.length)return {area:branches[0],reason:'All arriving cars are going to C: send every available shuttle'};
+    }
     const eligible = allowed.filter(id => snapshot[id].unmet.toHome + snapshot[id].unmet.toLot > 1e-8);
     const maxWait = Math.max(30, nonnegative(config().demandMaxWaitSeconds ?? 240));
     const overdue = eligible.filter(id => snapshot[id].ageSeconds >= maxWait);
@@ -138,7 +151,7 @@ export function createShuttleDemand(state, tripSeconds) {
     if (area.waiting.toHome + area.waiting.toLot <= 1e-8) area.since = null;
   };
   const publish = () => {
-    state.shuttleDemand = { source, units: 'estimated riders (not boardings)', areas: rows(), lastDecision: { ...lastDecision },
+    state.shuttleDemand = { source, arrivalFocus:allArrivalsToC?'c':null, units: 'estimated riders (not boardings)', areas: rows(), lastDecision: { ...lastDecision },
       assumptions: { peoplePerCar: config().estimatedPeoplePerCar ?? 2.5, rideShare: config().estimatedRideShare ?? .5,
         tripServiceUnits: capacity(), maxWaitSeconds: config().demandMaxWaitSeconds ?? 240 } };
   };

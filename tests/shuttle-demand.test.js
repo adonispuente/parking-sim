@@ -155,3 +155,21 @@ test('a blocked bus still at home follows changed demand before leaving',()=>{
   assert.equal(state.shuttleDemand.areas.cSouth.committed.buses,1);
   assert.ok(!state.cars.some(car=>car.fleetBus));
 });
+
+
+test('a moving B bus finishes its circuit then follows exclusive C arrivals despite older B demand',()=>{
+  const state=setup({}, {activeCount:1,demandOverride:undefined});
+  for(let i=0;i<100;i++)state.observeShuttleParking({id:`old-b-${i}`,target:'b',zone:'bNorth'});
+  state.prepareShuttles(live);
+  const bus=state.shuttles[0],moving=state.cars.find(car=>car.fleetBus),originalLane=moving.lane;
+  assert.equal(bus.circuit,'b');
+  const lane=state.shuttleLaneIds.cNorth[1];
+  state.cars.push({id:'c-incoming',phase:'arrival',target:'c',zone:'cNorth',lane,distance:state.lanes[lane].length/2});
+  state.prepareShuttles(live);
+  assert.equal(moving.lane,originalLane);assert.equal(bus.circuit,'b');
+  finish(state,bus);state.prepareShuttles(live);finish(state,bus);
+  state.prepareShuttles(live);finish(state,bus);
+  state.clock=20;state.prepareShuttles(live);
+  assert.equal(bus.circuit,'cNorth');
+  assert.ok(state.shuttleDemand.areas.b.waiting.toHome>0);
+});

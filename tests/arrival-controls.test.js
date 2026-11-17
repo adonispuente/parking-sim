@@ -53,14 +53,16 @@ test('feeder spills into B then C while Equity never enters through a C exit',()
   }
 });
 
-test('full campus sends all new arrivals away without queues or overflow parking',()=>{
+test('full campus redirects new arrivals along public roads without overflow parking',()=>{
   const state=createCampusTraffic({initialOccupancy:{a:411,b:487,c:686}});
   advance(state,60,[60,60,60]);
   assert.equal(state.atCapacity,true);
   assert.equal(sum(state.occupancy),1584);
   assert.ok(state.sentAway>=177);
   assert.equal(sum(state.waiting),0);
-  assert.equal(state.cars.length,0);
+  assert.ok(state.cars.length>0);
+  assert.ok(state.cars.every(car=>car.phase==='through'));
+  assert.equal(sum(state.throughEntered)+sum(state.overflowWaiting),state.sentAway);
   assert.equal(state.routeHistory.length,0);
 });
 
