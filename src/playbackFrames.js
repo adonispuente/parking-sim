@@ -3,7 +3,7 @@ const FIELDS = [
   'staffing', 'clock', 'cars', 'entered', 'exited', 'waiting', 'occupancy', 'reserved',
   'assignments', 'parked', 'overflow', 'sentAway', 'atCapacity', 'departed',
   'badgeParking', 'badgeReserved', 'zoneOccupancy', 'zoneReserved',
-  'serviceStatus', 'serviceCarry', 'shuttleBreak', 'gateStatus', 'routingIssues',
+  'serviceStatus', 'serviceTraffic', 'serviceCarry', 'shuttleBreak', 'gateStatus', 'routingIssues',
   'aDepartureControl', 'feederOfficer', 'corporateExitJunction', 'northernRadio',
   'blackPermitControl', 'equityClayStop', 'priorityWaiting',
   'shuttleDispatchMode', 'shuttles', 'shuttleDemand', 'cRoundabout', 'cEntrance', 'cHubOccupancy', 'abHubOccupancy',

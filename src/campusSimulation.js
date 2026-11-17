@@ -37,6 +37,12 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
   const originMinute=service?.preset.beginMinute;
   const autoContinue=options.autoContinue===true;
   const controllers=new Map(service?[[service.preset.id,service]]:[]);
+  state.serviceTraffic=structuredClone(carry?.serviceTraffic??{});
+  const registerService=controller=>{
+    state.serviceTraffic[controller.preset.id]??={id:controller.preset.id,label:controller.preset.label,
+      demand:controller.arrivals.length,entered:0,reachedParking:0,turnedAway:0};
+  };
+  if(service)registerService(service);
   state.serviceController=service;state.transitionActive=service?.isTransition??false;
   const sync=()=>{
     state.occupancy=lotTotals(state.zoneOccupancy);state.parked={...state.occupancy};
@@ -92,11 +98,17 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
   const currentOrdinals={};
   const updateServiceCarry=()=>{
     if(!service)return;
+    for(const [id,controller] of controllers) {
+      const totals=state.serviceTraffic[id];
+      totals.issued=controller.issued;totals.scheduled=totals.demand-totals.issued;
+      totals.waiting=totals.issued-totals.entered-totals.turnedAway;
+      totals.onRoad=totals.entered-totals.reachedParking;
+    }
     const status=state.serviceStatus;
     const idle=status.remaining===0&&state.waiting.every(n=>n===0)&&Object.values(state.reserved).every(n=>n===0)&&!state.cars.some(car=>!car.fleetBus);
     // Only expose a transferable checkpoint after cars finish their road legs.
     // Readiness is absolute; lane/controller closures are rebuilt, never copied.
-    state.serviceCarry=idle?{minute:status.minute,parkedVehicles:state.parkedVehicles.map(parkedRecord),
+    state.serviceCarry=idle?{minute:status.minute,serviceTraffic:structuredClone(state.serviceTraffic),parkedVehicles:state.parkedVehicles.map(parkedRecord),
       gate:{closed:service.gated.a,releaseMinute:status.gates.a.releaseMinute,
         reopenedMinute:service.reopenedAt.a==null?null:service.preset.beginMinute+service.reopenedAt.a/60}}:null;
   };
@@ -169,7 +181,7 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
       const gate={closed:service.gated.a,releaseMinute:state.serviceStatus.gates.a.releaseMinute,
         reopenedMinute:service.reopenedAt.a==null?null:originMinute+service.reopenedAt.a/60};
       service=createServiceController({...configuredServiceOptions(options,nextId),beginMinute:originMinute,initialGate:gate},state.zoneOccupancy);
-      controllers.set(nextId,service);
+      controllers.set(nextId,service);registerService(service);
       state.serviceController=service;state.transitionActive=service.isTransition;
     }
     service?.tick(state,live);
@@ -286,14 +298,32 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
       const request=state.arrivalQueues[source][0];
       if(!state.pendingIntent[source])state.pendingIntent[source]=request?.parkingIntent??(source===0&&manualFeederCount%10===9?'corporate':'general');
       let parkingIntent=state.pendingIntent[source];
-      if(!state.pendingCategory[source])state.pendingCategory[source]=source===0&&(!request||parkingIntent==='general')&&seededFraction(sequence+37)*100<state.badgePercent?'badge':'general';
+      if(!state.pendingCategory[source]) {
+        // Decide once per scheduled request, independently of lane admission.
+        // A full badge pool must not repeatedly classify every following car
+        // using the same unadvanced vehicle sequence number.
+        const category=request?.category??(source===0&&(!request||parkingIntent==='general')&&
+          seededFraction((request?.arrivalOrdinal??sequence)+37)*100<state.badgePercent?'badge':'general');
+        state.pendingCategory[source]=category;
+        if(request)request.category=category;
+      }
       // The Corporate bypass quota applies to general traffic, not authorized
       // badge arrivals. Keep manual badge-only scenarios eligible for Black Permit.
       if(state.pendingCategory[source]==='badge')parkingIntent=state.pendingIntent[source]='general';
       const badge=state.pendingCategory[source]==='badge',next=choose(source,badge,parkingIntent);
       if(!next) {
         const generalFull=ids.every(id=>!zoneFor(id));
-        if(generalFull&&!badge){const n=state.waiting[source];state.sentAway+=n;state.sentAwayBySource[source]+=n;state.denied+=n;state.overflow+=n;state.waiting[source]=0;state.arrivalQueues[source]=[];state.pendingCategory[source]=null;state.pendingIntent[source]=null;}
+        if(generalFull&&!badge){
+          const n=state.waiting[source];
+          for(const queued of state.arrivalQueues[source])if(state.serviceTraffic[queued.serviceId])state.serviceTraffic[queued.serviceId].turnedAway++;
+          state.sentAway+=n;state.sentAwayBySource[source]+=n;state.denied+=n;state.overflow+=n;
+          state.waiting[source]=0;state.arrivalQueues[source]=[];state.pendingCategory[source]=null;state.pendingIntent[source]=null;
+        } else if(request) {
+          // Keep the car waiting for eligible parking, while following requests
+          // can use other lots. Preserve category, intent and service identity.
+          state.arrivalQueues[source].push(state.arrivalQueues[source].shift());
+          state.pendingCategory[source]=null;state.pendingIntent[source]=null;
+        }
         continue;
       }
       const selection=selectArrivalAccess({target:next.target,source,category:badge?'badge':'general',policy:options.accessPolicy});let index;
@@ -305,6 +335,7 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
       state.zoneReserved[next.zone]++;state.assignments[next.target]++;state.cars.push(car);
       if(next.alphaDiverted)state.alphaQueueRelief.assigned++;
       state.routeHistory.push({id:car.id,source,target:car.target,zone:car.zone,cHubId,abHubId,access:car.access,arrivalRoute:car.routeName,badge,badgePool:car.badgePool,parkingIntent,serviceId:car.serviceId});
+      if(state.serviceTraffic[car.serviceId])state.serviceTraffic[car.serviceId].entered++;
       state.waiting[source]--;state.entered[source]++;state.arrivalQueues[source].shift();state.pendingCategory[source]=null;state.pendingIntent[source]=null;
       if(source===0&&!request&&!badge)manualFeederCount++;
       sync();
@@ -323,6 +354,7 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
       if(car.distance<state.lanes[car.lane].length)return true;
       if(car.fleetBus){state.completeShuttle(car);return false;}
       if(car.phase==='arrival') {
+        if(state.serviceTraffic[car.serviceId])state.serviceTraffic[car.serviceId].reachedParking++;
         state.exited[car.source]++;state.zoneReserved[car.zone]--;state.zoneOccupancy[car.zone]++;
         // Retain inbound lane as local endpoint evidence for continuity checks;
         // parkedRecord strips it from transferable carry checkpoints.

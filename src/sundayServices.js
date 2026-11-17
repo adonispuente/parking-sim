@@ -141,7 +141,7 @@ export function createServiceController(config, initialZones) {
     // Alternate the Equity entrances independently of the overall arrival index;
     // a regular ten-percent cadence must not accidentally select only one origin.
     const source=equity?(equityIndex++%2?2:1):0;
-    return {due,source,serviceId:preset.id,parkingIntent:corporate?'corporate':'general'};
+    return {due,source,arrivalOrdinal:i,serviceId:preset.id,parkingIntent:corporate?'corporate':'general'};
   }).sort((a,b)=>a.due-b.due);
   const started=lotTotals(initialZones,false);
   const initialGate=config.initialGate;
@@ -149,6 +149,7 @@ export function createServiceController(config, initialZones) {
   let releaseMinute=initialGate?.releaseMinute??(gated.a?timeline.previousDismissalMinute:null);
   let cursor=0;
   return {
+    get issued(){return cursor;},
     settings,preset,gated,reopenedAt:initialGate?.reopenedMinute!=null?{a:(initialGate.reopenedMinute-preset.beginMinute)*60}:{},arrivals,
     isTransition:preset.transition,
     departureMetadata(ordinal,lot,serviceId=(PREVIOUS_SERVICE[preset.id]??preset.id)) {
