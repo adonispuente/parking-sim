@@ -47,3 +47,32 @@ test('other Lot B departure legs are unchanged from the 2026-11-07 baseline', ()
   for(const [id,px] of Object.entries(baseline)){const [access,zone]=id.split(':');
     assert.ok(Math.abs(length(internalLeg(access,zone))-px)<.1,`${id} ${length(internalLeg(access,zone)).toFixed(1)} vs ${px}`);}
 });
+
+// Production cars depart from the drawn hubs, rather than zone staging.
+test('every B North hub reaches the north exit without touring B South', async () => {
+  const { abHubsForZone }=await import('../src/abHubSource.js');
+  const { clearSegment, drivableAllowed }=await import('../src/sourceRouting.js');
+  for(const hub of abHubsForZone('bNorth')) {
+    const route=zoneDepartureRoute('bNorth','bNorth',hub.id);
+    const k=route.findIndex(p=>distance(p,VECTOR_ROUTES.departure.bNorth[0])<.001);
+    assert.ok(k>0,`${hub.id} reaches the existing north exit`);
+    const leg=route.slice(0,k+1);
+    assert.deepEqual(leg[0],hub.point,'departure keeps its real parking anchor');
+    assert.ok(length(leg)<400,`${hub.id}: ${length(leg).toFixed(1)} px`);
+    assert.ok(Math.max(...leg.map(p=>p[1]))<=hub.point[1]+1,'no southbound loop');
+    for(let i=1;i<leg.length;i++)assert.ok(clearSegment(leg[i-1],leg[i],drivableAllowed),`${hub.id}: stays on clear drivable ground`);
+    assert.deepEqual(route.slice(k),VECTOR_ROUTES.departure.bNorth,'public exit geometry is preserved');
+  }
+});
+
+test('B North hub cars actually clear the north exit during normal arrivals and shuttle traffic', async () => {
+  const { createCampusTraffic }=await import('../src/traffic.js');
+  const state=createCampusTraffic({phase:'mixed',initialZoneOccupancy:{bNorth:12},departurePolicy:{b:'north'},
+    lotSettings:[{id:'a',open:false},{id:'c',open:false}],zonePreferences:{b:'bNorth'},shuttles:{activeCount:3,dwellSeconds:1}});
+  state.waiting[0]=12;
+  for(let i=0;i<18000&&state.departed.b<24;i++)state.step(.1);
+  assert.deepEqual(state.routingIssues,[]);
+  assert.equal(state.departed.b,24,'initial and newly parked cars complete their north departures');
+  assert.equal(state.parkedVehicles.length,0);
+  assert.equal(state.cars.filter(c=>!c.fleetBus).length,0);
+});

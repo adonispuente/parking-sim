@@ -9,6 +9,7 @@ import { C_THROAT, C_STAGING_TARGET, B_NORTH_DIRECT_PATH } from './layoutOverlay
 import { A_SOUTH_CENTRELINE, A_SOUTH_CENTRELINE_PROVENANCE } from './aSouthCentreline.js';
 import { aHubRoute, A_HUB_DEPARTURE_JOINS, AB_HUB_ROUTE_PROVENANCE } from './abHubRoutes.js';
 import { abHubById, aNorthEntryTrace, AB_HUB_SOURCE, A_NORTH_ENTRY_TRACE } from './abHubSource.js';
+import abHubDrawing from '../images/ABHubs.json' with { type: 'json' };
 import { cHubForCar } from './cHubSource.js';
 import { cHubArrival, cHubDeparture } from './cHubRoutes.js';
 const ZONE_SOURCE={aNorth:39,aSouth:38,aBadge:37,bSouth:40,bBanana:41,bPocket:42,bNorth:44,cFirstNorth:51,cFirstSouth:52,cNorth:51,cSouth:52};
@@ -306,9 +307,56 @@ function bLoopExit(access,zone,start,target) {
   }
   return null;
 }
-// Hub departures merge into B's existing forward circulation. The drawn north
-// exit lines run east across the westbound shuttle aisle, so adopting those as
-// independent through lanes would introduce opposing traffic at the pickup.
+// Keep the northbound/eastbound exit lane beside opposing arrival and shuttle
+// aisles. Width and short hub/exit tapers are derived from the drawn centerline.
+function bNorthExitLane(raw) {
+  const points=[raw[0]],arcs=[0];
+  for(let i=1;i<raw.length;i++) {
+    const a=raw[i-1],b=raw[i],n=Math.max(1,Math.ceil(distance(a,b)/2));
+    for(let k=1;k<=n;k++) {
+      const p=[a[0]+(b[0]-a[0])*k/n,a[1]+(b[1]-a[1])*k/n];
+      const gap=distance(points.at(-1),p);if(gap<1e-6)continue;
+      arcs.push(arcs.at(-1)+gap);points.push(p);
+    }
+  }
+  const lane=points.map((p,i)=>{
+    const a=points[Math.max(0,i-2)],b=points[Math.min(points.length-1,i+2)],d=distance(a,b)||1;
+    const offset=-16*Math.min(1,arcs[i]/20,(arcs.at(-1)-arcs[i])/20);
+    return [p[0]-(b[1]-a[1])/d*offset,p[1]+(b[0]-a[0])/d*offset];
+  });
+  if(lane.slice(1).some((p,i)=>!clearSegment(lane[i],p,drivableAllowed)))
+    throw new Error('B North exit lane leaves clear drivable ground');
+  return lane;
+}
+// B North hubs use the drawn north-exit aisles instead of wrapping around #25.
+// #30 feeds #29; #28/#29 end on the public exit road, whose existing geometry
+// takes over at target. Hub spurs are short, derived and checked for pavement.
+function bNorthHubExit(hub,target) {
+  const traces=[28,29,30].map(index=>({index,points:abHubDrawing.shapes[index].points}));
+  const paths=traces.map(({index,points})=>({index,points:index===30?
+    join(points,traces[1].points.slice(1,-1)) : points.slice(0,-1)}));
+  const candidates=[];
+  const length=points=>points.slice(1).reduce((sum,p,i)=>sum+distance(points[i],p),0);
+  if(hub.id==='b-hub-69'&&clearSegment(hub.point,target,drivableAllowed))
+    candidates.push({points:[hub.point,target],sources:['derived east-aisle join']});
+  for(const {index,points} of paths)for(let i=1;i<points.length;i++) {
+    const a=points[i-1],b=points[i],dx=b[0]-a[0],dy=b[1]-a[1];
+    const t=Math.max(0,Math.min(1,((hub.point[0]-a[0])*dx+(hub.point[1]-a[1])*dy)/(dx*dx+dy*dy||1)));
+    const entry=[a[0]+dx*t,a[1]+dy*t];
+    if(distance(hub.point,entry)>80||!clearSegment(hub.point,entry,drivableAllowed))continue;
+    const route=join([hub.point,entry],points.slice(i),[target]);
+    if(route.slice(1).some((p,k)=>!clearSegment(route[k],p,drivableAllowed)))continue;
+    candidates.push({points:route,sources:[`${AB_HUB_SOURCE} #${index}`,...(index===30?[`${AB_HUB_SOURCE} #29`]:[]),'derived hub/exit joins']});
+  }
+  candidates.sort((a,b)=>length(a.points)-length(b.points));
+  const best=candidates[0];
+  if(!best)throw new Error(`No direct B North exit aisle for ${hub.id}`);
+  const provenance={hub:hub.id,zone:hub.zone,access:'bNorth',phase:'departure',
+    sources:best.sources,mode:'hub-north-direct',provisional:true};
+  B_EXIT_PROVENANCE.push(provenance);AB_HUB_ROUTE_PROVENANCE.push(provenance);
+  return hub.id==='b-hub-69'?best.points:bNorthExitLane(best.points);
+}
+// Other hub departures retain the existing forward circulation.
 function bHubForwardExit(hub,access,target) {
   const station=B_EXIT_STATIONS[access],first=7,last=25;
   if(!station)throw new Error(`Invalid B hub exit: ${access}`);
@@ -554,7 +602,7 @@ export function zoneDepartureRoute(access,zone,hubId) {
     const hub=abHubById(hubId);
     if(hub.zone!==zone)throw new Error('A/B hub does not match section');
     const raw=VECTOR_ROUTES.departure[access];
-    result=join(bHubForwardExit(hub,access,raw[0]),raw);
+    result=join(zone==='bNorth'&&access==='bNorth'?bNorthHubExit(hub,raw[0]):bHubForwardExit(hub,access,raw[0]),raw);
     cache.set(id,result);return result;
   }
   if(access==='a'&&['aNorth','aSouth'].includes(zone)) {
