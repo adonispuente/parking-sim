@@ -12,7 +12,7 @@ export function attachCRoundaboutControl(state, options = {}) {
   const config = { ...C_ROUNDABOUT_DEFAULTS, ...options }, cache = new WeakMap(), pairs = new WeakMap();
   const status = state.cRoundabout = { position: C_ROUNDABOUT_POSITION, enabled: config.enabled,
     priority: ['shuttle', 'departure', 'arrival'], waiting: { shuttle: 0, departure: 0, arrival: 0 }, admitted: [], held: [], reason: 'free flow' };
-  state.parkingRadio?.positions.push({ id: 'cRoundabout', index: null, sourceIndex: 48, name: 'Lot C roundabout marshal' });
+  if(config.enabled)state.parkingRadio?.positions.push({ id: 'cRoundabout', index: null, sourceIndex: 48, name: 'Lot C roundabout marshal' });
   // A shuttle can cross the area twice on one leg. Track each visit separately,
   // so its later return never claims the junction while it is across the lot.
   const visits = lane => {

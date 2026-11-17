@@ -12,12 +12,12 @@ export function attachNorthernCorporateControl(state, options = {}) {
   const [x,z] = pointAt(64).map(v=>v*WORLD_SCALE);
   const lanes = new WeakMap(), pairs = new WeakMap(), stopped = new Map();
   const radio = state.northernRadio = { provisional:true,
-    positions:[62,63,64].map(index=>({index,
+    positions:[62,63,64].filter(index=>state.staffing?.[STAFF_POSITIONS.find(p=>p.index===index).id]!==false).map(index=>({index,
       name:STAFF_POSITIONS.find(p=>p.index===index).label,position:pointAt(index),channel:'parking operations'})),
     shuttles:[],releaseBuses:[],heldCars:0,clearingCars:0,reason:'free flow',
     clayBackedUp:false,diversionRemaining:0,diverted:0,nextBatchAt:0,batchSize:config.batchSize };
   // All staffed positions hear the same fleet state, with separate duties.
-  state.parkingRadio={channel:'parking operations',positions:STAFF_POSITIONS.map(p=>({id:p.id,index:p.index,name:p.label})),status:radio};
+  state.parkingRadio={channel:'parking operations',positions:STAFF_POSITIONS.filter(p=>state.staffing?.[p.id]!==false).map(p=>({id:p.id,index:p.index,name:p.label})),status:radio};
   const local = lane => {
     if (!lanes.has(lane)) {
       const points=[],count=Math.max(1,Math.ceil(lane.length/.3));
@@ -57,7 +57,7 @@ export function attachNorthernCorporateControl(state, options = {}) {
       return {id:bus.id,number:bus.number,phase:bus.phase,circuit:bus.circuit,leg:bus.leg,
         position:p?[p.x/WORLD_SCALE,p.z/WORLD_SCALE]:bus.stationary,moving:!!car};
     });
-    const buses=state.cars.filter(exitingC).filter(bus=>{
+    const buses=state.cars.filter(car=>state.staffing?.cExit!==false&&exitingC(car)).filter(bus=>{
       const points=local(state.lanes[bus.lane]);
       return points.length&&points[0].distance-bus.distance<=config.lookahead&&
         bus.distance-half(bus)<=points.at(-1).distance&&bus.distance<state.lanes[bus.lane].length;
@@ -125,7 +125,7 @@ export function attachNorthernCorporateControl(state, options = {}) {
     }
     radio.heldCars=held.size;radio.clearingCars=clearing.size;
     radio.clearingIds=[...clearing];
-    radio.reason=clearing.size?'clear occupied Corporate traffic, then release C shuttle':buses.length?'radio: hold conflicting Corporate traffic · C shuttle release':'free flow';
+    radio.reason=state.staffing?.cExit===false?'C exit unstaffed':clearing.size?'clear occupied Corporate traffic, then release C shuttle':buses.length?'radio: hold conflicting Corporate traffic · C shuttle release':'free flow';
     // Count sustained waits on the public eastbound road, never a B aisle.
     const live=new Set(state.cars.map(c=>c.id));
     for(const id of stopped.keys())if(!live.has(id))stopped.delete(id);
@@ -141,13 +141,13 @@ export function attachNorthernCorporateControl(state, options = {}) {
     if(!radio.clayBackedUp)radio.diversionRemaining=0;
   };
   state.northernDepartureAccess = (car,normal) => {
-    if(car.target!=='b'||car.zone==='bSouth'||normal!=='bNorth'||!radio.clayBackedUp)return normal;
+    if(state.staffing?.bExit===false||car.target!=='b'||car.zone==='bSouth'||normal!=='bNorth'||!radio.clayBackedUp)return normal;
     if(state.clock<radio.nextBatchAt&&!radio.diversionRemaining)return null;
     if(!radio.diversionRemaining)radio.diversionRemaining=config.batchSize;
     return 'bWest';
   };
   state.observeNorthernDeparture = (car,normal,actual) => {
-    if(car.target==='b'&&normal==='bNorth'&&actual==='bWest'&&radio.clayBackedUp) {
+    if(state.staffing?.bExit!==false&&car.target==='b'&&normal==='bNorth'&&actual==='bWest'&&radio.clayBackedUp) {
       radio.diversionRemaining=Math.max(0,radio.diversionRemaining-1);radio.diverted++;
       if(!radio.diversionRemaining)radio.nextBatchAt=state.clock+5;
     }

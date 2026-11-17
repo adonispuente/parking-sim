@@ -85,6 +85,7 @@ export function attachMainPositionToLane(lane, points, approach) {
 
 export function attachLotAControl(state) {
   const gate = state.aMainControl = {
+    enabled:state.staffing?.aMain!==false, reason:state.staffing?.aMain===false?'Unstaffed':'Staffed',
     name: 'Lot A Main Position', activeSide: 'aNorth', batchSize: LOT_A_MAIN_BATCH_SIZE,
     passedInBatch: 0, totalPassed: { aNorth: 0, aSouth: 0, aMain: 0 },
     waiting: { aNorth: 0, aSouth: 0, aMain: 0 }, ready: { aNorth: 0, aSouth: 0, aMain: 0 },
@@ -96,6 +97,7 @@ export function attachLotAControl(state) {
   const approach = car => control(car).approach ?? car.zone;
   const remaining = () => state.cars.filter(car => control(car) && !car.aMergePassed);
   state.prepareLotAControl = () => {
+    if(!gate.enabled)return;
     if (admitted && !state.cars.includes(admitted)) { admitted = null; gate.admittedId = null; }
     const candidates = remaining();
     const ready = candidates.filter(car => !car.holdForGate && car.distance >= control(car).stopDistance - .25);
@@ -155,6 +157,7 @@ export function attachLotAControl(state) {
     }
   };
   state.observeLotAControl = () => {
+    if(!gate.enabled)return;
     for (const car of remaining()) {
       if (car.distance < control(car).releaseDistance) continue;
       const side = approach(car);

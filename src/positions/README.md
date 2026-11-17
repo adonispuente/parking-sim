@@ -24,6 +24,10 @@ What every person on the map does, where the code implements it, and which new p
 | LotCHubs #48 | cRoundabout | Active four-way marshal: shuttles, exits, then entries; compatible movements continue together |
 | — | pos:c-layout-demo | Illustrative unstaffed overlay sample; not a real worker location |
 
+## Staffing scenarios
+
+Advanced settings → Position staffing controls the eight staffed source points plus the C roundabout marshal. `options.staffing` maps their canonical IDs to booleans; omitted IDs default to staffed. Changes restart the scenario. The engine keeps this map in `state.staffing`, and replay frames capture it. Removing a position disables its implemented controller work and radio membership and hides its worker/source marker. It does not delete road geometry or parking capacity. Equity / Clay remains an unstaffed stop and advisory overlay points are not staffing switches. The B entrance currently has passage counting only in normal wide-road mode; no unmodeled staffing penalty is added.
+
 ## Add a map-defined position (M3 S4)
 
 **Do not append to or renumber `images/EverythingClearImage.json`.** That source intentionally requires exactly 65 shapes. No rebind is needed for a new overlay position.

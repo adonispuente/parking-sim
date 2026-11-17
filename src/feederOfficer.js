@@ -100,7 +100,7 @@ export function attachFeederOfficer(state,options={}) {
   state.feederOfficerSeparatedLane=lane=>separated(lane);
   state.prepareFeederOfficer=()=>{
     for(const car of state.cars){delete car.feederStopDistance;car.holdForOfficer=false;}
-    if(!config.enabled)return;
+    if(!config.enabled){gate.reason='Unstaffed';return;}
     if(admitted&&!state.cars.includes(admitted)){admitted=null;gate.admittedId=null;}
     for(const car of state.cars)if(isExit(car)&&state.lanes[car.lane])exitLanes.add(state.lanes[car.lane]);
     for(const car of state.cars) {

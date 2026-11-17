@@ -45,7 +45,7 @@ export function attachCEntranceControl(state,options={}) {
   state.prepareCEntranceControl=()=>{
     for(const car of state.cars){delete car.cEntranceStopDistance;car.holdForCEntrance=false;}
     status.admitted=[];status.held=[];status.clearing=[];status.waiting={shuttle:0,departure:0,arrival:0};
-    if(!config.enabled)return;
+    if(!config.enabled){status.reason='Unstaffed';return;}
     const buses=state.cars.filter(c=>c.fleetBus).map(car=>({car,visit:visit(car)})).filter(b=>
       b.visit&&b.visit.from-b.car.distance<=config.lookahead&&
       !(b.car.holdForCRoundabout&&b.car.distance+half(b.car)<b.visit.from));

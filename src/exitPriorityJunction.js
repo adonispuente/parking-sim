@@ -60,7 +60,7 @@ export function attachExitPriorityJunction(state, options = {}) {
   };
   state.prepareCorporateExitJunction = () => {
     for (const car of state.cars) { delete car.corporateJunctionStopDistance; car.holdForCorporateJunction = false; }
-    if (!config.enabled) return;
+    if (!config.enabled) { gate.reason='Unstaffed'; return; }
     if (admitted && (!state.cars.includes(admitted) || admitted.lane !== admittedLane)) {
       admitted = null; gate.admittedId = null;
     }
@@ -101,7 +101,7 @@ export function attachExitPriorityJunction(state, options = {}) {
     }
   };
   state.observeCorporateExitJunction = () => {
-    if (!config.enabled) return;
+    if (!config.enabled) { gate.reason='Unstaffed'; return; }
     for (const car of state.cars) {
       if (passed.get(car) === car.lane || !cleared(car)) continue;
       passed.set(car,car.lane);

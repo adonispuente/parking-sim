@@ -25,7 +25,7 @@ const parkedRecord=car=>Object.fromEntries(['id','source','target','zone','acces
   'initialStaged','cohort','serviceId','dismissalMinute','readinessMinute','departureGroup','departureOrdinal','readyAt','parkedAt']
   .filter(key=>car[key]!==undefined).map(key=>[key,car[key]]));
 export function createZonedCampus(options, makeLane, legacyLanes) {
-  const state={lanes:[...legacyLanes],cars:[],clock:0,entered:[0,0,0],exited:[0,0,0],departed:{a:0,b:0,c:0},departedBySource:[0,0,0],
+  const state={staffing:{...options.staffing},lanes:[...legacyLanes],cars:[],clock:0,entered:[0,0,0],exited:[0,0,0],departed:{a:0,b:0,c:0},departedBySource:[0,0,0],
     waiting:[0,0,0],arrivalQueues:[[],[],[]],pendingIntent:[null,null,null],credit:[0,0,0],occupancy:{a:0,b:0,c:0},reserved:{a:0,b:0,c:0},parked:{a:0,b:0,c:0},assignments:{a:0,b:0,c:0},
     denied:0,overflow:0,sentAway:0,sentAwayBySource:[0,0,0],atCapacity:false,badgePercent:Math.max(0,Math.min(100,Number(options.badgePercent)||0)),
     badgeParking:0,badgeReserved:0,pendingCategory:[null,null,null],phase:options.phase??'arrival',mode:'campus',routeHistory:[],parkedVehicles:[],
@@ -48,11 +48,11 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
       if(car.abHubId)state.abHubOccupancy[car.abHubId]++;
     }
   };
-  sync();attachLotAControl(state);attachFeederOfficer(state,options.feederOfficer);attachCorporateDriveOperators(state,options.corporateOperators);
+  sync();attachLotAControl(state);attachFeederOfficer(state,{...options.feederOfficer,enabled:options.feederOfficer?.enabled!==false&&state.staffing.aExitOfficer!==false});attachCorporateDriveOperators(state,options.corporateOperators);
   attachNorthernCorporateControl(state,options.northernControl);attachWideAisles(state);
-  attachCRoundaboutControl(state,options.cRoundabout);
-  attachCEntranceControl(state,options.cEntrance);
-  attachAlphaQueueRelief(state,options.alphaQueueRelief);let sequence=0,manualFeederCount=0;
+  attachCRoundaboutControl(state,{...options.cRoundabout,enabled:options.cRoundabout?.enabled!==false&&state.staffing.cRoundabout!==false});
+  attachCEntranceControl(state,{...options.cEntrance,enabled:options.cEntrance?.enabled!==false&&state.staffing.cEntrance!==false});
+  attachAlphaQueueRelief(state,{...options.alphaQueueRelief,enabled:options.alphaQueueRelief?.enabled!==false&&state.staffing.corporateOfficer!==false});let sequence=0,manualFeederCount=0;
   service?.tick(state,options.lotSettings);state.gateStatus={...(service?.gated??{a:false,b:false,c:false})};
   const ordinals={a:0,b:0,c:0};
   for(const [zone,count] of Object.entries(state.zoneOccupancy))for(let i=0;i<count;i++) {

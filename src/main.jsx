@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import Scene from './Scene.jsx';
 import { openParkingCapacity } from './parkingAvailability.js';
 import SundayControls from './SundayControls.jsx';
+import StaffingControls from './StaffingControls.jsx';
 import SimulationControls from './SimulationControls.jsx';
 import RouteSourcesPanel from './RouteSourcesPanel.jsx';
 import { serviceOptions } from './sundayServices.js';
@@ -155,6 +156,7 @@ function App() {
         <details className="dashboard-details"><summary>Flow details & advanced settings</summary>
           <div className="traffic-controls" aria-label="Corporate Drive traffic controls">
             <section className="map-settings" aria-label="Map display settings"><strong>Map display</strong><div className="presentation-switch" role="group" aria-label="Presentation mode">{[['world','3D World'],['trace','Source trace'],['draft','Layout editor']].map(([id,title])=><button key={id} aria-pressed={presentation===id} onClick={()=>changePresentation(id)}>{title}</button>)}</div><div className="world-options"><button aria-pressed={showLabels} onClick={()=>setShowLabels(v=>!v)}>Labels</button><button aria-pressed={showPhoto} aria-controls="clear-photo" onClick={()=>setShowPhoto(v=>!v)}>Clear photo</button></div></section>
+            <StaffingControls options={trafficOptions} setOptions={setTrafficOptions} onReset={()=>{setRunning(false);setTrafficMode('continuous');setTrafficReset(v=>v+1);}}/>
             <SundayControls options={trafficOptions} setOptions={setTrafficOptions} stats={trafficStats} onReset={()=>{setRunning(false);setTrafficMode('continuous');setTrafficReset(v=>v+1);}} onRun={()=>setRunning(true)}/>
             <small role="status" aria-label="Playback status">{playbackState.error?`Playback failed: ${playbackState.error}`:playbackState.seeking?`Restoring engine state · ${Math.floor(100*playbackState.completed/Math.max(.05,playbackState.target))}% · pause cancels`:'Forward playback · arrival rates are per simulated minute.'}</small>
             <div className="traffic-phase" role="group" aria-label="Traffic phase">

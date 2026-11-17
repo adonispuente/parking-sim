@@ -249,13 +249,15 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
       }
       if (feature.shapeType === 'point') {
         const marker = new THREE.Mesh(new THREE.SphereGeometry(.38, 12, 8), new THREE.MeshBasicMaterial({ color, depthTest: false }));
-        marker.position.set(points[0][0], .55, points[0][1]); traces.add(marker);
+        marker.position.set(points[0][0], .55, points[0][1]);
+        marker.userData.staffingPositionId=STAFF_POSITIONS.find(p=>p.index===feature.index)?.id;traces.add(marker);
       } else {
         line(traces, feature.shapeType==='polygon'?[...points,points[0]]:points, color, .52);
       }
       const center = feature.shapeType === 'circle' || feature.shapeType === 'point' ? points[0] :
         [points.reduce((v,p) => v + p[0], 0) / points.length, points.reduce((v,p) => v + p[1], 0) / points.length];
-      label(traces, `${feature.id} · ${feature.label}`, center[0], .95, center[1], color, 11);
+      const caption=label(traces, `${feature.id} · ${feature.label}`, center[0], .95, center[1], color, 11);
+      caption.userData.staffingPositionId=STAFF_POSITIONS.find(p=>p.index===feature.index)?.id;
     });
 
     const objects = new THREE.Group(), traffic = new THREE.Group(), parkedMarkers = new THREE.Group(), staffing = new THREE.Group(), shuttleStops = new THREE.Group(), occupancyFills=new THREE.Group();
@@ -411,8 +413,9 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
     const stopRouteRuntime=subscribeRouteRuntime(()=>{renderer.domElement.dataset.routeCatalog=JSON.stringify(catalogSummary());});
     for(const {id,label:name,point:pixel} of [...STAFF_POSITIONS,...C_HUB_POSITIONS]) {
       const [x,z]=traceWorldPoint(pixel);
-      staffing.add(drawItem({id:`${id}-volunteer`,type:'position',x,z,width:1,depth:1,rotation:0,role:name},false,true));
-      label(staffing,name,x,4,z-3,'#ffe08a',17);
+      const group=new THREE.Group();group.userData.staffingPositionId=id;staffing.add(group);
+      group.add(drawItem({id:`${id}-volunteer`,type:'position',x,z,width:1,depth:1,rotation:0,role:name},false,true));
+      label(group,name,x,4,z-3,'#ffe08a',17);
     }
     const [stopX,stopZ]=traceWorldPoint(EQUITY_CLAY_STOP_POSITION);
     label(staffing,'Equity / Clay · 3-way STOP',stopX,4,stopZ,'#ffb6a5',17);
@@ -483,7 +486,11 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
   useEffect(() => {
     const e=engine.current; if(!e) return;
     release(e.objects);
-    layout.items.filter(item=>!world||!item.id.startsWith('staff-')).forEach(item => e.objects.add(drawItem(item,item.id===selectedId,world)));
+    layout.items.filter(item=>!world||!item.id.startsWith('staff-')).forEach(item => {
+      const object=drawItem(item,item.id===selectedId,world);
+      if(item.id.startsWith('staff-'))object.userData.staffingPositionId=item.id.slice(6);
+      e.objects.add(object);
+    });
     if(world) e.objects.add(createPresentationPavement()); // M4: S5 patches visible without Routes; display only.
     if(world) e.objects.add(createPresentationLots()); // Approved even-odd coverage, never simulation pavement.
     e.renderer.shadowMap.needsUpdate=true;
@@ -550,11 +557,15 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
     for(const root of [e.objects,e.staffing,e.shuttleStops,e.parkedMarkers])root.traverse(o=>{
       if(o.userData.isLabel)o.visible=showLabels;
     });
+    for(const root of [e.staffing,e.traces,e.objects])root.traverse(object=>{
+      const id=object.userData.staffingPositionId;
+      if(id)object.visible=trafficOptions.staffing?.[id]!==false&&(!object.userData.isLabel||showLabels);
+    });
     e.occupancyFills.visible=showOccupancy;
     e.renderer.domElement.dataset.occupancyVisible=String(showOccupancy);
     e.parkedMarkers.visible=showRoutes;
     e.renderer.domElement.dataset.hubsVisible=String(showRoutes);
-  },[showLabels,showOccupancy,showRoutes,world,layout,selectedId]);
+  },[showLabels,showOccupancy,showRoutes,world,layout,selectedId,trafficOptions.staffing]);
   useEffect(() => {
     const e=engine.current; if(!e) return;
     const focus=layout.items.find(i=>i.id===`lot-${cameraFocus}`);

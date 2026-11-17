@@ -30,10 +30,11 @@ export const needsValve=(a,b)=>!busesPassThrough(a,b)&&(trafficClass(a)==='depar
 
 export function attachCorporateDriveOperators(state,options={}) {
   const config={...CORPORATE_OPERATOR_DEFAULTS,...options};
-  attachExitPriorityJunction(state,config);
+  attachExitPriorityJunction(state,{...config,enabled:config.enabled&&state.staffing?.corporateOfficer!==false});
+  config.narrowCorridor=config.narrowCorridor&&state.staffing?.permitOfficer!==false&&state.staffing?.bEntrance!==false;
   attachBlackPermitControl(state);
   attachEquityClayStop(state);
-  const operators=CORPORATE_OPERATORS.map(op=>({...op,position:[...pointAt(op.index)],
+  const operators=CORPORATE_OPERATORS.map(op=>({...op,enabled:state.staffing?.[op.id]!==false,position:[...pointAt(op.index)],
     station:{x:pointAt(op.index)[0]*WORLD_SCALE,z:pointAt(op.index)[1]*WORLD_SCALE},
     waiting:0,passed:0,admitted:0,admittedInRow:0,request:null,reason:'idle'}));
   const byIndex=Object.fromEntries(operators.map(op=>[op.index,op]));
@@ -119,6 +120,7 @@ export function attachCorporateDriveOperators(state,options={}) {
     shared.direction=directions.size===1?[...directions][0]:directions.size?'both':null;
     // Each end operator posts its own request.
     for(const op of operators) {
+      if(!op.enabled){op.reason='Unstaffed';continue;}
       if(!op.end){op.waiting=0;op.request=null;op.reason='record passage';continue;}
       const queue=queues[op.end];
       op.waiting=queue.length;
@@ -173,7 +175,7 @@ export function attachCorporateDriveOperators(state,options={}) {
         if(car.distance<distance)continue;
         car.corporatePassed??={};
         if(car.corporatePassed[index])continue;
-        car.corporatePassed[index]=true;byIndex[index].passed++;
+        car.corporatePassed[index]=true;if(byIndex[index].enabled)byIndex[index].passed++;
       }
     }
   };

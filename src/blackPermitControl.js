@@ -16,7 +16,7 @@ const STOP_SETBACK = 1.0;            // stop line this far before that lane ente
 export function attachBlackPermitControl(state) {
   const position=pointAt(60),x=position[0]*WORLD_SCALE,z=position[1]*WORLD_SCALE;
   const merges=new WeakMap(),boxes=new Map(),entries=new Map();
-  const gate=state.blackPermitControl={position,name:'Black Permit shuttle release',waitingBuses:0,heldArrivals:0,heldDepartures:0,reason:'free flow'};
+  const gate=state.blackPermitControl={enabled:state.staffing?.permitOfficer!==false,position,name:'Black Permit shuttle release',waitingBuses:0,heldArrivals:0,heldDepartures:0,reason:'free flow'};
   const control=car=>{
     const lane=state.lanes[car.lane];if(!lane)return null;
     if(!merges.has(lane)) {
@@ -67,6 +67,7 @@ export function attachBlackPermitControl(state) {
   };
   state.prepareBlackPermitControl=()=>{
     for(const car of state.cars){delete car.permitStopDistance;car.holdForPermit=false;}
+    if(state.staffing?.permitOfficer===false){gate.enabled=false;gate.reason='Unstaffed';return;}
     const buses=state.cars.filter(car=>{
       const c=control(car);if(!c||!outbound(car))return false;
       return c.merge-car.distance<=PERMIT_WARNING&&car.distance-(car.bodyLength??2.9)/2<c.release;

@@ -272,3 +272,8 @@
 .arrival-settings input[type=range] { width:100%; padding:0; min-height:24px; accent-color:var(--ink); }
 .arrival-settings small { grid-column:1 / -1; color:#63745e; font-size:11px; }
 @media(max-width:700px) { .arrival-settings { grid-template-columns:1fr; gap:8px; } }
+
+.staffing-panel .staffing-position { display:flex; align-items:flex-start; gap:12px; padding:8px 0; }
+.staffing-position input[type=checkbox] { width:20px; height:20px; min-height:20px; flex:0 0 auto; margin-top:2px; accent-color:var(--ink); }
+.staffing-position span { display:grid; gap:4px; }
+.staffing-actions { display:flex; flex-wrap:wrap; gap:8px; }

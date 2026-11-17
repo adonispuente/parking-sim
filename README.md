@@ -21,6 +21,8 @@ The **Incoming traffic** bar above the map sets total incoming cars (0–2,500) 
 
 With **Keep playing into the next service** enabled (the default), the engine continues 9:00 → 11:00 → 1:15 on one clock. The next transition starts at its scheduled pre-roll (10:05 and 12:05), even with cars on the road. Moving cars, parked cars, queues, volunteer controllers and buses remain in place. Each arriving car keeps its own service identity and dismissal time, including cars that finish parking after a transition. The manual carry button remains available at idle checkpoints.
 
+Open **Flow details & advanced settings → Position staffing** to leave any of the nine modeled positions unstaffed, or restore everyone. Each change restarts and pauses the current scenario, hides that worker in the map views, and removes their implemented admission, advance-hold, diversion or passage-counting behavior. Normal lane geometry, vehicle clearance and the unstaffed Equity / Clay stop remain. The B entrance has no separate admission hold in the current wide-road model, so its toggle removes its counter/radio membership. These comparisons are illustrative; driver confusion and measured staffing-related delays are not modeled. Staffing selections survive service changes, carry and replay.
+
 Sunday presets cover 9:00, 11:00, and 1:15 services. Service timing, demand, arrival sources, dismissal readiness, and carry into the next service are defined in `src/sundayServices.js` and `src/serviceCarry.js`. Random-looking choices are deterministic so playback can reconstruct a run.
 
 ## Parking hubs and capacity
