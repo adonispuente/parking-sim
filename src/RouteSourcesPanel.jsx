@@ -15,8 +15,8 @@ export default function RouteSourcesPanel() {
     return stop;
   }, []);
   return (
-    <details className="route-sources" aria-label="Route sources diagnostics">
-      <summary>Route sources · Clear Image unified source</summary>
+    <div className="route-sources" aria-label="Route sources diagnostics">
+      <p className="panel-note">Clear Image unified source</p>
       <dl>
         <dt>Source pair</dt>
         <dd data-route-diag="source">
@@ -93,7 +93,7 @@ export default function RouteSourcesPanel() {
           <li key={g}>{g}</li>
         ))}
       </ul>
-      <h4>Layout overlay</h4>
+      <h3>Layout overlay</h3>
       <dl>
         <dt>File</dt>
         <dd data-route-diag="layout-overlay">
@@ -122,7 +122,7 @@ export default function RouteSourcesPanel() {
             <tr key={f.id}>
               <td>{f.id}</td>
               <td>{f.status}</td>
-              <td style={{ color: f.problem ? '#c4251f' : undefined }}>
+              <td className={f.problem ? 'is-problem' : undefined}>
                 {f.confidence} · {f.evidence}
                 {f.problem ? ` · ${f.problems.join('; ')}` : ''}
               </td>
@@ -131,7 +131,7 @@ export default function RouteSourcesPanel() {
           ))}
         </tbody>
       </table>
-      <h4>Map-defined positions · advisory only</h4>
+      <h3>Map-defined positions · advisory only</h3>
       <p>
         Staffed is a description of the proposed role, not an active worker. These points create no
         traffic holds or radio members.
@@ -160,6 +160,6 @@ export default function RouteSourcesPanel() {
         Runtime record v{d.runtimeVersion}. Source coordinates are authoritative; connection safety
         remains simulated, not field-certified.
       </small>
-    </details>
+    </div>
   );
 }

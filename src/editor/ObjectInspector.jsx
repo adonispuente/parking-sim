@@ -1,6 +1,7 @@
 import React from 'react';
 import { ROLES, WORLD } from '../model.js';
 import NumberField from './NumberField.jsx';
+import { TOTAL_LOT_CAPACITY, formatCount, lotCapacitySummary } from '../format.js';
 
 export default function ObjectInspector({
   selected,
@@ -23,13 +24,15 @@ export default function ObjectInspector({
           </h2>
         </div>
         <button className="icon-button" onClick={onClose} aria-label="Close inspector">
-          ×
+          <span aria-hidden="true">×</span>
         </button>
       </div>
       <div className="inspector-body">
         <label>
           Name
           <input
+            name="objectName"
+            autoComplete="off"
             maxLength={200}
             value={selected.name}
             onChange={(e) => onUpdate({ name: e.target.value })}
@@ -57,14 +60,18 @@ export default function ObjectInspector({
             </div>
             <button
               className={`lot-toggle ${selected.open ? 'enabled' : ''}`}
+              role="switch"
+              aria-checked={!!selected.open}
               onClick={() => onUpdate({ open: !selected.open })}
             >
-              {selected.open ? '● Open to arrivals' : '○ Closed to arrivals'}
-              <span>Toggle</span>
+              <span>Open to arrivals</span>
+              <span className="switch-track" aria-hidden="true">
+                <span />
+              </span>
             </button>
             <p className="field-note">
-              A: 411 · B: 487 · C: 686. Total: 1,584, supplied by you. Drawn spaces are approximate
-              and counted separately.
+              {lotCapacitySummary()}. Total: {formatCount(TOTAL_LOT_CAPACITY)}, supplied by you.
+              Drawn spaces are approximate and counted separately.
             </p>
           </>
         )}
@@ -104,8 +111,10 @@ export default function ObjectInspector({
             <label>
               Volunteer
               <input
+                name="volunteer"
+                autoComplete="off"
                 maxLength={200}
-                placeholder="Assign a name"
+                placeholder="e.g. Jordan Lee…"
                 value={selected.assignee}
                 onChange={(e) => onUpdate({ assignee: e.target.value })}
               />
@@ -115,16 +124,17 @@ export default function ObjectInspector({
               <textarea
                 rows={3}
                 maxLength={2000}
-                placeholder="What should this person do, and why?"
+                name="roleInstructions"
+                placeholder="What should this person do, and why…"
                 value={selected.notes}
                 onChange={(e) => onUpdate({ notes: e.target.value })}
               />
             </label>
           </>
         )}
-        <div className="section-label">
-          PLACEMENT <span>IMAGE-RELATIVE UNITS</span>
-        </div>
+        <h3 className="section-label">
+          Placement <span>Image-relative units</span>
+        </h3>
         <div className="field-pair">
           <NumberField
             label="X · east"
@@ -174,10 +184,13 @@ export default function ObjectInspector({
           className={`button move-button ${tool === 'move' ? 'moving' : ''}`}
           onClick={onToggleMove}
         >
-          {tool === 'move' ? 'Cancel move' : '⌖ Move on map'}
+          {tool === 'move' ? 'Cancel Move' : 'Move on Map'}
         </button>
-        <button className="delete-button" onClick={onRemove}>
-          Delete {selected.type === 'spaces' ? 'row' : selected.type}
+        <button className="button danger-ghost" onClick={onRemove}>
+          Delete{' '}
+          {selected.type === 'spaces'
+            ? 'Row'
+            : selected.type[0].toUpperCase() + selected.type.slice(1)}
         </button>
       </div>
     </aside>
