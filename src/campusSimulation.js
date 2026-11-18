@@ -10,6 +10,9 @@ import { onStreet } from './routes/pavementRouting.js';
 import { attachLotAControl, attachMainPositionToLane } from './lotAControl.js';
 import { attachFeederOfficer } from './feederOfficer.js';
 import { attachCorporateDriveOperators } from './corporateDriveOperators.js';
+import { attachExitPriorityJunction } from './exitPriorityJunction.js';
+import { attachBlackPermitControl } from './blackPermitControl.js';
+import { attachEquityClayStop } from './equityClayStop.js';
 import { fromWorld } from './clearImageSource.js';
 import { attachNorthernCorporateControl } from './northernCorporateControl.js';
 import { attachWideAisles } from './wideAisles.js';
@@ -57,11 +60,25 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
       if(car.abHubId)state.abHubOccupancy[car.abHubId]++;
     }
   };
-  sync();attachLotAControl(state);attachFeederOfficer(state,{...options.feederOfficer,enabled:options.feederOfficer?.enabled!==false&&state.staffing.aExitOfficer!==false});attachCorporateDriveOperators(state,options.corporateOperators);
-  attachNorthernCorporateControl(state,options.northernControl);attachWideAisles(state);
-  attachCRoundaboutControl(state,{...options.cRoundabout,enabled:options.cRoundabout?.enabled!==false&&state.staffing.cRoundabout!==false});
-  attachCEntranceControl(state,{...options.cEntrance,enabled:options.cEntrance?.enabled!==false&&state.staffing.cEntrance!==false});
-  attachAlphaQueueRelief(state,{...options.alphaQueueRelief,enabled:options.alphaQueueRelief?.enabled!==false&&state.staffing.corporateOfficer!==false});let sequence=0,manualFeederCount=0;
+  sync();
+  // Traffic controllers: one per staffed position or local traffic rule. Each
+  // adds state.prepareX()/state.observeX() hooks that step() calls around
+  // advanceSharedTraffic, in the same order as they are attached here.
+  // A controller runs unless its options set enabled:false or the position is
+  // unstaffed in state.staffing.
+  const staffed=(controllerOptions,position)=>controllerOptions?.enabled!==false&&state.staffing[position]!==false;
+  attachLotAControl(state);
+  attachFeederOfficer(state,{...options.feederOfficer,enabled:staffed(options.feederOfficer,'aExitOfficer')});
+  attachCorporateDriveOperators(state,options.corporateOperators);
+  attachExitPriorityJunction(state,{...options.corporateOperators,enabled:staffed(options.corporateOperators,'corporateOfficer')});
+  attachBlackPermitControl(state);
+  attachEquityClayStop(state);
+  attachNorthernCorporateControl(state,options.northernControl);
+  attachWideAisles(state);
+  attachCRoundaboutControl(state,{...options.cRoundabout,enabled:staffed(options.cRoundabout,'cRoundabout')});
+  attachCEntranceControl(state,{...options.cEntrance,enabled:staffed(options.cEntrance,'cEntrance')});
+  attachAlphaQueueRelief(state,{...options.alphaQueueRelief,enabled:staffed(options.alphaQueueRelief,'corporateOfficer')});
+  let sequence=0,manualFeederCount=0;
   service?.tick(state,options.lotSettings);state.gateStatus={...(service?.gated??{a:false,b:false,c:false})};
   const ordinals={a:0,b:0,c:0};
   for(const [zone,count] of Object.entries(state.zoneOccupancy))for(let i=0;i<count;i++) {
@@ -372,12 +389,17 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
     state.prepareLotAControl();
     state.prepareFeederOfficer();
     state.prepareCorporateDriveOperators();
+    state.prepareCorporateExitJunction();
+    state.prepareBlackPermitControl();
+    state.prepareEquityClayStop();
     state.prepareNorthernCorporateControl();
     state.prepareCRoundaboutControl();
     state.prepareCEntranceControl();
     advanceSharedTraffic(state,dt);
     state.observeLotAControl();
     state.observeFeederOfficer();
+    state.observeCorporateExitJunction();
+    state.observeEquityClayStop();
     state.observeCorporateDriveOperators();
     state.cars=state.cars.filter(car=>{
       if(car.distance<state.lanes[car.lane].length)return true;

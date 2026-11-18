@@ -7,9 +7,6 @@
 import { pointAt, WORLD_SCALE } from './clearImageSource.js';
 import { compareTrafficPriority, trafficClass, trafficPriority } from './trafficPriority.js';
 import { busesPassThrough } from './vehicleInteractions.js';
-import { attachExitPriorityJunction } from './exitPriorityJunction.js';
-import { attachBlackPermitControl } from './blackPermitControl.js';
-import { attachEquityClayStop } from './equityClayStop.js';
 
 // conflictGap: opposing lanes closer than this (scene units) belong to the shared
 // stretch. It exceeds the 0.915 bus/car body clearance in sharedTraffic.js.
@@ -30,10 +27,7 @@ export const needsValve=(a,b)=>!busesPassThrough(a,b)&&(trafficClass(a)==='depar
 
 export function attachCorporateDriveOperators(state,options={}) {
   const config={...CORPORATE_OPERATOR_DEFAULTS,...options};
-  attachExitPriorityJunction(state,{...config,enabled:config.enabled&&state.staffing?.corporateOfficer!==false});
   config.narrowCorridor=config.narrowCorridor&&state.staffing?.permitOfficer!==false&&state.staffing?.bEntrance!==false;
-  attachBlackPermitControl(state);
-  attachEquityClayStop(state);
   const operators=CORPORATE_OPERATORS.map(op=>({...op,enabled:state.staffing?.[op.id]!==false,position:[...pointAt(op.index)],
     station:{x:pointAt(op.index)[0]*WORLD_SCALE,z:pointAt(op.index)[1]*WORLD_SCALE},
     waiting:0,passed:0,admitted:0,admittedInRow:0,request:null,reason:'idle'}));
@@ -159,15 +153,10 @@ export function attachCorporateDriveOperators(state,options={}) {
       car.corridorStopDistance=stretch.stop;
       car.holdForCorridor=car.distance>=stretch.stop-.01;
     }
-    state.prepareCorporateExitJunction();
-    state.prepareBlackPermitControl();
-    state.prepareEquityClayStop();
   };
   // Mandatory passage record: every operator counts vehicles crossing its point.
   state.observeCorporateDriveOperators=()=>{
     if(!config.enabled)return;
-    state.observeCorporateExitJunction();
-    state.observeEquityClayStop();
     for(const car of state.cars) {
       const passes=control(car)?.passes;
       if(!passes)continue;
