@@ -7,7 +7,7 @@ const LOOKAHEAD = 6;
 const BODY_GAP = 1.25;
 export const CONFLICT_WIDTH = .9;
 const halfLength = car => (car.bodyLength ?? 1.35) / 2;
-const pointAt = (state, car, distance) => {
+const pointOnLane = (state, car, distance) => {
   const lane = state.lanes[car.lane];
   return lane.path.getPointAt(Math.max(0, Math.min(1, distance / lane.length)));
 };
@@ -61,7 +61,7 @@ function routeWindow(state, car) {
     const distance = start + (end - start) * i / count;
     // Conflict windows only use positions. Computing a tangent here sampled
     // each path two additional times, for every lookahead/body point.
-    return { point: pointAt(state, car, distance), relative: distance - car.distance };
+    return { point: pointOnLane(state, car, distance), relative: distance - car.distance };
   });
 }
 
@@ -189,7 +189,7 @@ export function advanceSharedTraffic(state, dt) {
   const bodyWindow=(car,next)=>{
     const lane=state.lanes[car.lane],start=Math.max(0,car.distance-halfLength(car)),end=Math.min(lane.length,next+halfLength(car));
     const count=Math.max(1,Math.ceil((end-start)/.5));
-    return Array.from({length:count+1},(_,i)=>pointAt(state,car,start+(end-start)*i/count));
+    return Array.from({length:count+1},(_,i)=>pointOnLane(state,car,start+(end-start)*i/count));
   };
   const sweepClear=(car,other)=>{
     if(busesPassThrough(car,other))return true;
