@@ -26,7 +26,9 @@ export default function App() {
   const traced = presentation === 'trace',
     world = presentation === 'world';
   const [showLabels, setShowLabels] = useState(false),
-    [showOccupancy, setShowOccupancy] = useState(true);
+    [showOccupancy, setShowOccupancy] = useState(true),
+    [showAreaNames, setShowAreaNames] = useState(false),
+    [showShuttleNames, setShowShuttleNames] = useState(false);
   const [showPhoto, setShowPhoto] = useState(false);
   const [cameraFocus, setCameraFocus] = useState('campus'),
     [cameraReset, setCameraReset] = useState(0);
@@ -246,6 +248,8 @@ export default function App() {
             world={world}
             showLabels={showLabels || !world}
             showOccupancy={showOccupancy}
+            showAreaNames={showAreaNames}
+            showShuttleNames={showShuttleNames}
             cameraFocus={cameraFocus}
             cameraReset={cameraReset}
             running={running}
@@ -272,6 +276,20 @@ export default function App() {
             <button aria-pressed={showOccupancy} onClick={() => setShowOccupancy((v) => !v)}>
               Lot fullness
             </button>
+            {world && (
+              <button aria-pressed={showAreaNames} onClick={() => setShowAreaNames((v) => !v)}>
+                Area names
+              </button>
+            )}
+            {/* Shuttle name pills only exist in Top view (3D shows the flags alone). */}
+            {world && view === 'top' && (
+              <button
+                aria-pressed={showShuttleNames}
+                onClick={() => setShowShuttleNames((v) => !v)}
+              >
+                Shuttle names
+              </button>
+            )}
           </div>
           {view === 'top' && (
             <div className="north" aria-hidden="true">
