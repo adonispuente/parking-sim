@@ -2,12 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createCampusTraffic } from '../src/traffic.js';
 import { serviceOptions } from '../src/sundayServices.js';
-import { VECTOR_ROUTES } from '../src/vectorRoutes.js';
-import { zoneDepartureRoute } from '../src/parkingRoutes.js';
-import { avoidsShuttleObstacles } from '../src/shuttleRoutes.js';
+import { VECTOR_ROUTES } from '../src/routes/vectorRoutes.js';
+import { zoneDepartureRoute } from '../src/routes/parkingRoutes.js';
+import { avoidsShuttleObstacles } from '../src/routes/shuttleRoutes.js';
 import * as THREE from 'three';
 import { indexLanePath } from '../src/lanePath.js';
-import { AB_HUBS } from '../src/abHubSource.js';
+import { AB_HUBS } from '../src/routes/abHubSource.js';
 
 test('indexed lane sampling preserves Three points and tangents including segment boundaries',()=>{
   const path=new THREE.CurvePath();

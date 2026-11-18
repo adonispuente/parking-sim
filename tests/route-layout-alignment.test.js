@@ -1,15 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { VECTOR_ROUTES, ACCESS_THROATS } from '../src/vectorRoutes.js';
+import { VECTOR_ROUTES, ACCESS_THROATS } from '../src/routes/vectorRoutes.js';
 import { MAIN_POSITION_RESOLUTION, RESOLVED_A_MAIN_POSITION } from '../src/positions/index.js';
 import { LOT_A_MAIN_POSITION, attachMainPositionToLane } from '../src/lotAControl.js';
-import { zoneArrivalRoute, zoneDepartureRoute, A_MEDIAN } from '../src/parkingRoutes.js';
-import { roadAnchoredRoute } from '../src/roadAnchoredRoutes.js';
+import { zoneArrivalRoute, zoneDepartureRoute, A_MEDIAN } from '../src/routes/parkingRoutes.js';
+import { roadAnchoredRoute } from '../src/routes/roadAnchoredRoutes.js';
 import { createCampusTraffic } from '../src/traffic.js';
-import { onLotGround, avoidsShuttleObstacles } from '../src/shuttleRoutes.js';
+import { onLotGround, avoidsShuttleObstacles } from '../src/routes/shuttleRoutes.js';
 import { shapeAt, pointAt } from '../src/clearImageSource.js';
-import { aNorthEntryTrace } from '../src/abHubSource.js';
-import { inPolygon, segmentDistance, onDrivable, isDisclosedUntraced, untracedGapPoints } from '../src/sourceRouting.js';
+import { aNorthEntryTrace } from '../src/routes/abHubSource.js';
+import { inPolygon, segmentDistance, onDrivable, isDisclosedUntraced, untracedGapPoints } from '../src/routes/sourceRouting.js';
 
 const near=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1])<.001;
 const edgeDistance=(p,ring)=>Math.min(...ring.map((a,i)=>segmentDistance(p,a,ring[(i+1)%ring.length])));

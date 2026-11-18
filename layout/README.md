@@ -88,8 +88,8 @@ unconfirmed. Route sources lists its duty, actual implementation and confidence.
 
 ## S5 pavement patches
 
-Commander drawings in `research/runs/m3-s5-3318/s5-returned.labelme.json` supply
-`pave:lot-a-entrance-road` and `pave:equity-exit2-driveway`. Original vertices are
+The Commander-drawn features `pave:lot-a-entrance-road` and
+`pave:equity-exit2-driveway` are included in `images/layout-overlay.json`. Original vertices are
 unchanged. These two patches feed street routing, drivable connectors and mapped
 pavement diagnostics. Existing roof polygons and their 1px margin remain excluded
 from travel. The Lot A boundary has a small overlap with that mask; it is NOT a

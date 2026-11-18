@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { C_SHUTTLE_TRACE } from '../src/exitPathSource.js';
-import { C_LOOP_STOPS, C_SHUTTLE_JOINS, C_STOP_CURB_PX } from '../src/cShuttleLoop.js';
-import { buildShuttleCircuits, SHUTTLE_STOPS } from '../src/shuttleRoutes.js';
-import { clearSegment, join, distance, drivableAllowed, avoidsObstacles } from '../src/sourceRouting.js';
+import { C_SHUTTLE_TRACE } from '../src/routes/exitPathSource.js';
+import { C_LOOP_STOPS, C_SHUTTLE_JOINS, C_STOP_CURB_PX } from '../src/routes/cShuttleLoop.js';
+import { buildShuttleCircuits, SHUTTLE_STOPS } from '../src/routes/shuttleRoutes.js';
+import { clearSegment, join, distance, drivableAllowed, avoidsObstacles } from '../src/routes/sourceRouting.js';
 import { createCampusTraffic } from '../src/traffic.js';
 import { WORLD_SCALE, pointAt } from '../src/clearImageSource.js';
 

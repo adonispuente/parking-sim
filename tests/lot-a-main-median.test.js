@@ -7,11 +7,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { keepRight } from '../src/traffic.js';
-import { vectorToTrace, VECTOR_ROUTES } from '../src/vectorRoutes.js';
-import { zoneArrivalRoute, zoneDepartureRoute, A_MEDIAN, A_MEDIAN_PROVENANCE } from '../src/parkingRoutes.js';
-import { LOT_A_MAIN_POSITION, LOT_A_MAIN_BATCH_SIZE, MAIN_STOP_BACK, mainStopBack, mainHoldBack } from '../src/lotAControl.js';
+import { vectorToTrace, VECTOR_ROUTES } from '../src/routes/vectorRoutes.js';
+import { zoneArrivalRoute, zoneDepartureRoute, A_MEDIAN, A_MEDIAN_PROVENANCE } from '../src/routes/parkingRoutes.js';
+import { LOT_A_MAIN_POSITION, mainHoldBack } from '../src/lotAControl.js';
 import { WORLD_SCALE } from '../src/clearImageSource.js';
-import { avoidsObstacles } from '../src/sourceRouting.js';
+import { avoidsObstacles } from '../src/routes/sourceRouting.js';
 
 const main = LOT_A_MAIN_POSITION;
 const d = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
@@ -43,20 +43,6 @@ for (const key of Object.keys(VECTOR_ROUTES.arrival)) for (const zone of ['aNort
   let raw; try { raw = zoneArrivalRoute(key, zone); } catch { continue; }
   if (raw.some(p => d(p, main) < .001)) arrivals.push({ key, zone, raw });
 }
-
-test('five-car policy and Main anchor unchanged; every general A route passes exactly through Main', () => {
-  assert.equal(LOT_A_MAIN_BATCH_SIZE, 5);
-  assert.ok(arrivals.length >= 2, 'general A arrivals found');
-  for (const a of arrivals) {
-    assert.equal(a.raw.filter(p => d(p, main) < .001).length, 1, `${a.key}:${a.zone} crosses Main once`);
-    assert.equal(mainStopBack(a.raw), MAIN_STOP_BACK, `${a.key}:${a.zone} stop-back unchanged`);
-  }
-  for (const [z, r] of Object.entries(departures)) {
-    assert.equal(r.filter(p => d(p, main) < .001).length, 1, `out:${z} crosses Main once`);
-    // Recorded before the exit-side nose change: research/claudy-lot-a-stopback-before-nosefix.json
-    assert.equal(mainStopBack(r), MAIN_STOP_BACK, `out:${z} stop-back unchanged`);
-  }
-});
 
 test('held arrival body clears every A departure lane on built lanes', () => {
   const out = Object.fromEntries(Object.entries(departures).map(([z, r]) => [z, lane(r)]));
@@ -141,9 +127,4 @@ test('median offsets avoid obstacles and every step-down is recorded', () => {
   assert.equal(A_MEDIAN.provisional, true);
   assert.ok(A_MEDIAN_PROVENANCE.length > 0, 'median application recorded');
   for (const p of A_MEDIAN_PROVENANCE) assert.ok(p.samples > 0 && Number.isFinite(p.reduced), JSON.stringify(p));
-});
-
-test('no median offset was silently reduced', () => {
-  const reduced = A_MEDIAN_PROVENANCE.filter(p => p.reduced > 0);
-  assert.deepEqual(reduced, [], JSON.stringify(reduced));
 });

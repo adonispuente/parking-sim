@@ -1,4 +1,4 @@
-import { buildShuttleCircuits, SHUTTLE_STOPS } from './shuttleRoutes.js';
+import { buildShuttleCircuits, SHUTTLE_STOPS } from './routes/shuttleRoutes.js';
 import { busesPassThrough } from './vehicleInteractions.js';
 import { createShuttleDemand } from './shuttleDemand.js';
 

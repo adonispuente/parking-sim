@@ -1,8 +1,8 @@
 // Staff at C's entrance reserve shuttle turns, using the actual conflicting
 // portions of each lane. Area, lookahead, and gaps are provisional estimates.
 import { pointAt, WORLD_SCALE } from './clearImageSource.js';
-import { C_FOUR_WAY } from './cHubSource.js';
-import { inPolygon } from './sourceRouting.js';
+import { C_FOUR_WAY } from './routes/cHubSource.js';
+import { inPolygon } from './routes/sourceRouting.js';
 const [x,y]=pointAt(63);
 export const C_ENTRANCE_AREA=Object.freeze([[x-45,y-30],[x+45,y-30],[x+45,y+65],[x-45,y+65]].map(p=>Object.freeze(p)));
 const half=car=>(car.bodyLength??(car.fleetBus?2.9:1.35))/2;

@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import { traceWorldPoint } from './tracedMap.js';
-import { VECTOR_ROUTES, vectorToTrace } from './vectorRoutes.js';
+import { VECTOR_ROUTES, vectorToTrace } from './routes/vectorRoutes.js';
 import { createZonedCampus } from './campusSimulation.js';
 import { indexLanePath } from './lanePath.js';
-import { onStreet, inPolygon } from './pavementRouting.js';
-import { avoidsObstacles, drivingPrefix } from './sourceRouting.js';
+import { onStreet, inPolygon } from './routes/pavementRouting.js';
+import { avoidsObstacles, drivingPrefix } from './routes/sourceRouting.js';
 import { shapeAt, pointAt } from './clearImageSource.js';
-import { alignCorporateLanes } from './corporateLanes.js';
+import { alignCorporateLanes } from './routes/corporateLanes.js';
 import { alignClayApproach } from './equityClayStop.js';
 
 const point = ([x,y]) => { const [wx,wz]=traceWorldPoint([x,y]); return new THREE.Vector3(wx,.6,wz); };

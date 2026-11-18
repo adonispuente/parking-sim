@@ -1,5 +1,5 @@
 // S0 exit-trace catalog tests, 2026-11-10.
-// Bounded tests for src/exitPathSource.js only. The module is isolated: no
+// Bounded tests for src/routes/exitPathSource.js only. The module is isolated: no
 // routing, parking, controller or view module imports it, so this file must not
 // import any of those either — only the catalog, the registered source JSON and
 // node's file/hash tools.
@@ -15,7 +15,7 @@ import {
   C_SHUTTLE_TRACE,
   validateExitPathDrawing,
   exitPathById,
-} from '../src/exitPathSource.js';
+} from '../src/routes/exitPathSource.js';
 
 const W = 1374, H = 1118;
 

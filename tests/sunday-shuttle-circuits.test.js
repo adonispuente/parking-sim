@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createCampusTraffic } from '../src/traffic.js';
 import { keepRight } from '../src/traffic.js';
-import { buildShuttleCircuits, internalPath, avoidsShuttleObstacles, SHUTTLE_STOPS } from '../src/shuttleRoutes.js';
-import { streetPath, inPolygon, onStreet } from '../src/pavementRouting.js';
+import { buildShuttleCircuits, internalPath, avoidsShuttleObstacles, SHUTTLE_STOPS } from '../src/routes/shuttleRoutes.js';
+import { streetPath, inPolygon, onStreet } from '../src/routes/pavementRouting.js';
 // Current source pair only (EverythingClearImage.json on Clear Image.png).
 import source from '../src/clearImageSource.js';
 

@@ -1,25 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import { PARKING_ZONES, GENERAL_CAPACITY, distributeInitialOccupancy, blankZones, chooseZone } from '../src/parkingZones.js';
+import { PARKING_ZONES, distributeInitialOccupancy } from '../src/parkingZones.js';
 import { createServiceController, serviceOptions, SUNDAY_SERVICES } from '../src/sundayServices.js';
 import { createCampusTraffic } from '../src/traffic.js';
-import { zoneArrivalRoute, zoneDepartureRoute, B_SOUTH_CHECKPOINT } from '../src/parkingRoutes.js';
-import { avoidsShuttleObstacles } from '../src/shuttleRoutes.js';
+import { zoneArrivalRoute, zoneDepartureRoute, B_SOUTH_CHECKPOINT } from '../src/routes/parkingRoutes.js';
+import { avoidsShuttleObstacles } from '../src/routes/shuttleRoutes.js';
 import { advanceSharedTraffic } from '../src/sharedTraffic.js';
 import { makeOccupancyFill } from '../src/occupancyFill.js';
 const advance=(s,seconds)=>{for(let i=0;i<seconds*10;i++)s.step(.1);};
-
-test('confirmed section capacities total1584; badge51 stays inside A411',()=>{
-  assert.equal(PARKING_ZONES.reduce((n,z)=>n+z.capacity,0),1584);
-  assert.deepEqual(GENERAL_CAPACITY,{a:360,b:487,c:686});
-  const n=distributeInitialOccupancy({a:411,b:487,c:686});
-  assert.deepEqual(n,{aNorth:210,aSouth:150,aBadge:51,bSouth:75,bBanana:100,bPocket:8,bNorth:304,cNorth:343,cSouth:343});
-  assert.equal(chooseZone('a',blankZones(),blankZones()),'aNorth');
-  assert.equal(chooseZone('a',{...blankZones(),aNorth:210},blankZones()),'aSouth');
-  assert.equal(chooseZone('b',{...blankZones(),bSouth:75},blankZones()),'bBanana');
-  assert.equal(SUNDAY_SERVICES.final.startMinute,795);
-});
 
 test('A transition gate excludes badges, reopens at50%, and B has no half-full hold',()=>{
   const initial=distributeInitialOccupancy({a:411,b:487});

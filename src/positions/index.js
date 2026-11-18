@@ -12,7 +12,7 @@ import { LAYOUT } from '../layoutOverlay.js';
 import { buildOverlayPositions } from './overlayDefinitions.js';
 import { pointAt, STAFF_POSITIONS, POSITION_ALIASES } from '../clearImageSource.js';
 import { EQUITY_CLAY_STOP_POSITION, EQUITY_CLAY_MAX_WAIT_S } from '../equityClayStop.js';
-import { C_ROUNDABOUT_POSITION, C_HUB_SOURCE } from '../cHubSource.js';
+import { C_ROUNDABOUT_POSITION, C_HUB_SOURCE } from '../routes/cHubSource.js';
 
 // Point bindings used by controllers and the route panel (formerly src/trafficPositions.js).
 export const RESOLVED_A_MAIN_POSITION = Object.freeze([...pointAt(57)]);
@@ -65,7 +65,7 @@ const DEFINITIONS = {
     implemented: 'Route checkpoint: entrance routes are bound to this point and passage is counted. No separate admission quota in the default wide-road mode.',
     intended: ['Inside-Bravo marshal / row-filling workflow (not modeled)'],
     provisional: [],
-    controllers: ['src/parkingRoutes.js', 'src/vectorRoutes.js', 'src/corporateDriveOperators.js'],
+    controllers: ['src/routes/parkingRoutes.js', 'src/routes/vectorRoutes.js', 'src/corporateDriveOperators.js'],
   },
   bExit: {
     title: 'Lot B north exit',
@@ -81,7 +81,7 @@ const DEFINITIONS = {
     implemented: 'Entrance marshal reserves approaching shuttle turns, holds conflicting car queues before the turn area, and lets occupied or separated movements clear.',
     intended: ['Per-person admission quota (not modeled)'],
     provisional: ['Estimated turn area around #63', '14-unit shuttle lookahead; body-length buffer plus 1.25-unit gap'],
-    controllers: ['src/parkingRoutes.js', 'src/vectorRoutes.js', 'src/northernCorporateControl.js', 'src/cEntranceControl.js'],
+    controllers: ['src/routes/parkingRoutes.js', 'src/routes/vectorRoutes.js', 'src/northernCorporateControl.js', 'src/cEntranceControl.js'],
   },
   cExit: {
     title: 'Lot C exit',
@@ -117,7 +117,7 @@ export const C_HUB_POSITIONS = Object.freeze([Object.freeze({
   duty: 'Manages the four-way above the roundabout, giving shuttles first priority, then exits, while separated entering and exiting lanes continue together.',
   implemented: 'Holds only conflicting movements at the drawn four-way; occupied movements and physical leaders clear first. Compatible paths may enter together.',
   intended: [], provisional: ['28px aisle separation on wide interior roads', '10 scene-unit shuttle lookahead', '1.25 scene-unit stop gap'],
-  controllers: ['src/cRoundaboutControl.js', 'src/cHubRoutes.js'],
+  controllers: ['src/cRoundaboutControl.js', 'src/routes/cHubRoutes.js'],
 })]);
 
 // Preserve the eight-entry source API; the new drawing has a separate namespace.

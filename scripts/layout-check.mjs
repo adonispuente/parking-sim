@@ -1,6 +1,6 @@
 // npm run layout:check [-- path/to/overlay.json]
 // Validates a LabelMe layout overlay and writes an SVG review image to
-// research/layout-check/<hash>.svg. Exit 0 = valid, 1 = problems found.
+// .artifacts/layout-check/<hash>.svg. Exit 0 = valid, 1 = problems found.
 // Geometry checks here use routing helpers; the runtime parser stays pure.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -29,7 +29,7 @@ const problems = geo.problems.map(p => `${p.id}: ${p.message}`);
 
 // SVG review image: overlay on the source photo. Colour = confidence, red = problem.
 const colour = f => badIds.has(f.id) ? '#e0312b' : { confirmed:'#2e9d4f', estimated:'#e3a21a', unknown:'#8a8a8a' }[f.fields.confidence] ?? '#3a6fd8';
-const outDir = 'research/layout-check'; fs.mkdirSync(outDir, { recursive: true });
+const outDir = '.artifacts/layout-check'; fs.mkdirSync(outDir, { recursive: true });
 const img = path.relative(outDir, 'images/Clear Image.png').split(path.sep).map(encodeURIComponent).join('/');
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' })[c]);
 const P = pts => pts.map(p => p.join(',')).join(' ');

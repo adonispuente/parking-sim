@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { keepRight, KEEP_RIGHT_PX, TWO_WAY_KEEP_RIGHT_PX, onTwoWayStreet } from '../src/traffic.js';
 import { shapeAt, WORLD_SCALE } from '../src/clearImageSource.js';
-import { inPolygon, onStreet } from '../src/pavementRouting.js';
-import { CORPORATE_LANE_OFFSET_PX } from '../src/corporateLanes.js';
+import { inPolygon, onStreet } from '../src/routes/pavementRouting.js';
+import { CORPORATE_LANE_OFFSET_PX } from '../src/routes/corporateLanes.js';
 
 // Commander 2026-11-06: "corporate drive is a two way street, as is equity".
 // Opposing lanes on those streets must clear bus/bus body width (1.03 world,

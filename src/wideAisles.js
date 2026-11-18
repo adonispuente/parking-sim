@@ -7,8 +7,8 @@
 // shuttle turn; only its local, drivable turn apron receives the same behavior.
 import { fromWorld, shapeAt } from './clearImageSource.js';
 import { C_ENTRANCE_AREA } from './cEntranceControl.js';
-import { inPolygon, drivableAllowed } from './sourceRouting.js';
-import { onLotGround } from './shuttleRoutes.js';
+import { inPolygon, drivableAllowed } from './routes/sourceRouting.js';
+import { onLotGround } from './routes/shuttleRoutes.js';
 
 export const WIDE_AISLE_LOTS = ['c'];
 // Lot A North interior (section polygon, source #39), on drivable ground only.

@@ -1,8 +1,8 @@
 // Local marshal at the drawn four-way above C's roundabout. Compatible lanes
 // run together; priority applies to crossing/merging movements only.
-import { C_FOUR_WAY, C_ROUNDABOUT_POSITION } from './cHubSource.js';
+import { C_FOUR_WAY, C_ROUNDABOUT_POSITION } from './routes/cHubSource.js';
 import { WORLD_SCALE } from './clearImageSource.js';
-import { inPolygon } from './sourceRouting.js';
+import { inPolygon } from './routes/sourceRouting.js';
 import { trafficClass, compareTrafficPriority } from './trafficPriority.js';
 import { busesPassThrough } from './vehicleInteractions.js';
 

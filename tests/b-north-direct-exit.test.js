@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { routeAt, shapeAt } from '../src/clearImageSource.js';
-import { zoneDepartureRoute, B_NORTH_DIRECT, B7_ROW_SWEEP, B_EXIT_PROVENANCE } from '../src/parkingRoutes.js';
-import { VECTOR_ROUTES } from '../src/vectorRoutes.js';
-import { avoidsObstacles, inPolygon, segmentDistance, distance } from '../src/sourceRouting.js';
+import { zoneDepartureRoute, B_NORTH_DIRECT, B7_ROW_SWEEP, B_EXIT_PROVENANCE } from '../src/routes/parkingRoutes.js';
+import { VECTOR_ROUTES } from '../src/routes/vectorRoutes.js';
+import { avoidsObstacles, inPolygon, segmentDistance, distance } from '../src/routes/sourceRouting.js';
 
 // Internal leg = route points up to the exit source's first vertex (#11/#17 start).
 const internalLeg=(access,zone)=>{
@@ -50,8 +50,8 @@ test('other Lot B departure legs are unchanged from the 2026-11-07 baseline', ()
 
 // Production cars depart from the drawn hubs, rather than zone staging.
 test('every B North hub reaches the north exit without touring B South', async () => {
-  const { abHubsForZone }=await import('../src/abHubSource.js');
-  const { clearSegment, drivableAllowed }=await import('../src/sourceRouting.js');
+  const { abHubsForZone }=await import('../src/routes/abHubSource.js');
+  const { clearSegment, drivableAllowed }=await import('../src/routes/sourceRouting.js');
   for(const hub of abHubsForZone('bNorth')) {
     const route=zoneDepartureRoute('bNorth','bNorth',hub.id);
     const k=route.findIndex(p=>distance(p,VECTOR_ROUTES.departure.bNorth[0])<.001);

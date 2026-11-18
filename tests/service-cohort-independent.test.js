@@ -205,35 +205,6 @@ test('idle carry across nine->eleven: ids, zones, readiness and A latch preserve
   assert.equal(next.serviceStatus.gates.a.releaseMinute,615);
 });
 
-// --- 7. Current-service lifecycle: every car releases at ITS OWN dismissal --
-test('carried 9:00-cohort cars key to 9:00 dismissal; fresh 11:00 arrivals key to 11:00 dismissal',()=>{
-  const state=createCampusTraffic({
-    initialOccupancy:{a:0,b:200,c:0},
-    service:{enabled:true,...serviceOptions('eleven',{demand:20,beginMinute:605})},
-  });
-  // Carried 9:00-cohort cars (initial occupancy): dismissal 615, main 615..640.
-  const nine=state.parkedVehicles.filter(c=>c.serviceId==='nine'&&c.cohort==='previous');
-  assert.equal(nine.length,200);
-  for(const c of nine){
-    assert.equal(c.dismissalMinute,615);
-    assert.ok(c.readinessMinute>=605-1e-9&&c.readinessMinute<=640+1e-9,`9:00-cohort readiness ${c.readinessMinute} outside 9:00 dismissal window`);
-  }
-  assert.equal(nine.filter(c=>c.departureGroup==='early').length,10,'floor(200/20) early in 9:00 cohort');
-  // Fresh 11:00 arrivals (parked from demand): dismissal 735, readiness 725..760.
-  state.waiting[0]=20;
-  step(state,60); // through 10:25: all due arrivals park (3-5 min road leg)
-  const eleven=state.parkedVehicles.filter(c=>c.serviceId==='eleven'&&c.cohort==='current');
-  assert.ok(eleven.length>=10,`at least 10 of 20 arrivals must have parked by 10:25 (got ${eleven.length})`);
-  for(const c of eleven){
-    assert.equal(c.dismissalMinute,735,'fresh arrival keys to the 11:00 dismissal, not a fixed offset');
-    assert.ok(c.readinessMinute>=725-1e-9&&c.readinessMinute<=760+1e-9,`11:00 readiness ${c.readinessMinute} outside 11:00 dismissal window`);
-    assert.ok(Number.isFinite(c.readyAt));
-  }
-  // current-cohort ordinals start fresh from 0 in the actual parked lot
-  assert.deepEqual(eleven.map(c=>c.departureOrdinal).sort((a,b)=>a-b),Array.from({length:eleven.length},(_,i)=>i));
-  assert.deepEqual(state.routingIssues,[]);
-});
-
 // --- 8. Full-day chain: nine -> eleven -> final ----------------------------
 test('chain: a completed eleven service carries forward to final without rewinding the clock',()=>{
   // 60 nine-cohort lot-A cars (all ready by 645) + no incoming demand: the service

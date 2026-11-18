@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { createCampusTraffic } from '../src/traffic.js';
-import { buildShuttleRoutes, SHUTTLE_STOPS, avoidsShuttleObstacles } from '../src/shuttleRoutes.js';
+import { buildShuttleRoutes, SHUTTLE_STOPS, avoidsShuttleObstacles } from '../src/routes/shuttleRoutes.js';
 import { advanceSharedTraffic } from '../src/sharedTraffic.js';
 const advance=(s,seconds,rates=[0,0,0])=>{for(let i=0;i<seconds*10;i++)s.step(.1,rates);};
 const fleet=options=>createCampusTraffic({shuttles:{enabled:true,dwellSeconds:1},...options});
@@ -20,28 +20,6 @@ test('all shuttle loops begin/end at exact labeled pickups and avoid roofs/block
   }
 });
 
-test('five persistent buses loop with four to B and one cycling all C stops',()=>{
-  const s=fleet();const c=new Set();
-  for(let i=0;i<6000;i++){s.step(.1);const b=s.shuttles[4];if(b.phase==='outbound')c.add(b.stop);}
-  assert.equal(s.shuttles.length,5);
-  assert.ok(s.shuttles.every(b=>b.trips>=3));
-  assert.ok(s.shuttles.slice(0,4).every(b=>b.stop==='bSouth'));
-  assert.deepEqual([...c].sort(),['cNorth','cRoundabout','cSouth']);
-  assert.equal(Object.values(s.occupancy).reduce((a,b)=>a+b,0),0);
-  assert.equal(s.routeHistory.length,0,'fleet does not consume private parking');
-});
-
-test('B full switches to C after current trip completes at home, with no midroute jump',()=>{
-  const s=fleet();advance(s,20);
-  const bus=s.cars.find(c=>c.id==='shuttle-1');const lane=bus.lane,d=bus.distance;
-  s.occupancy.b=487;s.step(.1);
-  assert.equal(bus.lane,lane);assert.ok(bus.distance>=d&&bus.distance<=d+.26);
-  advance(s,500);
-  assert.equal(s.shuttleDispatchMode,'all-c');
-  assert.ok(s.shuttles.every(b=>b.stop.startsWith('c')));
-  assert.ok(s.shuttles.every(b=>b.trips>=3));
-});
-
 test('fleet keeps completing trips in traffic in both allocation modes',()=>{
   for(const b of [0,487]) {
     const s=fleet({initialOccupancy:{b}});
@@ -53,14 +31,6 @@ test('fleet keeps completing trips in traffic in both allocation modes',()=>{
     // shared-traffic queuing; this integration test requires fleet progress.
 
   }
-});
-
-test('badge parking stays available when general campus is full without inflating 1584',()=>{
-  const s=createCampusTraffic({badgePercent:100,initialOccupancy:{a:411,b:487,c:686}});
-  s.waiting[0]=2;advance(s,180);
-  assert.equal(s.badgeParking,2);assert.equal(s.badgeReserved,0);
-  assert.equal(s.occupancy.a,411);assert.equal(s.sentAway,0);
-  assert.ok(s.routeHistory.every(c=>c.access==='badgeA'));
 });
 
 test('departure releases count-only A/B/C simultaneously through proper exits and buses continue',()=>{

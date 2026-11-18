@@ -2,10 +2,10 @@
 // source pair (Clear Image.png + EverythingClearImage.json) is the only frame.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { VEHICLE_ROUTE_CATALOG, ROUTE_RUNTIME, runtimeKey, catalogSummary, routeDiagnostics, subscribeRouteRuntime } from '../src/vehicleRouteCatalog.js';
+import { VEHICLE_ROUTE_CATALOG, ROUTE_RUNTIME, runtimeKey, catalogSummary, routeDiagnostics, subscribeRouteRuntime } from '../src/routes/vehicleRouteCatalog.js';
 import { SOURCE_BINDINGS, SOURCE_PAIR, pointAt, IMAGE_SIZE } from '../src/clearImageSource.js';
-import { zoneArrivalRoute, B_SOUTH_CHECKPOINT } from '../src/parkingRoutes.js';
-import { avoidsShuttleObstacles } from '../src/shuttleRoutes.js';
+import { zoneArrivalRoute, B_SOUTH_CHECKPOINT } from '../src/routes/parkingRoutes.js';
+import { avoidsShuttleObstacles } from '../src/routes/shuttleRoutes.js';
 import { LOT_A_MAIN_POSITION } from '../src/lotAControl.js';
 import { MAIN_POSITION_RESOLUTION } from '../src/positions/index.js';
 

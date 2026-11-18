@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createCampusTraffic } from '../src/traffic.js';
-import { zoneArrivalRoute } from '../src/parkingRoutes.js';
-import { VECTOR_ROUTES } from '../src/vectorRoutes.js';
-import { SHUTTLE_STOPS, avoidsShuttleObstacles } from '../src/shuttleRoutes.js';
+import { zoneArrivalRoute } from '../src/routes/parkingRoutes.js';
+import { VECTOR_ROUTES } from '../src/routes/vectorRoutes.js';
+import { SHUTTLE_STOPS, avoidsShuttleObstacles } from '../src/routes/shuttleRoutes.js';
 import { shapeAt } from '../src/clearImageSource.js';
-import { inPolygon } from '../src/sourceRouting.js';
+import { inPolygon } from '../src/routes/sourceRouting.js';
 
 function depart(north, south) {
   const state=createCampusTraffic({phase:'departure',initialZoneOccupancy:{aNorth:north,aSouth:south}});

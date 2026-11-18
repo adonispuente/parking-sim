@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 // Current source frame only (images/EverythingClearImage.json, 1374 x 1118). The old
 // HopeCityLayoutVectors.json is a different 735 x 566 frame and cannot be compared.
 import { shapeAt } from '../src/clearImageSource.js';
-import { inPolygon, onStreet } from '../src/pavementRouting.js';
-import { onDrivable, isDisclosedUntraced, untracedGapPoints } from '../src/sourceRouting.js';
-import { ROUTE_METADATA, STREET_SECTIONS, VECTOR_ROUTES } from '../src/vectorRoutes.js';
+import { inPolygon, onStreet } from '../src/routes/pavementRouting.js';
+import { onDrivable, isDisclosedUntraced, untracedGapPoints } from '../src/routes/sourceRouting.js';
+import { ROUTE_METADATA, STREET_SECTIONS, VECTOR_ROUTES } from '../src/routes/vectorRoutes.js';
 
 const FEEDER_ROAD = 54, EQUITY_DRIVE = 55, CORPORATE_DRIVE = 56;
 const ring = index => {

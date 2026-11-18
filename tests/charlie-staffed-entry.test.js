@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { zoneArrivalRoute, C_ENTRANCE_INTERIOR } from '../src/parkingRoutes.js';
+import { zoneArrivalRoute, C_ENTRANCE_INTERIOR } from '../src/routes/parkingRoutes.js';
 import { pointAt, WORLD_SCALE, fromWorld } from '../src/clearImageSource.js';
-import { clearSegment, distance } from '../src/sourceRouting.js';
+import { clearSegment, distance } from '../src/routes/sourceRouting.js';
 import { createCampusTraffic } from '../src/traffic.js';
 
 for (const key of ['cWest', 'eCWest', 'e2CWest']) for (const zone of ['cFirstNorth', 'cFirstSouth', 'cNorth', 'cSouth'])

@@ -69,9 +69,9 @@ test('real traffic recorded rewind restores car poses/counts and deterministic f
   assert.deepEqual(captureTrafficFrame(p.simulation), reference);
 });
 test('Operations mounts compact parked counts and retires requested sections/presets', () => {
-  const ui = readFileSync(new URL('../src/main.jsx', import.meta.url), 'utf8');
+  const ui = readFileSync(new URL('../src/App.jsx', import.meta.url), 'utf8');
   const sunday = readFileSync(new URL('../src/SundayControls.jsx', import.meta.url), 'utf8');
-  assert.match(ui, /badgePercent:5/);
+  assert.match(ui, /badgePercent:\s*5/);
   assert.doesNotMatch(ui, /<ParkingSectionControls|<VolunteerControls|Badge vehicles \(%\)|\['Empty lots'|\['A full'|\['A \+ B full'/);
   assert.match(sunday, /aria-label="Current parked cars"/);
   assert.match(sunday, /stats\.occupancy\?\.\[lot\]/);

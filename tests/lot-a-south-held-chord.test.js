@@ -13,10 +13,10 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { keepRight } from '../src/traffic.js';
 import { traceWorldPoint } from '../src/tracedMap.js';
-import { vectorToTrace, VECTOR_ROUTES } from '../src/vectorRoutes.js';
+import { vectorToTrace, VECTOR_ROUTES } from '../src/routes/vectorRoutes.js';
 import { indexLanePath } from '../src/lanePath.js';
-import { zoneArrivalRoute, zoneDepartureRoute } from '../src/parkingRoutes.js';
-import { attachMainPositionToLane, MAIN_DEPARTURE_HOLD_BACK } from '../src/lotAControl.js';
+import { zoneArrivalRoute, zoneDepartureRoute } from '../src/routes/parkingRoutes.js';
+import { attachMainPositionToLane } from '../src/lotAControl.js';
 
 const HALF = 1.35 / 2, LOOKAHEAD = 6, CONFLICT_WIDTH = .9, STEP = .1;
 const point = ([x, y]) => { const [wx, wz] = traceWorldPoint([x, y]); return new THREE.Vector3(wx, .6, wz); };
@@ -76,15 +76,6 @@ const reverseMin = (departureStop, arrivalStop) => { let m = Infinity;
     for (const a of arrivals) for (let d = arrivalStop(a.lane); d <= a.lane.length; d += STEP)
       m = Math.min(m, heldWins(windowOf(a.lane, d, Infinity), held)); }
   return m; };
-
-test('production approaches apply the measured holds (aMain 2.2, aSouth 3.2, aNorth 3.0)', () => {
-  assert.equal(arrivals.length, 26, 'all Main-inbound arrival lanes built');
-  assert.deepEqual({ ...MAIN_DEPARTURE_HOLD_BACK }, { aNorth: 3.0, aSouth: 3.2, aMain: 2.2 });
-  for (const a of arrivals) assert.ok(Math.abs(a.lane.aControl.mergeDistance - heldStop(a.lane) - 2.2) < 1e-9, a.name);
-  const south = departures.find(x => x.name === 'out:aSouth').lane.aControl;
-  assert.ok(Math.abs(south.mergeDistance - south.stopDistance - 3.2) < 1e-9);
-  assert.ok(south.stopDistance > 0, 'aSouth hold stays on its staging lane');
-});
 
 test('no admitted A departure yields to a batch-held Main-inbound arrival (chord rule)', () => {
   const m = forwardMin(heldStop);

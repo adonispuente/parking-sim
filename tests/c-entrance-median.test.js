@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { keepRight, createCampusTraffic } from '../src/traffic.js';
-import { vectorToTrace } from '../src/vectorRoutes.js';
-import { zoneArrivalRoute, zoneDepartureRoute, ZONE_STAGING, C_MEDIAN, C_MEDIAN_PROVENANCE, inCThroat } from '../src/parkingRoutes.js';
+import { vectorToTrace } from '../src/routes/vectorRoutes.js';
+import { zoneArrivalRoute, zoneDepartureRoute, ZONE_STAGING, C_MEDIAN, C_MEDIAN_PROVENANCE, inCThroat } from '../src/routes/parkingRoutes.js';
 import { WORLD_SCALE } from '../src/clearImageSource.js';
 
 // Commander (2026-11-07): Lot C entrance = two roads split by a median; C cars use both exits ~50/50.

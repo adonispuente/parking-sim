@@ -2,7 +2,7 @@
 // and the in-app Routes view so both mark the same features as problems.
 // Moved verbatim from scripts/layout-check.mjs (M3 S3); behavior unchanged.
 // Pure: reads source roofs via sourceRouting, never changes routing state.
-import { avoidsObstacles, inPolygon, distance, clearSegment } from './sourceRouting.js';
+import { avoidsObstacles, inPolygon, distance, clearSegment } from './routes/sourceRouting.js';
 import { routeAt } from './clearImageSource.js'; // imports only the source JSON: no cycle
 
 export const JOIN_PX = 18; // same as VEHICLE_ROUTE_MANIFEST.thresholds.joinPx

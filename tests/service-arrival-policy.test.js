@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 // Current source only: Lot B entrance is EverythingClearImage point #61.
 import { pointAt } from '../src/clearImageSource.js';
-import { onStreet } from '../src/pavementRouting.js';
-import { ROUTE_METADATA, STREET_SECTIONS, VECTOR_ROUTES } from '../src/vectorRoutes.js';
+import { onStreet } from '../src/routes/pavementRouting.js';
+import { ROUTE_METADATA, STREET_SECTIONS, VECTOR_ROUTES } from '../src/routes/vectorRoutes.js';
 import { selectArrivalAccess } from '../src/trafficPolicy.js';
 import { serviceArrivalPriorities } from '../src/sundayServices.js';
 

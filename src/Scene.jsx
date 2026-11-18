@@ -1,28 +1,28 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { WORLD } from './model.js';
-import { createCampusTraffic, createTenCarDemo } from './traffic.js';
+import { createCampusTraffic } from './traffic.js';
 import { createSeekablePlayback } from './playback.js';
 import { captureTrafficFrame } from './playbackFrames.js';
-import { SHUTTLE_STOPS } from './shuttleRoutes.js';
+import { SHUTTLE_STOPS } from './routes/shuttleRoutes.js';
 import { PARKING_ZONES } from './parkingZones.js';
-import { ZONE_STAGING } from './parkingRoutes.js';
+import { ZONE_STAGING } from './routes/parkingRoutes.js';
 import { makeOccupancyFillPieces } from './occupancyFill.js';
 import { C_ZONE_PIECES } from './cParkingGeometry.js';
 import referenceUrl from '../images/Clear Image.png';
 import { STAFF_POSITIONS } from './clearImageSource.js';
 import { tracedFeatures, traceWorldPoint } from './tracedMap.js';
-import { VEHICLE_ROUTE_CATALOG, catalogSummary, routeDiagnostics, subscribeRouteRuntime } from './vehicleRouteCatalog.js';
+import { VEHICLE_ROUTE_CATALOG, catalogSummary, routeDiagnostics, subscribeRouteRuntime } from './routes/vehicleRouteCatalog.js';
 import { createVehicleVisual, createVolunteerVisual } from './worldActors.js';
 import { worldSurfaceMaterial } from './presentationMaterials.js';
 import { createPresentationPavement } from './presentationPavement.js';
 import { createPresentationLots, REPLACED_WORLD_SURFACES } from './presentationLots.js';
 import { createBuildingModel } from './buildingModels.js';
 import { MAIN_POSITION_RESOLUTION, C_HUB_POSITIONS } from './positions/index.js';
-import { AB_HUBS } from './abHubSource.js';
-import { C_HUBS, C_FOUR_WAY } from './cHubSource.js';
-import { roadAnchoredRoute } from './roadAnchoredRoutes.js';
+import { AB_HUBS } from './routes/abHubSource.js';
+import { C_HUBS, C_FOUR_WAY } from './routes/cHubSource.js';
+import { roadAnchoredRoute } from './routes/roadAnchoredRoutes.js';
 import { EQUITY_CLAY_STOP_POSITION } from './equityClayStop.js';
 import { overlayDisplay, overlaySummary, CONFIDENCE_COLORS, PROBLEM_COLOR } from './layoutOverlayView.js';
 import { exitTraceOverlay, EXIT_TRACE_COLOR } from './exitPathOverlayView.js';
@@ -186,9 +186,8 @@ function drawItem(item, selected, world = false) {
   return group;
 }
 
-export default function Scene({ layout, selectedId, tool, reference, traced = false, world = false, showLabels = true, showOccupancy = true, cameraFocus = 'campus', cameraReset = 0, running, playbackSpeed = 5, seekRequest, onPlaybackState, onReplayInvalidated, trafficRates, trafficReset, trafficMode, trafficOptions, onTrafficStats, view, zoom, showRoutes = false, onPick, onPlace }) {
+export default function Scene({ layout, selectedId, tool, reference, traced = false, world = false, showLabels = true, showOccupancy = true, cameraFocus = 'campus', cameraReset = 0, running, playbackSpeed = 5, onPlaybackState, onReplayInvalidated, trafficRates, trafficReset, trafficOptions, onTrafficStats, view, zoom, showRoutes = false, onPick, onPlace }) {
   const mount = useRef(null), engine = useRef(null), latest = useRef({});
-  const consumedSeek = useRef(null);
   const [error, setError] = useState('');
   const replayInputs = {
     rates: trafficRates ?? [18,18,0],
@@ -197,7 +196,10 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
     zonePreferences: trafficOptions?.zonePreferences ?? {}, departurePolicy: trafficOptions?.departurePolicy ?? {},
   };
   const inputKey = JSON.stringify(replayInputs);
-  latest.current = { world, view, tool, onPick, onPlace, running, playbackSpeed, onTrafficStats, onPlaybackState, onReplayInvalidated, replayInputs };
+  // The renderer and pointer handlers consume the last committed React inputs.
+  useLayoutEffect(() => {
+    latest.current = { world, view, tool, onPick, onPlace, running, playbackSpeed, onTrafficStats, onPlaybackState, onReplayInvalidated, replayInputs, trafficOptions };
+  });
 
   useEffect(() => {
     const host = mount.current;
@@ -499,18 +501,18 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
   useEffect(()=>{
     const e=engine.current; if(!e) return;
     e.playback?.cancel();
-    const origin=structuredClone(trafficOptions);
-    const factory=()=>trafficMode==='demo'?createTenCarDemo(structuredClone(origin)):createCampusTraffic(structuredClone(origin));
+    const origin=structuredClone(latest.current.trafficOptions);
+    const factory=()=>createCampusTraffic(structuredClone(origin));
     e.playback=createSeekablePlayback(factory,latest.current.replayInputs,{captureFrame:captureTrafficFrame});
     release(e.traffic); e.carMeshes.clear(); e.simulation=e.playback.simulation;
     latest.current.onPlaybackState?.({clock:0,seeking:false,target:0,completed:0,error:''});
     // Counts are refreshed from the new simulation on the next animation frame;
     // keep the existing section-marker resources alive across service resets.
-  },[trafficReset,trafficMode]);
+  },[trafficReset]);
 
   useEffect(()=>{
     const e=engine.current;
-    if(!e?.playback || !e.playback.setInputs(replayInputs))return;
+    if(!e?.playback || !e.playback.setInputs(latest.current.replayInputs))return;
     e.simulation=e.playback.simulation;
     release(e.traffic);e.carMeshes.clear();
     latest.current.onPlaybackState?.({clock:0,seeking:false,target:0,completed:0,error:''});
@@ -518,25 +520,6 @@ export default function Scene({ layout, selectedId, tool, reference, traced = fa
   },[inputKey]);
 
   useEffect(()=>{engine.current?.playback?.cancel();},[running,playbackSpeed]);
-
-  useEffect(()=>{
-    const e=engine.current;
-    if(!e?.playback || !seekRequest || consumedSeek.current===seekRequest)return;
-    consumedSeek.current=seekRequest;
-    let active=true;
-    const controller=e.playback;
-    controller.seek(seekRequest.seconds,progress=>{
-      if(active)latest.current.onPlaybackState?.({...progress,error:''});
-    }).then(applied=>{
-      if(!active||!applied||engine.current!==e||e.playback!==controller)return;
-      e.simulation=controller.simulation;
-      release(e.traffic);e.carMeshes.clear();
-      latest.current.onPlaybackState?.({clock:controller.clock,seeking:false,error:''});
-    }).catch(error=>{
-      if(active)latest.current.onPlaybackState?.({seeking:false,error:error.message});
-    });
-    return ()=>{active=false;controller.cancel();};
-  },[seekRequest,trafficReset,trafficMode,inputKey]);
 
   useEffect(() => {
     const e=engine.current; if(!e) return;

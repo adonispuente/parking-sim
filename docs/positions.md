@@ -14,7 +14,7 @@ Lot C adds a ninth staffed position from `images/LotCHubs.json` #48, in its own 
 
 - **Location:** exact #48 point, managing the four-way polygon #49 above the roundabout.
 - **Implemented:** `src/cRoundaboutControl.js` admits compatible movements together. Conflicting movements yield to shuttles, then departures, then arrivals. Occupied movements and the physical blocking chains of admitted traffic clear first.
-- **Routing:** `src/cHubRoutes.js` builds a bidirectional aisle network from the C drawing. Cars keep their hub through parking, service carry and departure. Both C exits remain available; their public-road tails merge onto one downstream Corporate trace. Shuttle pickup locations stay unchanged.
+- **Routing:** `src/routes/cHubRoutes.js` builds a bidirectional aisle network from the C drawing. Cars keep their hub through parking, service carry and departure. Both C exits remain available; their public-road tails merge onto one downstream Corporate trace. Shuttle pickup locations stay unchanged.
 - **Provisional:** wide-aisle offsets up to 14px per side, reduced at mapped boundaries and recorded in route provenance; 10 scene-unit lookahead and 1.25 stop gap. Each hub admits two departing cars into the interior at once; further cars remain parked until a slot clears. This models pull-out room, not surveyed aisle capacity. Original parking totals and first-half allocation remain unchanged.
 
 ## #57 — Lot A Main (`aMain`)
@@ -45,7 +45,7 @@ Lot C adds a ninth staffed position from `images/LotCHubs.json` #48, in its own 
 ## #61 — Bravo entrance (`bEntrance`)
 - **Location:** #61; #32 is its alias.
 - **Person's duty:** coordinate the staffed entrance, observe its queue and communicate with #59/#60 and the fleet.
-- **Implemented:** `src/parkingRoutes.js` and `src/vectorRoutes.js` bind entrance-area routes. Feeder arrivals use a median-separated entrance-side turn instead of reversing across Corporate to touch the exact point. Corporate operator reporting counts local passage. Default wide-road mode imposes no independent alternating quota at #61.
+- **Implemented:** `src/routes/parkingRoutes.js` and `src/routes/vectorRoutes.js` bind entrance-area routes. Feeder arrivals use a median-separated entrance-side turn instead of reversing across Corporate to touch the exact point. Corporate operator reporting counts local passage. Default wide-road mode imposes no independent alternating quota at #61.
 - **Not yet represented:** a complete inside-Bravo marshal/row-filling workflow. Do not infer it from a rendered person or the old diagnostic valve.
 
 ## #62 — Bravo north exit (`bExit`)
@@ -57,7 +57,7 @@ Lot C adds a ninth staffed position from `images/LotCHubs.json` #48, in its own 
 ## #63 — Charlie staffed entrance (`cEntrance`)
 - **Location:** #63; #34 is its alias.
 - **Person's duty:** receive ordinary C arrivals, coordinate with #62/#64, and keep entry and exit movement separated.
-- **Implemented:** `src/parkingRoutes.js` checks that ordinary C arrivals pass #63. `src/cEntranceControl.js` holds conflicting cars before an approaching shuttle turn, using the actual shared parts of the built lanes. Cars already admitted, shared-lane leaders, and the roundabout marshal’s exit stream keep clearing. The local entrance apron permits a shuttle to pull around a dependency cycle; ordinary cars keep their lanes. Northern radio still coordinates the point.
+- **Implemented:** `src/routes/parkingRoutes.js` checks that ordinary C arrivals pass #63. `src/cEntranceControl.js` holds conflicting cars before an approaching shuttle turn, using the actual shared parts of the built lanes. Cars already admitted, shared-lane leaders, and the roundabout marshal’s exit stream keep clearing. The local entrance apron permits a shuttle to pull around a dependency cycle; ordinary cars keep their lanes. Northern radio still coordinates the point.
 - **Estimated settings:** turn area around #63, 14 scene units of lookahead, and body-length stop buffers plus a 1.25-unit gap.
 - **Limits:** route checkpoint/radio role, not an independent per-person quota. Multiple departure exits do not grant new ordinary-arrival entry permissions.
 
@@ -83,9 +83,7 @@ Derived from shared turn vertices on source routes #10/#11/#13/#15, approximatel
 
 **This is overdue-queue ranking, not a guaranteed 20-second maximum wait.** An approaching shuttle still preempts the queue; an admitted movement, occupied intersection and physical clearance must clear first. Upstream time before reaching the ready band is not the controller's stop timer. Observed near-stationary waits can therefore exceed 20 seconds.
 
-Independent service evidence: `research/runs/positions-independent-36e5/verification.json`. Those three 5400-second runs reproduce CLAUD's saved outputs exactly; final worst Equity/Clay wait drops from 78 to 23 seconds. The thresholded eleven-service count rises from three to four episodes. That count alone does not measure total delay.
-
-Latest local admission-timeline review: `research/runs/positions-final-8aa0/verification.json`, calculated from the raw `heldSince` fields in `research/runs/claud-1019-1108/timeline-{before,after}.json`. Arrival 1029 changes from 31.20 to 23.40 seconds first-held-to-admission; arrival 1019 changes from 19.75 to 23.25 seconds. Their combined wait drops from 50.95 to 46.65 seconds, and their worst wait drops from 31.20 to 23.40 seconds. The extra qualifying episode is a reorder across the reporting cutoff, not proof of greater combined delay. These are local two-arrival results, not whole-service total delay or a hard wait ceiling. Raw first-held timestamps differ from the earlier report's assumed timestamps; controller stop timers and near-stationary wait probes are also distinct measurements. Retain the original threshold-count flag for traceability; do not silently redefine its gate or claim overall acceptance. The subsequent connector-disclosure repair was independently verified in `research/runs/connector-independent-5007/verification.json`: 236 pass / 15 standing failures, no new failing names. Its provenance-label fixes do not establish geometry or traffic acceptance.
+Historical verification results are summarized in [HANDOFF.md](../HANDOFF.md).
 
 ## Adding inside-lot positions
 

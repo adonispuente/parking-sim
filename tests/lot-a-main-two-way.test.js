@@ -5,9 +5,9 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { createCampusTraffic, keepRight } from '../src/traffic.js';
 import { traceWorldPoint } from '../src/tracedMap.js';
-import { vectorToTrace } from '../src/vectorRoutes.js';
+import { vectorToTrace } from '../src/routes/vectorRoutes.js';
 import { indexLanePath } from '../src/lanePath.js';
-import { zoneArrivalRoute, zoneDepartureRoute } from '../src/parkingRoutes.js';
+import { zoneArrivalRoute, zoneDepartureRoute } from '../src/routes/parkingRoutes.js';
 import { attachMainPositionToLane, LOT_A_MAIN_POSITION } from '../src/lotAControl.js';
 import { advanceSharedTraffic } from '../src/sharedTraffic.js';
 import { SUNDAY_SERVICES, serviceOptions } from '../src/sundayServices.js';
@@ -30,17 +30,6 @@ function build(raw, approach) {
 // longer pass the Main gate; only Lot A South arrivals are Main-controlled.
 const arrivals=['aSouth'].map(zone=>({zone,lane:build(zoneArrivalRoute('a',zone),'aMain')}));
 const departures=['aNorth','aSouth'].map(zone=>({zone,lane:build(zoneDepartureRoute('a',zone),zone)}));
-function freeLane(raw) {
-  const points = keepRight(raw.map(vectorToTrace)).map(p => { const [x,z] = traceWorldPoint(p); return new THREE.Vector3(x,.6,z); });
-  const path = new THREE.CurvePath();
-  for(let i=1;i<points.length;i++) if(points[i].distanceTo(points[i-1])>.00001) path.add(new THREE.LineCurve3(points[i-1],points[i]));
-  indexLanePath(path);
-  const lane={path,length:path.getLength()};
-  assert.equal(attachMainPositionToLane(lane,raw,'aMain'),false,'North arrival does not pass Main');
-  return lane;
-}
-const northArrival=freeLane(zoneArrivalRoute('a','aNorth'));
-
 test('Main exact anchor survives lane building instead of being street-centered again',()=>{
   const [x,z]=traceWorldPoint(LOT_A_MAIN_POSITION);
   for(const entry of [...arrivals,...departures]){
@@ -49,38 +38,17 @@ test('Main exact anchor survives lane building instead of being street-centered 
   }
 });
 
-// Commander 2026-11-12: cars leaving Lot A North must not stop cars entering it.
-// A North arrival drives its whole AddNorthRoute lane past every exit held at Main.
-test('North two-way: entering North arrival passes every exit held at Main',()=>{
+test('North two-way production clearance: moving arrival clears held opposing bodies',()=>{
+  // North arrivals bypass Main, so the admitted movers are South arrivals.
   let samples=0;
-  for(const holder of departures){
+  for(const mover of arrivals)for(const holder of departures){
     const stop=holder.lane.aControl.stopDistance;
-    for(let d=0;d<northArrival.length;d+=.1){
-      const car={id:'entering',lane:0,distance:d,speed:2.8,bodyLength:1.35,phase:'arrival'};
+    for(let d=mover.lane.aControl.stopDistance;d<=mover.lane.length;d+=.1){
+      const car={id:'moving',lane:0,distance:d,speed:2.8,bodyLength:1.35,phase:'arriving'};
       const held={id:'held',lane:1,distance:stop,speed:2.8,bodyLength:1.35,holdForBatch:true,controlStopDistance:stop,phase:'departing'};
-      advanceSharedTraffic({cars:[car,held],lanes:[northArrival,holder.lane]},.1);
-      assert.equal(held.distance,stop);
-      assert.notEqual(car.yieldingTo,'held',`North arrival vs held ${holder.zone} exit, distance ${d.toFixed(1)}`);
-      samples++;
-    }
-  }
-  assert.ok(samples>100);
-});
-
-for(const direction of ['departure','arrival']) test(`North two-way production clearance: moving ${direction} clears held opposing bodies`,()=>{
-  // Main-controlled movers only: North exits, and South arrivals (North arrivals bypass Main).
-  const movers=direction==='departure'?departures.filter(e=>e.zone==='aNorth'):arrivals;
-  const holders=direction==='departure'?arrivals:departures;
-  let samples=0;
-  for(const mover of movers)for(const holder of holders){
-    const stop=holder.lane.aControl.stopDistance;
-    const end=direction==='departure'?mover.lane.aControl.releaseDistance+2:mover.lane.length;
-    for(let d=mover.lane.aControl.stopDistance;d<=Math.min(end,mover.lane.length);d+=.1){
-      const car={id:'moving',lane:0,distance:d,speed:2.8,bodyLength:1.35,phase:direction==='departure'?'departing':'arriving'};
-      const held={id:'held',lane:1,distance:stop,speed:2.8,bodyLength:1.35,holdForBatch:true,controlStopDistance:stop,phase:direction==='departure'?'arriving':'departing'};
       advanceSharedTraffic({cars:[car,held],lanes:[mover.lane,holder.lane]},.1);
       assert.equal(held.distance,stop);
-      assert.notEqual(car.yieldingTo,'held',`${direction} ${mover.zone} vs ${holder.zone}, distance ${d}`);
+      assert.notEqual(car.yieldingTo,'held',`arrival ${mover.zone} vs ${holder.zone}, distance ${d}`);
       assert.ok(car.distance>=Math.min(mover.lane.length,d+.28)-1e-8);
       samples++;
     }

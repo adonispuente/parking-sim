@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { pointAt, routeAt } from '../src/clearImageSource.js';
-import { mainStationCorridorJoin, MAIN_STATION_MERGE_PX, zoneArrivalRoute } from '../src/parkingRoutes.js';
-import { CONNECTOR_PROVENANCE, segmentDistance, clearSegment, avoidsObstacles } from '../src/sourceRouting.js';
+import { mainStationCorridorJoin, MAIN_STATION_MERGE_PX, zoneArrivalRoute } from '../src/routes/parkingRoutes.js';
+import { CONNECTOR_PROVENANCE, segmentDistance, clearSegment, avoidsObstacles } from '../src/routes/sourceRouting.js';
 const main=pointAt(57);
 test('revised traces connect to fixed Main without a grid detour and disclose residual',()=>{
   for(const index of [0,1,18]) {

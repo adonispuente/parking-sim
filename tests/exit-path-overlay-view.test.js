@@ -4,7 +4,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { exitPathById } from '../src/exitPathSource.js';
+import { exitPathById } from '../src/routes/exitPathSource.js';
 import { traceWorldPoint } from '../src/tracedMap.js';
 import { exitTraceOverlay, ACTIVATED_EXIT_IDS, EXIT_TRACE_COLOR } from '../src/exitPathOverlayView.js';
 
@@ -106,16 +106,16 @@ test('9. Import isolation (static): overlay has exactly two imports; only Scene.
   const srcDir = join(__dirname, '..', 'src');
   const ov = readFileSync(join(srcDir, 'exitPathOverlayView.js'), 'utf8');
   const importSpecs = [...ov.matchAll(/import\s+[^;]*?from\s+['"]([^'"]+)['"]/g)].map(m => m[1]);
-  assert.deepEqual(importSpecs, ['./exitPathSource.js', './tracedMap.js']);
+  assert.deepEqual(importSpecs, ['./routes/exitPathSource.js', './tracedMap.js']);
   const importers = [];
-  for (const f of readdirSync(srcDir)) {
+  for (const f of readdirSync(srcDir, { recursive: true })) {
     if (!/\.(jsx?|js)$/.test(f)) continue;
     if (f === 'exitPathOverlayView.js') continue;
     const t = readFileSync(join(srcDir, f), 'utf8');
     if (t.includes('exitPathOverlayView')) importers.push(f);
   }
   assert.deepEqual(importers, ['Scene.jsx']);
-  for (const f of ['parkingRoutes.js', 'traffic.js', 'campusSimulation.js', 'vehicleRouteCatalog.js', 'vectorRoutes.js', 'roadAnchoredRoutes.js', 'lotAControl.js']) {
+  for (const f of ['routes/parkingRoutes.js', 'traffic.js', 'campusSimulation.js', 'routes/vehicleRouteCatalog.js', 'routes/vectorRoutes.js', 'routes/roadAnchoredRoutes.js', 'lotAControl.js']) {
     const t = readFileSync(join(srcDir, f), 'utf8');
     assert.ok(!t.includes('exitPathOverlayView'), `exitPathOverlayView referenced in ${f}`);
   }
@@ -124,7 +124,7 @@ test('9. Import isolation (static): overlay has exactly two imports; only Scene.
 // Integration alarm only: proves the list matches the route imports, not that a trace is behaviorally accepted.
 // #16 comes from A South 1R-e promotion; #34 from S1's handback (still parked).
 test('10. Activation tripwire: ACTIVATED_EXIT_IDS matches the actual parkingRoutes imports', () => {
-  const parking = readFileSync(join(__dirname, '..', 'src', 'parkingRoutes.js'), 'utf8');
+  const parking = readFileSync(join(__dirname, '..', 'src', 'routes', 'parkingRoutes.js'), 'utf8');
   const importsFrom = (spec) =>
     new RegExp(`^\\s*import\\s[^;]*?from\\s+['"]\\./${spec}['"]`, 'm').test(parking);
   const expected = [];

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createCampusTraffic } from '../src/traffic.js';
 import { serviceOptions } from '../src/sundayServices.js';
 import { C_ENTRANCE_AREA } from '../src/cEntranceControl.js';
-import { inPolygon } from '../src/sourceRouting.js';
+import { inPolygon } from '../src/routes/sourceRouting.js';
 import { fromWorld } from '../src/clearImageSource.js';
 
 test('Easter full-lot traffic keeps moving past the 11:05 C entrance deadlock',context=>{

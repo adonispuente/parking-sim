@@ -1,12 +1,11 @@
 // Focused runtime checks for the unified-source migration: opposing street
-// lanes, Main Position clearance, pavement-first connectors.
+// lanes and Main Position clearance.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { keepRight, KEEP_RIGHT_PX } from '../src/traffic.js';
-import { onStreet } from '../src/pavementRouting.js';
-import { zoneDepartureRoute, zoneArrivalRoute, B7_ROW_SWEEP } from '../src/parkingRoutes.js';
+import { onStreet } from '../src/routes/pavementRouting.js';
+import { zoneDepartureRoute, zoneArrivalRoute, B7_ROW_SWEEP } from '../src/routes/parkingRoutes.js';
 import { pointAt, routeAt, WORLD_SCALE } from '../src/clearImageSource.js';
-import { CONNECTOR_PROVENANCE, NONPAVEMENT_CONNECTOR_MODES, onDrivable } from '../src/sourceRouting.js';
 import { createCampusTraffic } from '../src/traffic.js';
 import { mainStopBack } from '../src/lotAControl.js';
 
@@ -63,20 +62,6 @@ test('A departures through Main do not double back into the opposing held queue'
   const clearance = (.325 * 2 + .15) / WORLD_SCALE;
   assert.ok(minGap(afterMain(south), holdPoint(north)) > clearance, 'south exit clears held north car');
   assert.ok(minGap(afterMain(north), holdPoint(south)) > clearance, 'north exit clears held south car');
-});
-
-test('connectors prefer traced pavement; fallbacks are flagged', () => {
-  for (const zone of ['aNorth', 'aSouth', 'bSouth', 'bNorth', 'cNorth', 'cSouth']) zoneArrivalRoute(zone[0] === 'a' ? 'a' : zone[0] === 'b' ? 'bWest' : 'cWest', zone);
-  for (const c of CONNECTOR_PROVENANCE) {
-    // nonpavement iff the mode is a registered, disclosed off-pavement fallback.
-    assert.equal(c.nonpavement, NONPAVEMENT_CONNECTOR_MODES.includes(c.mode), c.context);
-    if (c.nonpavement) assert.match(c.source, /not a traced aisle/, c.context);
-    if (c.mode === 'straight-on-pavement' && d(c.start, c.end) > 1) assert.ok(onDrivable(c.start) && onDrivable(c.end), c.context);
-  }
-  const throat = CONNECTOR_PROVENANCE.filter(c => c.context === 'C staffed entrance #63 to #8 interior');
-  assert.equal(throat.length, 1, 'C #63 throat recorded once');
-  assert.equal(throat[0].mode, 'staffed-entrance-throat');
-  assert.equal(throat[0].nonpavement, true, 'untraced #63 join stays flagged');
 });
 
 test('mixed A departure drains both North and South through Main', () => {

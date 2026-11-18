@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { routeDiagnostics, subscribeRouteRuntime } from './vehicleRouteCatalog.js';
+import { routeDiagnostics, subscribeRouteRuntime } from './routes/vehicleRouteCatalog.js';
 import { MAIN_POSITION_RESOLUTION, FEEDER_OFFICER_POSITION, OVERLAY_POSITIONS } from './positions/index.js';
 import { overlayDisplay } from './layoutOverlayView.js';
 const LAYOUT_VIEW = overlayDisplay();

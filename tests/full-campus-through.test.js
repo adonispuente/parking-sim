@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createCampusTraffic, onFeederStreet } from '../src/traffic.js';
-import { overflowRoute } from '../src/overflowRoutes.js';
-import { clearSegment } from '../src/sourceRouting.js';
+import { overflowRoute } from '../src/routes/overflowRoutes.js';
+import { clearSegment } from '../src/routes/sourceRouting.js';
 import { WORLD_SCALE } from '../src/clearImageSource.js';
 import { serviceOptions } from '../src/sundayServices.js';
 import { createSeekablePlayback } from '../src/playback.js';

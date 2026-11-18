@@ -1,6 +1,6 @@
 // #59 offers Bravo when Alpha backs up. Thresholds are provisional, not surveyed.
 import { pointAt, shapeAt } from './clearImageSource.js';
-import { inPolygon } from './sourceRouting.js';
+import { inPolygon } from './routes/sourceRouting.js';
 export const ALPHA_RELIEF_DECISION = Object.freeze([...pointAt(59)]);
 export const beforeAlphaDecision = p => inPolygon(p, shapeAt(54).points) && p[1] > ALPHA_RELIEF_DECISION[1] + 12;
 export function attachAlphaQueueRelief(state, options = {}) {

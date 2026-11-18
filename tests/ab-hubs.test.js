@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import drawing from '../images/ABHubs.json' with { type:'json' };
-import { AB_HUBS, abHubsForZone } from '../src/abHubSource.js';
-import { zoneArrivalRoute, zoneDepartureRoute, B_SOUTH_CHECKPOINT } from '../src/parkingRoutes.js';
-import { clearSegment, distance } from '../src/sourceRouting.js';
+import { AB_HUBS, abHubsForZone } from '../src/routes/abHubSource.js';
+import { zoneArrivalRoute, zoneDepartureRoute, B_SOUTH_CHECKPOINT } from '../src/routes/parkingRoutes.js';
+import { clearSegment, distance } from '../src/routes/sourceRouting.js';
 import { createCampusTraffic } from '../src/traffic.js';
 import { WORLD_SCALE } from '../src/clearImageSource.js';
 import { captureTrafficFrame } from '../src/playbackFrames.js';

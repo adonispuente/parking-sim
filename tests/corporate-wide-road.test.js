@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { CORPORATE_CENTERLINE, CORPORATE_LANE_OFFSET_PX } from '../src/corporateLanes.js';
+import { CORPORATE_CENTERLINE, CORPORATE_LANE_OFFSET_PX } from '../src/routes/corporateLanes.js';
 import { keepRight, createCampusTraffic } from '../src/traffic.js';
 import { shapeAt, WORLD_SCALE } from '../src/clearImageSource.js';
-import { inPolygon, avoidsObstacles } from '../src/sourceRouting.js';
+import { inPolygon, avoidsObstacles } from '../src/routes/sourceRouting.js';
 
 function segmentGap(a,b,c,d) {
   const pointGap=(p,a,b)=>{

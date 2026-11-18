@@ -9,5 +9,5 @@ __pycache__/
 *.py[cod]
 *.cpuprofile
 
-# New verification output belongs here; keep reports/manifests versionable
-research/runs/
+# Generated local review and diagnostic output
+.artifacts/

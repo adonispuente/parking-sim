@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { attachLotAControl, attachMainPositionToLane, LOT_A_MAIN_POSITION } from '../src/lotAControl.js';
-import { zoneArrivalRoute, zoneDepartureRoute } from '../src/parkingRoutes.js';
+import { zoneArrivalRoute, zoneDepartureRoute } from '../src/routes/parkingRoutes.js';
 import { createCampusTraffic } from '../src/traffic.js';
 import { MAIN_POSITION_RESOLUTION } from '../src/positions/index.js';
 

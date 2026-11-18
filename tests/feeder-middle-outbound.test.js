@@ -13,11 +13,11 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { keepRight, KEEP_RIGHT_PX, FEEDER_MIDDLE_OUTBOUND_PX, onFeederStreet, usesFeederMiddleLane } from '../src/traffic.js';
 import { traceWorldPoint } from '../src/tracedMap.js';
-import { vectorToTrace } from '../src/vectorRoutes.js';
+import { vectorToTrace } from '../src/routes/vectorRoutes.js';
 import { indexLanePath } from '../src/lanePath.js';
-import { zoneArrivalRoute, zoneDepartureRoute } from '../src/parkingRoutes.js';
-import { onStreet } from '../src/pavementRouting.js';
-import { avoidsObstacles } from '../src/sourceRouting.js';
+import { zoneArrivalRoute, zoneDepartureRoute } from '../src/routes/parkingRoutes.js';
+import { onStreet } from '../src/routes/pavementRouting.js';
+import { avoidsObstacles } from '../src/routes/sourceRouting.js';
 import { advanceSharedTraffic } from '../src/sharedTraffic.js';
 import { fromWorld, WORLD_SCALE } from '../src/clearImageSource.js';
 

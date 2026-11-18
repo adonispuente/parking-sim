@@ -7,7 +7,7 @@
 // never appear here: only the 32 exit linestrips are drawn.
 // The display never infers activation: it comes only from the explicit frozen
 // list below, set by the reviewed slice that promotes a trace into traffic.
-import { EXIT_PATHS, EXIT_PATH_SOURCE_FILE } from './exitPathSource.js';
+import { EXIT_PATHS, EXIT_PATH_SOURCE_FILE } from './routes/exitPathSource.js';
 import { traceWorldPoint } from './tracedMap.js';
 
 // Explicit activation list, in sourceIndex order. Each entry is set only by the

@@ -5,7 +5,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { pointAt } from '../src/clearImageSource.js';
-import { zoneArrivalRoute } from '../src/parkingRoutes.js';
+import { zoneArrivalRoute } from '../src/routes/parkingRoutes.js';
 
 const ZONES = ['bSouth', 'bBanana', 'bPocket', 'bNorth'];
 const KEYS = ['bWest', 'bNorth'];

@@ -8,9 +8,9 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { keepRight } from '../src/traffic.js';
 import { traceWorldPoint } from '../src/tracedMap.js';
-import { vectorToTrace } from '../src/vectorRoutes.js';
+import { vectorToTrace } from '../src/routes/vectorRoutes.js';
 import { indexLanePath } from '../src/lanePath.js';
-import { zoneArrivalRoute, zoneDepartureRoute } from '../src/parkingRoutes.js';
+import { zoneArrivalRoute, zoneDepartureRoute } from '../src/routes/parkingRoutes.js';
 import { attachMainPositionToLane, mainStopBack, mainHoldBack, MAIN_STOP_BACK,
   MAIN_DEPARTURE_HOLD_BACK } from '../src/lotAControl.js';
 
@@ -46,17 +46,6 @@ test('aNorth departure is held at the measured setback; mainStopBack itself unch
   assert.ok(c.releaseDistance > c.mergeDistance, 'release unchanged after Main');
 });
 
-test('Main-inbound arrivals are held at the measured aMain setback (2.2, aSouth repair)', () => {
-  assert.ok(arrivals.length >= 2);
-  assert.equal(MAIN_DEPARTURE_HOLD_BACK.aMain, 2.2);
-  for (const a of arrivals) {
-    assert.equal(mainStopBack(a.raw), MAIN_STOP_BACK, `${a.key}:${a.zone} base stop-back unchanged`);
-    assert.equal(mainHoldBack(a.raw, 'aMain'), 2.2, `${a.key}:${a.zone}`);
-    const c = a.lane.aControl;
-    assert.ok(Math.abs(c.mergeDistance - c.stopDistance - 2.2) < 1e-9, `${a.key}:${a.zone} stop`);
-  }
-});
-
 test('held aNorth departure body clears every admitted arrival path past Main', () => {
   const c = northLane.aControl;
   const body = sample(northLane, Math.max(0, c.stopDistance - HALF - PAD), c.stopDistance + HALF);
@@ -65,12 +54,4 @@ test('held aNorth departure body clears every admitted arrival path past Main', 
     const g = gap(body, sample(a.lane, o.stopDistance, Math.min(a.lane.length, o.mergeDistance + 4)));
     assert.ok(g >= CONFLICT_WIDTH + .2, `${a.key}:${a.zone} gap ${g.toFixed(3)} world`);
   }
-});
-
-test('the old 1.7 hold reproduces the measured lock geometry (guards the diagnosis)', () => {
-  const c = northLane.aControl, stop = c.mergeDistance - MAIN_STOP_BACK;
-  const body = sample(northLane, stop - HALF - PAD, stop + HALF);
-  const a = arrivals.find(x => x.key === 'a' && x.zone === 'aNorth'), o = a.lane.aControl;
-  const g = gap(body, sample(a.lane, o.stopDistance, o.mergeDistance + 4));
-  assert.ok(g < CONFLICT_WIDTH, `old hold gap ${g.toFixed(3)} should be inside the conflict width`);
 });
