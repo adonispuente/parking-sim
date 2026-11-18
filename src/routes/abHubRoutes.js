@@ -1,7 +1,14 @@
 // Derived lanes on the drawn A/B aisle network. Short joins and widths are estimates.
 import { AB_HUBS, A_HUB_TRACES, abHubTrace, abHubById, aNorthEntryTrace } from './abHubSource.js';
 import { routeAt } from '../clearImageSource.js';
-import { clearSegment, distance, drivingPrefix, join, drivableAllowed, projectOntoSegment } from './sourceRouting.js';
+import {
+  clearSegment,
+  distance,
+  drivingPrefix,
+  join,
+  drivableAllowed,
+  projectOntoSegment,
+} from './sourceRouting.js';
 
 export const AB_HUB_ROUTE_PROVENANCE = [];
 export const A_HUB_DEPARTURE_JOINS = {
@@ -16,22 +23,31 @@ const entries = {
 // that bypasses the Main position. Arrivals continue from here to their hub.
 export const A_NORTH_TWO_WAY_ENTRY = Object.freeze([...aNorthEntryTrace().at(-1)]);
 const extraArrivalAnchors = [A_NORTH_TWO_WAY_ENTRY];
-const graphs = new Map(), cache = new Map();
+const graphs = new Map(),
+  cache = new Map();
 
 function graph(departure = false) {
   const key = departure;
   if (graphs.has(key)) return graphs.get(key);
-  const traces = A_HUB_TRACES.map(index => ({
-    source: `ABHubs #${index}`, points: abHubTrace(index),
+  const traces = A_HUB_TRACES.map((index) => ({
+    source: `ABHubs #${index}`,
+    points: abHubTrace(index),
   }));
   // Departures follow the drawn A exit direction. Arrivals also use the
   // existing approach traces to reach their upper-aisle branch.
-  for (const index of departure ? [] : [0, 1]) traces.push({
-    source: `EverythingClearImage #${index}`, points: drivingPrefix(index),
-  });
-  const segments = traces.flatMap(trace => trace.points.slice(1).map((b, i) => ({
-    a: trace.points[i], b, source: trace.source, cuts: [0, 1],
-  })));
+  for (const index of departure ? [] : [0, 1])
+    traces.push({
+      source: `EverythingClearImage #${index}`,
+      points: drivingPrefix(index),
+    });
+  const segments = traces.flatMap((trace) =>
+    trace.points.slice(1).map((b, i) => ({
+      a: trace.points[i],
+      b,
+      source: trace.source,
+      cuts: [0, 1],
+    })),
+  );
   const joins = [];
   const attach = (p, segment, gap) => {
     const q = projectOntoSegment(p, segment.a, segment.b);
@@ -40,35 +56,49 @@ function graph(departure = false) {
     joins.push([p, q.point]);
     return true;
   };
-  for (const a of segments) for (const b of segments) {
-    if (a === b) continue;
-    attach(a.a, b, 8);
-    attach(a.b, b, 8);
-    const ux = a.b[0] - a.a[0], uy = a.b[1] - a.a[1];
-    const vx = b.b[0] - b.a[0], vy = b.b[1] - b.a[1], cross = ux * vy - uy * vx;
-    if (Math.abs(cross) < 1e-9) continue;
-    const dx = b.a[0] - a.a[0], dy = b.a[1] - a.a[1];
-    const t = (dx * vy - dy * vx) / cross, u = (dx * uy - dy * ux) / cross;
-    if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
-      a.cuts.push(t);
-      b.cuts.push(u);
+  for (const a of segments)
+    for (const b of segments) {
+      if (a === b) continue;
+      attach(a.a, b, 8);
+      attach(a.b, b, 8);
+      const ux = a.b[0] - a.a[0],
+        uy = a.b[1] - a.a[1];
+      const vx = b.b[0] - b.a[0],
+        vy = b.b[1] - b.a[1],
+        cross = ux * vy - uy * vx;
+      if (Math.abs(cross) < 1e-9) continue;
+      const dx = b.a[0] - a.a[0],
+        dy = b.a[1] - a.a[1];
+      const t = (dx * vy - dy * vx) / cross,
+        u = (dx * uy - dy * ux) / cross;
+      if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
+        a.cuts.push(t);
+        b.cuts.push(u);
+      }
     }
-  }
-  const hubs = AB_HUBS.filter(h => h.lot === 'a');
-  const anchors = [...Object.values(A_HUB_DEPARTURE_JOINS), ...Object.values(entries), ...extraArrivalAnchors, ...hubs.map(h => h.point)];
+  const hubs = AB_HUBS.filter((h) => h.lot === 'a');
+  const anchors = [
+    ...Object.values(A_HUB_DEPARTURE_JOINS),
+    ...Object.values(entries),
+    ...extraArrivalAnchors,
+    ...hubs.map((h) => h.point),
+  ];
   for (const p of anchors) {
-    const candidates = segments.map(s => ({ s, ...projectOntoSegment(p, s.a, s.b) }))
+    const candidates = segments
+      .map((s) => ({ s, ...projectOntoSegment(p, s.a, s.b) }))
       .sort((a, b) => a.gap - b.gap);
     // Only local hub spurs, never a straight route across an entire section.
-    const limit = hubs.some(h => h.point === p) ? 40 : 25;
-    if (!candidates.some(q => attach(p, q.s, limit)))
+    const limit = hubs.some((h) => h.point === p) ? 40 : 25;
+    if (!candidates.some((q) => attach(p, q.s, limit)))
       throw new Error(`Lot A hub anchor disconnected: ${p}`);
     for (const q of candidates)
       if (q.gap <= Math.min(limit, candidates[0].gap + 8)) attach(p, q.s, limit);
   }
-  const nodes = [], edges = [], byPoint = new Map();
-  const node = p => {
-    const key = p.map(v => v.toFixed(5)).join(',');
+  const nodes = [],
+    edges = [],
+    byPoint = new Map();
+  const node = (p) => {
+    const key = p.map((v) => v.toFixed(5)).join(',');
     if (!byPoint.has(key)) {
       byPoint.set(key, nodes.length);
       nodes.push(p);
@@ -78,14 +108,17 @@ function graph(departure = false) {
   };
   const edge = (p, q, source, bidirectional = true) => {
     if (!clearSegment(p, q)) return;
-    const a = node(p), b = node(q), length = distance(p, q);
+    const a = node(p),
+      b = node(q),
+      length = distance(p, q);
     if (a === b) return;
     edges[a].push({ to: b, length, source });
     if (bidirectional) edges[b].push({ to: a, length, source });
   };
   for (const s of segments) {
-    const points = [...new Set(s.cuts)].sort((a, b) => a - b)
-      .map(t => [s.a[0] + (s.b[0] - s.a[0]) * t, s.a[1] + (s.b[1] - s.a[1]) * t]);
+    const points = [...new Set(s.cuts)]
+      .sort((a, b) => a - b)
+      .map((t) => [s.a[0] + (s.b[0] - s.a[0]) * t, s.a[1] + (s.b[1] - s.a[1]) * t]);
     for (let i = 1; i < points.length; i++) edge(points[i - 1], points[i], s.source, !departure);
   }
   for (const [p, q] of joins) edge(p, q, 'short aisle join');
@@ -95,8 +128,12 @@ function graph(departure = false) {
 }
 
 function walk(start, end, departure) {
-  const { nodes, edges, node } = graph(departure), from = node(start), to = node(end);
-  const cost = new Map([[from, 0]]), previous = new Map(), open = new Set([from]);
+  const { nodes, edges, node } = graph(departure),
+    from = node(start),
+    to = node(end);
+  const cost = new Map([[from, 0]]),
+    previous = new Map(),
+    open = new Set([from]);
   while (open.size) {
     let best;
     for (const id of open) if (best === undefined || cost.get(id) < cost.get(best)) best = id;
@@ -111,7 +148,8 @@ function walk(start, end, departure) {
     }
   }
   if (!cost.has(to)) throw new Error(`No Lot A aisle route from ${start} to ${end}`);
-  const points = [], sources = [];
+  const points = [],
+    sources = [];
   let id = to;
   while (id !== undefined) {
     points.push(nodes[id]);
@@ -123,11 +161,14 @@ function walk(start, end, departure) {
 }
 
 function splitLane(raw) {
-  const points = [raw[0]], arcs = [0];
+  const points = [raw[0]],
+    arcs = [0];
   for (let i = 1; i < raw.length; i++) {
-    const a = raw[i - 1], b = raw[i], count = Math.max(1, Math.ceil(distance(a, b) / 2));
+    const a = raw[i - 1],
+      b = raw[i],
+      count = Math.max(1, Math.ceil(distance(a, b) / 2));
     for (let k = 1; k <= count; k++) {
-      const p = [a[0] + (b[0] - a[0]) * k / count, a[1] + (b[1] - a[1]) * k / count];
+      const p = [a[0] + ((b[0] - a[0]) * k) / count, a[1] + ((b[1] - a[1]) * k) / count];
       const gap = distance(points.at(-1), p);
       if (gap < 1e-6) continue;
       arcs.push(arcs.at(-1) + gap);
@@ -135,18 +176,22 @@ function splitLane(raw) {
     }
   }
   const shifted = points.map((p, i) => {
-    const a = points[Math.max(0, i - 2)], b = points[Math.min(points.length - 1, i + 2)];
+    const a = points[Math.max(0, i - 2)],
+      b = points[Math.min(points.length - 1, i + 2)];
     const length = distance(a, b) || 1;
     const offset = 7 * Math.min(1, arcs[i] / 16, (arcs.at(-1) - arcs[i]) / 16);
-    for (const factor of [1, .75, .5, .25, 0]) {
-      const q = [p[0] - (b[1] - a[1]) / length * offset * factor,
-        p[1] + (b[0] - a[0]) / length * offset * factor];
+    for (const factor of [1, 0.75, 0.5, 0.25, 0]) {
+      const q = [
+        p[0] - ((b[1] - a[1]) / length) * offset * factor,
+        p[1] + ((b[0] - a[0]) / length) * offset * factor,
+      ];
       if (clearSegment(p, q) && (factor === 0 || drivableAllowed(q))) return q;
     }
     return p;
   });
   for (let i = 1; i < shifted.length; i++)
-    if (!clearSegment(shifted[i - 1], shifted[i])) throw new Error('A/B split hub aisle touches a roof');
+    if (!clearSegment(shifted[i - 1], shifted[i]))
+      throw new Error('A/B split hub aisle touches a roof');
   return join(shifted);
 }
 
@@ -160,11 +205,18 @@ export function aHubRoute(hubId, access = null, from = null) {
       throw new Error(`Invalid Lot A arrival start ${from} for ${hubId}`);
     const end = access ? A_HUB_DEPARTURE_JOINS[hub.zone] : hub.point;
     const start = access ? hub.point : from ? A_NORTH_TWO_WAY_ENTRY : entries[hub.zone];
-    if (!end || access && access !== 'a') throw new Error(`Invalid hub access ${access} for ${hubId}`);
+    if (!end || (access && access !== 'a'))
+      throw new Error(`Invalid hub access ${access} for ${hubId}`);
     const path = walk(start, end, !!access);
     cache.set(key, splitLane(path.points));
-    AB_HUB_ROUTE_PROVENANCE.push({ hub: hubId, phase: access ? 'departure' : 'arrival',
-      access, sources: path.sources, halfGapPx: 7, provisional: true });
+    AB_HUB_ROUTE_PROVENANCE.push({
+      hub: hubId,
+      phase: access ? 'departure' : 'arrival',
+      access,
+      sources: path.sources,
+      halfGapPx: 7,
+      provisional: true,
+    });
   }
   return cache.get(key);
 }

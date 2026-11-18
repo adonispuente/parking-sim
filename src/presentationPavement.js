@@ -11,16 +11,25 @@ import { WORLD_PAVEMENT_MATERIAL } from './presentationMaterials.js';
 export const PRESENTATION_PAVEMENT_COLOR = WORLD_PAVEMENT_MATERIAL.color;
 // Between source road surfaces (.11) and lot surfaces (.15): no coplanar faces, and buildings
 // (base .2) still cover the known Lot A roof-overlap sliver from above.
-export const PRESENTATION_PAVEMENT_ELEVATION = .13;
+export const PRESENTATION_PAVEMENT_ELEVATION = 0.13;
 
 export function createPresentationPavement() {
   const group = new THREE.Group();
   group.name = 'presentation-pavement';
   PAVEMENT_PATCHES.forEach((ring, index) => {
-    const shape = new THREE.Shape(ring.map(traceWorldPoint).map(([x, z]) => new THREE.Vector2(x, -z)));
+    const shape = new THREE.Shape(
+      ring.map(traceWorldPoint).map(([x, z]) => new THREE.Vector2(x, -z)),
+    );
     const geometry = new THREE.ShapeGeometry(shape);
     geometry.rotateX(-Math.PI / 2);
-    const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: PRESENTATION_PAVEMENT_COLOR, roughness: 1, side: THREE.DoubleSide }));
+    const mesh = new THREE.Mesh(
+      geometry,
+      new THREE.MeshStandardMaterial({
+        color: PRESENTATION_PAVEMENT_COLOR,
+        roughness: 1,
+        side: THREE.DoubleSide,
+      }),
+    );
     mesh.position.y = PRESENTATION_PAVEMENT_ELEVATION;
     mesh.receiveShadow = true;
     mesh.userData.presentationPavement = PAVEMENT_FEATURE_IDS[index];

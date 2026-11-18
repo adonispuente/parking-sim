@@ -18,27 +18,35 @@ export const WIDE_AISLE_LOTS = ['c'];
 // closed a wait cycle (cars 997/158/70, 11:00 run). Only the cycle breaker uses
 // this; ordinary yields are unchanged. PROVISIONAL: polygon is the drawn section.
 export const WIDE_AISLE_SECTIONS = Object.freeze({ aNorth: 39 });
-const sectionRings = Object.fromEntries(Object.entries(WIDE_AISLE_SECTIONS).map(([zone, shape]) => [zone, shapeAt(shape).points]));
-const inWideSection = p => Object.values(sectionRings).some(ring => inPolygon(p, ring) && drivableAllowed(p));
+const sectionRings = Object.fromEntries(
+  Object.entries(WIDE_AISLE_SECTIONS).map(([zone, shape]) => [zone, shapeAt(shape).points]),
+);
+const inWideSection = (p) =>
+  Object.values(sectionRings).some((ring) => inPolygon(p, ring) && drivableAllowed(p));
 
 export function attachWideAisles(state) {
-  const position=car=>{
-    const lane=state.lanes[car.lane];if(!lane)return null;
-    const p=lane.path.getPointAt(Math.max(0,Math.min(1,car.distance/lane.length)));
-    return fromWorld([p.x,p.z]);
+  const position = (car) => {
+    const lane = state.lanes[car.lane];
+    if (!lane) return null;
+    const p = lane.path.getPointAt(Math.max(0, Math.min(1, car.distance / lane.length)));
+    return fromWorld([p.x, p.z]);
   };
-  state.inWideAisle=car=>{
-    const p=position(car);
-    return !!p&&WIDE_AISLE_LOTS.some(lot=>onLotGround(lot,p));
+  state.inWideAisle = (car) => {
+    const p = position(car);
+    return !!p && WIDE_AISLE_LOTS.some((lot) => onLotGround(lot, p));
   };
-  const inEntrance=car=>{
-    const p=position(car);return !!p&&inPolygon(p,C_ENTRANCE_AREA)&&drivableAllowed(p);
+  const inEntrance = (car) => {
+    const p = position(car);
+    return !!p && inPolygon(p, C_ENTRANCE_AREA) && drivableAllowed(p);
   };
-  const inSection=car=>{const p=position(car);return !!p&&inWideSection(p);};
-  state.canPullAroundInWideAisle=(car,other)=>
-    (state.inWideAisle(car)&&state.inWideAisle(other)) ||
-    (inSection(car)&&inSection(other)) ||
+  const inSection = (car) => {
+    const p = position(car);
+    return !!p && inWideSection(p);
+  };
+  state.canPullAroundInWideAisle = (car, other) =>
+    (state.inWideAisle(car) && state.inWideAisle(other)) ||
+    (inSection(car) && inSection(other)) ||
     // Only the shuttle gets the extra entrance-apron maneuver. Ordinary cars
     // stay on their lanes; the interior hub launch allowance is unchanged.
-    (car.fleetBus===true&&inEntrance(car)&&inEntrance(other));
+    (car.fleetBus === true && inEntrance(car) && inEntrance(other));
 }

@@ -27,36 +27,80 @@ export const DEFAULT_HEIGHT = 2.4;
 export const BUILDING_PROFILES = {
   'lot a building': {
     vertexCount: 12,
-    evidence: 'Provisional: broad main roof plus a narrower wing to the south-west; chord joins re-entrant source vertices 8 and 11 (not a surveyed seam). Main block drawn taller from an apparently longer shadow (illustrative, not a measured height).',
+    evidence:
+      'Provisional: broad main roof plus a narrower wing to the south-west; chord joins re-entrant source vertices 8 and 11 (not a surveyed seam). Main block drawn taller from an apparently longer shadow (illustrative, not a measured height).',
     masses: [
-      { name: 'Main block', indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 11], height: 3.0, roof: '#eee9d8', wall: '#b7b9aa' },
-      { name: 'South-west wing', indices: [8, 9, 10, 11], height: DEFAULT_HEIGHT, roof: '#e7e3d3', wall: '#aeb1a2' },
+      {
+        name: 'Main block',
+        indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 11],
+        height: 3.0,
+        roof: '#eee9d8',
+        wall: '#b7b9aa',
+      },
+      {
+        name: 'South-west wing',
+        indices: [8, 9, 10, 11],
+        height: DEFAULT_HEIGHT,
+        roof: '#e7e3d3',
+        wall: '#aeb1a2',
+      },
     ],
   },
   'lot b building': {
     vertexCount: 8,
-    evidence: 'Provisional: two elongated roof masses on one diagonal axis, laterally offset; chord joins re-entrant source vertices 2 and 6 (not a surveyed seam). Flat roofs and equal heights are illustrative.',
+    evidence:
+      'Provisional: two elongated roof masses on one diagonal axis, laterally offset; chord joins re-entrant source vertices 2 and 6 (not a surveyed seam). Flat roofs and equal heights are illustrative.',
     masses: [
-      { name: 'North mass', indices: [2, 3, 4, 5, 6], height: DEFAULT_HEIGHT, roof: '#eee9d8', wall: '#b7b9aa' },
-      { name: 'South offset mass', indices: [6, 7, 0, 1, 2], height: DEFAULT_HEIGHT, roof: '#e6e2d2', wall: '#adb0a1' },
+      {
+        name: 'North mass',
+        indices: [2, 3, 4, 5, 6],
+        height: DEFAULT_HEIGHT,
+        roof: '#eee9d8',
+        wall: '#b7b9aa',
+      },
+      {
+        name: 'South offset mass',
+        indices: [6, 7, 0, 1, 2],
+        height: DEFAULT_HEIGHT,
+        roof: '#e6e2d2',
+        wall: '#adb0a1',
+      },
     ],
   },
   'lot c building': {
     vertexCount: 8,
-    evidence: 'Provisional: two broad offset wings; chord joins re-entrant source vertices 3 and 7 along y≈306 (not a surveyed seam). Equal heights are illustrative.',
+    evidence:
+      'Provisional: two broad offset wings; chord joins re-entrant source vertices 3 and 7 along y≈306 (not a surveyed seam). Equal heights are illustrative.',
     masses: [
-      { name: 'North wing', indices: [3, 4, 5, 6, 7], height: DEFAULT_HEIGHT, roof: '#eee9d8', wall: '#b7b9aa' },
-      { name: 'South wing', indices: [7, 0, 1, 2, 3], height: DEFAULT_HEIGHT, roof: '#e6e2d2', wall: '#adb0a1' },
+      {
+        name: 'North wing',
+        indices: [3, 4, 5, 6, 7],
+        height: DEFAULT_HEIGHT,
+        roof: '#eee9d8',
+        wall: '#b7b9aa',
+      },
+      {
+        name: 'South wing',
+        indices: [7, 0, 1, 2, 3],
+        height: DEFAULT_HEIGHT,
+        roof: '#e6e2d2',
+        wall: '#adb0a1',
+      },
     ],
   },
 };
 
-const key = name => String(name ?? '').toLowerCase().replace(/\s+/g, ' ').trim();
+const key = (name) =>
+  String(name ?? '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim();
 
 export function signedArea(points) {
   let sum = 0;
   for (let i = 0; i < points.length; i++) {
-    const [x1, z1] = points[i], [x2, z2] = points[(i + 1) % points.length];
+    const [x1, z1] = points[i],
+      [x2, z2] = points[(i + 1) % points.length];
     sum += x1 * z2 - x2 * z1;
   }
   return sum / 2;
@@ -72,7 +116,8 @@ export function isSimplePolygon(points) {
   for (let i = 0; i < n; i++) {
     for (let j = i + 1; j < n; j++) {
       if (j === i + 1 || (i === 0 && j === n - 1)) continue; // adjacent edges share a vertex
-      if (segmentsCross(points[i], points[(i + 1) % n], points[j], points[(j + 1) % n])) return false;
+      if (segmentsCross(points[i], points[(i + 1) % n], points[j], points[(j + 1) % n]))
+        return false;
     }
   }
   return true;
@@ -88,7 +133,10 @@ export function buildingMasses(name, points) {
   if (!profile || !Array.isArray(points) || points.length !== profile.vertexCount) return null;
   const total = signedArea(points);
   if (!Number.isFinite(total) || Math.abs(total) < 1e-6) return null;
-  const masses = profile.masses.map(mass => ({ ...mass, points: mass.indices.map(i => points[i]) }));
+  const masses = profile.masses.map((mass) => ({
+    ...mass,
+    points: mass.indices.map((i) => points[i]),
+  }));
   let sum = 0;
   for (const mass of masses) {
     const area = signedArea(mass.points);
@@ -96,20 +144,22 @@ export function buildingMasses(name, points) {
     sum += area;
   }
   if (Math.abs(sum - total) > Math.abs(total) * 1e-9) return null;
-  const used = new Set(profile.masses.flatMap(mass => mass.indices));
+  const used = new Set(profile.masses.flatMap((mass) => mass.indices));
   if (used.size !== points.length) return null;
   return { profile, masses };
 }
 
 function outline(group, points, color, y) {
-  const geometry = new THREE.BufferGeometry().setFromPoints([...points, points[0]].map(([x, z]) => new THREE.Vector3(x, y, z)));
+  const geometry = new THREE.BufferGeometry().setFromPoints(
+    [...points, points[0]].map(([x, z]) => new THREE.Vector3(x, y, z)),
+  );
   group.add(new THREE.Line(geometry, new THREE.LineBasicMaterial({ color })));
 }
 
 // Chord between masses: the two vertices shared by consecutive masses. Drawn
 // as a presentation cue for the provisional split, not a surveyed roof seam.
 function seam(a, b) {
-  const shared = a.indices.filter(i => b.indices.includes(i));
+  const shared = a.indices.filter((i) => b.indices.includes(i));
   return shared.length === 2 ? shared : null;
 }
 
@@ -131,23 +181,31 @@ export function createBuildingModel(item) {
       new THREE.MeshStandardMaterial({ color: mass.roof, roughness: 0.88 }),
       new THREE.MeshStandardMaterial({ color: mass.wall, roughness: 0.95 }),
     ]);
-    mesh.castShadow = true; mesh.receiveShadow = true;
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
     mesh.position.y = 0.2;
     mesh.userData.mass = mass.name;
     group.add(mesh);
     outline(group, mass.points, '#faf4e2', mass.height + 0.22);
   }
   for (let i = 1; i < split.masses.length; i++) {
-    const a = split.masses[i - 1], b = split.masses[i];
+    const a = split.masses[i - 1],
+      b = split.masses[i];
     const ids = seam(a, b);
     if (!ids) continue;
     const y = Math.min(a.height, b.height) + 0.235;
-    const geometry = new THREE.BufferGeometry().setFromPoints(ids.map(id => {
-      const [x, z] = item.points[id];
-      return new THREE.Vector3(x, y, z);
-    }));
+    const geometry = new THREE.BufferGeometry().setFromPoints(
+      ids.map((id) => {
+        const [x, z] = item.points[id];
+        return new THREE.Vector3(x, y, z);
+      }),
+    );
     group.add(new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: '#8f8e80' })));
   }
-  group.userData.buildingModel = { masses: split.masses.map(m => ({ name: m.name, height: m.height })), illustrativeHeights: true, provisionalSplit: true };
+  group.userData.buildingModel = {
+    masses: split.masses.map((m) => ({ name: m.name, height: m.height })),
+    illustrativeHeights: true,
+    provisionalSplit: true,
+  };
   return group;
 }

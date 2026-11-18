@@ -11,7 +11,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import { keepRight, KEEP_RIGHT_PX, FEEDER_MIDDLE_OUTBOUND_PX, onFeederStreet, usesFeederMiddleLane } from '../src/traffic.js';
+import {
+  keepRight,
+  KEEP_RIGHT_PX,
+  FEEDER_MIDDLE_OUTBOUND_PX,
+  onFeederStreet,
+  usesFeederMiddleLane,
+} from '../src/traffic.js';
 import { traceWorldPoint } from '../src/tracedMap.js';
 import { vectorToTrace } from '../src/routes/vectorRoutes.js';
 import { indexLanePath } from '../src/lanePath.js';
@@ -25,29 +31,46 @@ const CONFLICT_WIDTH = 0.9; // sharedTraffic.js conflict width, world units
 const B_ZONES = ['bSouth', 'bBanana', 'bNorth', 'bPocket'];
 const build = (raw, feederOffset) => {
   const trace = keepRight(raw.map(vectorToTrace), KEEP_RIGHT_PX, feederOffset);
-  const pts = trace.map(p => { const [x, z] = traceWorldPoint(p); return new THREE.Vector3(x, .6, z); });
+  const pts = trace.map((p) => {
+    const [x, z] = traceWorldPoint(p);
+    return new THREE.Vector3(x, 0.6, z);
+  });
   const path = new THREE.CurvePath();
-  for (let i = 1; i < pts.length; i++) if (pts[i].distanceTo(pts[i - 1]) > .00001) path.add(new THREE.LineCurve3(pts[i - 1], pts[i]));
+  for (let i = 1; i < pts.length; i++)
+    if (pts[i].distanceTo(pts[i - 1]) > 0.00001) path.add(new THREE.LineCurve3(pts[i - 1], pts[i]));
   indexLanePath(path);
   return { trace, lane: { path, length: path.getLength() } };
 };
-const at = (lane, d) => { const p = lane.path.getPointAt(Math.min(1, Math.max(0, d / lane.length))); return fromWorld([p.x, p.z]); };
-const dense = (t, step = .5) => {
+const at = (lane, d) => {
+  const p = lane.path.getPointAt(Math.min(1, Math.max(0, d / lane.length)));
+  return fromWorld([p.x, p.z]);
+};
+const dense = (t, step = 0.5) => {
   const o = [t[0]];
   for (let i = 1; i < t.length; i++) {
-    const a = t[i - 1], b = t[i], n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / step));
-    for (let k = 1; k <= n; k++) o.push([a[0] + (b[0] - a[0]) * k / n, a[1] + (b[1] - a[1]) * k / n]);
+    const a = t[i - 1],
+      b = t[i],
+      n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / step));
+    for (let k = 1; k <= n; k++)
+      o.push([a[0] + ((b[0] - a[0]) * k) / n, a[1] + ((b[1] - a[1]) * k) / n]);
   }
   return o;
 };
-const arrivals = ['aNorth', 'aSouth'].map(z => build(zoneArrivalRoute('a', z), null));
-const arrivalTrace = arrivals.flatMap(a => dense(a.trace));
+const arrivals = ['aNorth', 'aSouth'].map((z) => build(zoneArrivalRoute('a', z), null));
+const arrivalTrace = arrivals.flatMap((a) => dense(a.trace));
 
 test('only Lot B west departures take the Feeder middle lane', () => {
   for (const z of B_ZONES) assert.equal(usesFeederMiddleLane(`Departure · bWest · ${z}`), true, z);
-  for (const name of ['Arrival · a · aSouth', 'Arrival · bWest · bSouth', 'Departure · a · aNorth',
-    'Departure · badgeA · aBadge', 'Departure · bNorth · bNorth', 'Departure · cWest · cSouth',
-    'Redirected arrival · bWest · bSouth', 'Feeder → B west'])
+  for (const name of [
+    'Arrival · a · aSouth',
+    'Arrival · bWest · bSouth',
+    'Departure · a · aNorth',
+    'Departure · badgeA · aBadge',
+    'Departure · bNorth · bNorth',
+    'Departure · cWest · cSouth',
+    'Redirected arrival · bWest · bSouth',
+    'Feeder → B west',
+  ])
     assert.equal(usesFeederMiddleLane(name), false, name);
   assert.ok(FEEDER_MIDDLE_OUTBOUND_PX < 0, 'middle lane is left of centre');
 });
@@ -70,9 +93,13 @@ test('B west middle lane stays paved, clear of obstacles and separated past the 
     }
     // Past the exit mouth (trace y <= 515) the lanes run side by side.
     let minSep = Infinity;
-    for (const p of feederPts.filter(p => p[1] <= 515))
-      for (const q of arrivalTrace) minSep = Math.min(minSep, Math.hypot(p[0] - q[0], p[1] - q[1]) * WORLD_SCALE);
-    assert.ok(minSep > CONFLICT_WIDTH, `${z} min separation ${minSep.toFixed(3)} > ${CONFLICT_WIDTH}`);
+    for (const p of feederPts.filter((p) => p[1] <= 515))
+      for (const q of arrivalTrace)
+        minSep = Math.min(minSep, Math.hypot(p[0] - q[0], p[1] - q[1]) * WORLD_SCALE);
+    assert.ok(
+      minSep > CONFLICT_WIDTH,
+      `${z} min separation ${minSep.toFixed(3)} > ${CONFLICT_WIDTH}`,
+    );
     // Route still ends on Feeder, west of (left of) the northbound arrival lane.
     const end = trace.at(-1);
     assert.ok(onFeederStreet(end));
@@ -81,27 +108,48 @@ test('B west middle lane stays paved, clear of obstacles and separated past the 
 });
 
 // Production path: PUBLIC advanceSharedTraffic, no copied conflict rule.
-const queuedPastExit = arrivals.map(a => {
+const queuedPastExit = arrivals.map((a) => {
   const stops = [];
-  for (let d = 0; d <= a.lane.length; d += .25) { const [x, y] = at(a.lane, d); if (onFeederStreet([x, y]) && y >= 470 && y <= 500) stops.push(d); }
+  for (let d = 0; d <= a.lane.length; d += 0.25) {
+    const [x, y] = at(a.lane, d);
+    if (onFeederStreet([x, y]) && y >= 470 && y <= 500) stops.push(d);
+  }
   return { lane: a.lane, stops };
 });
 const sweep = (depLane) => {
-  let samples = 0, blocked = 0;
-  for (const a of queuedPastExit) for (const stop of a.stops)
-    for (let d = Math.max(0, depLane.length - 10); d <= depLane.length; d += .2) {
-      const car = { id: 'dep', lane: 0, distance: d, speed: 2.8, bodyLength: 1.35, phase: 'departing' };
-      const held = { id: 'arr', lane: 1, distance: stop, speed: 0, bodyLength: 1.35, phase: 'arrival', holdForBatch: true, controlStopDistance: stop };
-      advanceSharedTraffic({ cars: [car, held], lanes: [depLane, a.lane] }, .1);
-      assert.equal(held.distance, stop, 'queued arrival must not move');
-      samples++;
-      if (car.yieldingTo === 'arr') blocked++;
-    }
+  let samples = 0,
+    blocked = 0;
+  for (const a of queuedPastExit)
+    for (const stop of a.stops)
+      for (let d = Math.max(0, depLane.length - 10); d <= depLane.length; d += 0.2) {
+        const car = {
+          id: 'dep',
+          lane: 0,
+          distance: d,
+          speed: 2.8,
+          bodyLength: 1.35,
+          phase: 'departing',
+        };
+        const held = {
+          id: 'arr',
+          lane: 1,
+          distance: stop,
+          speed: 0,
+          bodyLength: 1.35,
+          phase: 'arrival',
+          holdForBatch: true,
+          controlStopDistance: stop,
+        };
+        advanceSharedTraffic({ cars: [car, held], lanes: [depLane, a.lane] }, 0.1);
+        assert.equal(held.distance, stop, 'queued arrival must not move');
+        samples++;
+        if (car.yieldingTo === 'arr') blocked++;
+      }
   return { samples, blocked };
 };
 
 test('B west departures pass Alpha arrivals queued north of the exit (416/1172 case)', () => {
-  assert.ok(queuedPastExit.every(a => a.stops.length > 0));
+  assert.ok(queuedPastExit.every((a) => a.stops.length > 0));
   for (const z of B_ZONES) {
     const raw = zoneDepartureRoute('bWest', z);
     const middle = sweep(build(raw, FEEDER_MIDDLE_OUTBOUND_PX).lane);

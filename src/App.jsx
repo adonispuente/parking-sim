@@ -3,7 +3,6 @@ import Scene from './Scene.jsx';
 import SimulationControls from './SimulationControls.jsx';
 import { serviceOptions } from './sundayServices.js';
 
-
 import { openParkingCapacity } from './parkingAvailability.js';
 import LayoutSidebar from './editor/LayoutSidebar.jsx';
 import ObjectInspector from './editor/ObjectInspector.jsx';
@@ -139,7 +138,9 @@ export default function App() {
     edit((current) => ({ ...current, items: [...current.items, object] }));
     setSelectedId(object.id);
     setTool('select');
-    notify(`${object.type === 'spaces' ? 'Parking row' : 'Object'} placed. Adjust it in the inspector.`);
+    notify(
+      `${object.type === 'spaces' ? 'Parking row' : 'Object'} placed. Adjust it in the inspector.`,
+    );
   }
   function choose(id) {
     setSelectedId(id);
@@ -443,8 +444,8 @@ export default function App() {
           <strong>LAYOUT FIRST.</strong> Confidence follows.
         </span>
         <span>
-          {totals.marked} drawn spaces <b>·</b> *User-supplied capacities · 1,584 total <b>·</b> Draft
-          v0.1
+          {totals.marked} drawn spaces <b>·</b> *User-supplied capacities · 1,584 total <b>·</b>{' '}
+          Draft v0.1
         </span>
         <button
           onClick={() =>

@@ -24,7 +24,9 @@ const FRAME = Object.freeze({ width: 1374, height: 1118 });
 // required, never silent adoption of new shapes.
 const EXPECTED_SHAPE_COUNT = 51;
 const SHUTTLE_SPEC = Object.freeze({
-  sourceIndex: 50, expectedLabel: 'Lot C Shuttle Route new', expectedType: 'linestrip',
+  sourceIndex: 50,
+  expectedLabel: 'Lot C Shuttle Route new',
+  expectedType: 'linestrip',
 });
 
 // Allowed LabelMe shape types and the point cardinality each demands.
@@ -66,9 +68,18 @@ const EXIT_RANGES = Object.freeze([
 
 // sourceIndex -> { lot, family, expectedLabel, expectedType }
 const EXIT_SPECS = new Map();
-for (const r of EXIT_RANGES) for (const i of r.indices) {
-  EXIT_SPECS.set(i, Object.freeze({ lot: r.lot, family: r.family, expectedLabel: r.label, expectedType: 'linestrip' }));
-}
+for (const r of EXIT_RANGES)
+  for (const i of r.indices) {
+    EXIT_SPECS.set(
+      i,
+      Object.freeze({
+        lot: r.lot,
+        family: r.family,
+        expectedLabel: r.label,
+        expectedType: 'linestrip',
+      }),
+    );
+  }
 
 // The two Lot C roundabout annotations. Validated for coordinates only; they are
 // never made drivable and never included in EXIT_PATHS. (Label 48 spelling is
@@ -86,7 +97,7 @@ function describeCardinality(card) {
 // alias a caller-owned fixture. Coordinates are copied verbatim — no
 // normalization, reorder, reverse, smoothing, connecting or dedup.
 function deepFreezePoints(points) {
-  const frozen = points.map(p => Object.freeze([p[0], p[1]]));
+  const frozen = points.map((p) => Object.freeze([p[0], p[1]]));
   return Object.freeze(frozen);
 }
 
@@ -101,25 +112,36 @@ function validateShape(shape, index) {
   if (typeof shape.label !== 'string' || shape.label.trim() === '')
     throw new Error(`${where}: missing "label"`);
   if (typeof shape.shape_type !== 'string' || !KNOWN_TYPES.includes(shape.shape_type))
-    throw new Error(`${where} "${shape.label}": shape_type ${JSON.stringify(shape.shape_type)} is not one of ${KNOWN_TYPES.join('/')}`);
+    throw new Error(
+      `${where} "${shape.label}": shape_type ${JSON.stringify(shape.shape_type)} is not one of ${KNOWN_TYPES.join('/')}`,
+    );
 
   // exact contracts where pinned
   const exit = EXIT_SPECS.get(index);
   const ann = ANNOTATION_SPECS[index];
   if (index === SHUTTLE_SPEC.sourceIndex) {
-    if (shape.label !== SHUTTLE_SPEC.expectedLabel || shape.shape_type !== SHUTTLE_SPEC.expectedType)
+    if (
+      shape.label !== SHUTTLE_SPEC.expectedLabel ||
+      shape.shape_type !== SHUTTLE_SPEC.expectedType
+    )
       throw new Error(`${where}: expected shuttle linestrip "${SHUTTLE_SPEC.expectedLabel}"`);
   }
   if (exit) {
     if (shape.shape_type !== exit.expectedType)
-      throw new Error(`${where} "${shape.label}": exit path must be shape_type "${exit.expectedType}", found "${shape.shape_type}"`);
+      throw new Error(
+        `${where} "${shape.label}": exit path must be shape_type "${exit.expectedType}", found "${shape.shape_type}"`,
+      );
     if (shape.label !== exit.expectedLabel)
       throw new Error(`${where} "${shape.label}": expected exit label "${exit.expectedLabel}"`);
   } else if (ann) {
     if (shape.shape_type !== ann.expectedType)
-      throw new Error(`${where} "${shape.label}": annotation must be "${ann.expectedType}", found "${shape.shape_type}"`);
+      throw new Error(
+        `${where} "${shape.label}": annotation must be "${ann.expectedType}", found "${shape.shape_type}"`,
+      );
     if (shape.label !== ann.expectedLabel)
-      throw new Error(`${where} "${shape.label}": expected annotation label "${ann.expectedLabel}"`);
+      throw new Error(
+        `${where} "${shape.label}": expected annotation label "${ann.expectedLabel}"`,
+      );
   }
 
   // coordinates: every point = exactly 2 finite numbers within the inclusive frame
@@ -127,15 +149,23 @@ function validateShape(shape, index) {
   if (!Array.isArray(shape.points))
     throw new Error(`${where} "${shape.label}": missing "points" array`);
   if (shape.points.length < card.min || shape.points.length > card.max)
-    throw new Error(`${where} "${shape.label}": ${shape.shape_type} has ${shape.points.length} point(s), needs ${describeCardinality(card)}`);
+    throw new Error(
+      `${where} "${shape.label}": ${shape.shape_type} has ${shape.points.length} point(s), needs ${describeCardinality(card)}`,
+    );
   shape.points.forEach((p, pi) => {
     if (!Array.isArray(p) || p.length !== 2)
-      throw new Error(`${where} "${shape.label}" point #${pi}: must be exactly [x, y], got ${JSON.stringify(p)}`);
+      throw new Error(
+        `${where} "${shape.label}" point #${pi}: must be exactly [x, y], got ${JSON.stringify(p)}`,
+      );
     if (!p.every(Number.isFinite))
-      throw new Error(`${where} "${shape.label}" point #${pi}: contains a non-finite coordinate ${JSON.stringify(p)}`);
+      throw new Error(
+        `${where} "${shape.label}" point #${pi}: contains a non-finite coordinate ${JSON.stringify(p)}`,
+      );
     const [x, y] = p;
     if (x < 0 || x > FRAME.width || y < 0 || y > FRAME.height)
-      throw new Error(`${where} "${shape.label}" point #${pi} (${x}, ${y}) is outside the ${FRAME.width}x${FRAME.height} frame`);
+      throw new Error(
+        `${where} "${shape.label}" point #${pi} (${x}, ${y}) is outside the ${FRAME.width}x${FRAME.height} frame`,
+      );
   });
 }
 
@@ -146,15 +176,23 @@ export function validateExitPathDrawing(value) {
   if (typeof value !== 'object' || value === null || Array.isArray(value))
     throw new Error(`${EXIT_PATH_SOURCE_FILE}: drawing must be an object, got ${typeof value}`);
 
-  if (!Number.isInteger(value.imageWidth) || !Number.isInteger(value.imageHeight) ||
-      value.imageWidth !== FRAME.width || value.imageHeight !== FRAME.height)
-    throw new Error(`${EXIT_PATH_SOURCE_FILE}: registered frame is ${value.imageWidth}x${value.imageHeight}, expected ${FRAME.width}x${FRAME.height}`);
+  if (
+    !Number.isInteger(value.imageWidth) ||
+    !Number.isInteger(value.imageHeight) ||
+    value.imageWidth !== FRAME.width ||
+    value.imageHeight !== FRAME.height
+  )
+    throw new Error(
+      `${EXIT_PATH_SOURCE_FILE}: registered frame is ${value.imageWidth}x${value.imageHeight}, expected ${FRAME.width}x${FRAME.height}`,
+    );
 
   if (!Array.isArray(value.shapes))
     throw new Error(`${EXIT_PATH_SOURCE_FILE}: drawing must have a "shapes" array`);
 
   if (value.shapes.length !== EXPECTED_SHAPE_COUNT)
-    throw new Error(`${EXIT_PATH_SOURCE_FILE}: expected exactly ${EXPECTED_SHAPE_COUNT} shapes for this versioned binding, found ${value.shapes.length}. Appended source shapes require an explicit binding revision.`);
+    throw new Error(
+      `${EXIT_PATH_SOURCE_FILE}: expected exactly ${EXPECTED_SHAPE_COUNT} shapes for this versioned binding, found ${value.shapes.length}. Appended source shapes require an explicit binding revision.`,
+    );
 
   value.shapes.forEach((shape, index) => validateShape(shape, index));
 
@@ -181,8 +219,10 @@ export const EXIT_PATHS = validateExitPathDrawing(source);
 
 // Separate from the exit catalog: this is a shuttle loop, not a 33rd car exit.
 export const C_SHUTTLE_TRACE = Object.freeze({
-  id: 'exitpaths-shuttle-50', sourceFile: EXIT_PATH_SOURCE_FILE,
-  sourceIndex: SHUTTLE_SPEC.sourceIndex, label: SHUTTLE_SPEC.expectedLabel,
+  id: 'exitpaths-shuttle-50',
+  sourceFile: EXIT_PATH_SOURCE_FILE,
+  sourceIndex: SHUTTLE_SPEC.sourceIndex,
+  label: SHUTTLE_SPEC.expectedLabel,
   points: deepFreezePoints(source.shapes[SHUTTLE_SPEC.sourceIndex].points),
 });
 
@@ -190,7 +230,7 @@ export const C_SHUTTLE_TRACE = Object.freeze({
 // of EXIT_PATHS and never used for routing/rendering behavior).
 export const EXIT_PATH_ANNOTATIONS = Object.freeze(
   Object.keys(ANNOTATION_SPECS)
-    .map(key => {
+    .map((key) => {
       const i = Number(key);
       return Object.freeze({
         sourceIndex: i,
@@ -200,14 +240,22 @@ export const EXIT_PATH_ANNOTATIONS = Object.freeze(
         drivable: false,
       });
     })
-    .sort((a, b) => a.sourceIndex - b.sourceIndex)
+    .sort((a, b) => a.sourceIndex - b.sourceIndex),
 );
 
 export function exitPathById(id) {
-  const found = EXIT_PATHS.find(e => e.id === id);
+  const found = EXIT_PATHS.find((e) => e.id === id);
   if (!found)
-    throw new Error(`Unknown exit path id ${JSON.stringify(id)}. Expected format "exitpaths-<sourceIndex>" for one of ${EXIT_PATHS.length} exits (source indices 16..47).`);
+    throw new Error(
+      `Unknown exit path id ${JSON.stringify(id)}. Expected format "exitpaths-<sourceIndex>" for one of ${EXIT_PATHS.length} exits (source indices 16..47).`,
+    );
   return found;
 }
 
-export default { EXIT_PATHS, EXIT_PATH_ANNOTATIONS, EXIT_PATH_SOURCE_FILE, validateExitPathDrawing, exitPathById };
+export default {
+  EXIT_PATHS,
+  EXIT_PATH_ANNOTATIONS,
+  EXIT_PATH_SOURCE_FILE,
+  validateExitPathDrawing,
+  exitPathById,
+};

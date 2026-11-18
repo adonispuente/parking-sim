@@ -26,7 +26,9 @@ function build() {
   const ids = new Set();
   for (const e of EXIT_PATHS) {
     if (!Object.hasOwn(counts, e.lot))
-      throw new Error(`exitPathOverlayView: catalog entry ${e.id} has unknown lot ${JSON.stringify(e.lot)}`);
+      throw new Error(
+        `exitPathOverlayView: catalog entry ${e.id} has unknown lot ${JSON.stringify(e.lot)}`,
+      );
     if (ids.has(e.id)) throw new Error(`exitPathOverlayView: duplicate id ${e.id}`);
     ids.add(e.id);
     counts[e.lot] += 1;
@@ -35,29 +37,34 @@ function build() {
   if (total !== 32) throw new Error(`exitPathOverlayView: expected 32 exit traces, found ${total}`);
   for (const lot of Object.keys(EXPECTED_COUNTS)) {
     if (counts[lot] !== EXPECTED_COUNTS[lot])
-      throw new Error(`exitPathOverlayView: lot ${lot} expected ${EXPECTED_COUNTS[lot]} traces, found ${counts[lot]}`);
+      throw new Error(
+        `exitPathOverlayView: lot ${lot} expected ${EXPECTED_COUNTS[lot]} traces, found ${counts[lot]}`,
+      );
   }
   for (const id of ACTIVATED_EXIT_IDS) {
-    if (!ids.has(id)) throw new Error(`exitPathOverlayView: ACTIVATED_EXIT_IDS references unknown id ${id}`);
+    if (!ids.has(id))
+      throw new Error(`exitPathOverlayView: ACTIVATED_EXIT_IDS references unknown id ${id}`);
   }
-  const lines = [...EXIT_PATHS].sort((x, y) => x.sourceIndex - y.sourceIndex).map((e) => {
-    const activated = ACTIVATED_EXIT_IDS.includes(e.id);
-    const letter = LOT_NAMES[e.lot] ?? String(e.lot).toUpperCase();
-    const pixelPoints = e.points;
-    const worldPoints = Object.freeze(pixelPoints.map((p) => Object.freeze(traceWorldPoint(p))));
-    return Object.freeze({
-      id: e.id,
-      sourceIndex: e.sourceIndex,
-      lot: e.lot,
-      family: e.family,
-      label: e.label,
-      pixelPoints,
-      worldPoints,
-      status: activated ? 'active' : 'drawn-reference',
-      tag: `#${e.sourceIndex} · ${letter} · ${activated ? 'drawn, in traffic use' : 'drawn ref'}`,
-      labelAt: worldPoints[Math.floor(worldPoints.length / 2)],
+  const lines = [...EXIT_PATHS]
+    .sort((x, y) => x.sourceIndex - y.sourceIndex)
+    .map((e) => {
+      const activated = ACTIVATED_EXIT_IDS.includes(e.id);
+      const letter = LOT_NAMES[e.lot] ?? String(e.lot).toUpperCase();
+      const pixelPoints = e.points;
+      const worldPoints = Object.freeze(pixelPoints.map((p) => Object.freeze(traceWorldPoint(p))));
+      return Object.freeze({
+        id: e.id,
+        sourceIndex: e.sourceIndex,
+        lot: e.lot,
+        family: e.family,
+        label: e.label,
+        pixelPoints,
+        worldPoints,
+        status: activated ? 'active' : 'drawn-reference',
+        tag: `#${e.sourceIndex} · ${letter} · ${activated ? 'drawn, in traffic use' : 'drawn ref'}`,
+        labelAt: worldPoints[Math.floor(worldPoints.length / 2)],
+      });
     });
-  });
   return Object.freeze({
     file: EXIT_PATH_SOURCE_FILE,
     total,

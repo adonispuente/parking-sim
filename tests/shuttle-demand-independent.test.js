@@ -26,31 +26,54 @@ import { captureTrafficFrame } from '../src/playbackFrames.js';
 
 // ---- shared fakes -------------------------------------------------------
 
-const makeLane = points => {
+const makeLane = (points) => {
   const path = new THREE.CurvePath();
-  for (let i = 1; i < points.length; i++) path.add(new THREE.LineCurve3(
-    new THREE.Vector3(points[i - 1][0], 0, points[i - 1][1]),
-    new THREE.Vector3(points[i][0], 0, points[i][1])));
+  for (let i = 1; i < points.length; i++)
+    path.add(
+      new THREE.LineCurve3(
+        new THREE.Vector3(points[i - 1][0], 0, points[i - 1][1]),
+        new THREE.Vector3(points[i][0], 0, points[i][1]),
+      ),
+    );
   return { path, length: path.getLength() };
 };
 const live = () => [{ id: 'b', open: true, capacity: 487 }];
 const TRIP = { b: 300, cNorth: 300, cSouth: 300 };
-const DEMAND = { b: { toHome: 0, toLot: 0 }, cNorth: { toHome: 0, toLot: 0 }, cSouth: { toHome: 0, toLot: 0 } };
+const DEMAND = {
+  b: { toHome: 0, toLot: 0 },
+  cNorth: { toHome: 0, toLot: 0 },
+  cSouth: { toHome: 0, toLot: 0 },
+};
 
 // Minimal state for the ledger in isolation.
 const ledgerState = (extra = {}) => ({
-  clock: 0, cars: [], lanes: [], occupancy: { b: 0 }, zoneOccupancy: {},
-  phase: 'arrival', shuttleConfig: {}, shuttles: [], parkedVehicles: [], ...extra,
+  clock: 0,
+  cars: [],
+  lanes: [],
+  occupancy: { b: 0 },
+  zoneOccupancy: {},
+  phase: 'arrival',
+  shuttleConfig: {},
+  shuttles: [],
+  parkedVehicles: [],
+  ...extra,
 });
 // Full fake state that attachShuttles can drive (mirrors shuttle-staggering).
 const busState = (options = {}) => {
-  const state = { cars: [], lanes: [], clock: 0, occupancy: { b: 0 }, zoneOccupancy: {}, phase: 'arrival' };
+  const state = {
+    cars: [],
+    lanes: [],
+    clock: 0,
+    occupancy: { b: 0 },
+    zoneOccupancy: {},
+    phase: 'arrival',
+  };
   attachShuttles(state, makeLane, options);
   return state;
 };
 // Finish the bus currently in motion (mirrors shuttle-staggering.test.js).
 const finish = (state, bus) => {
-  const car = state.cars.find(item => item.id === bus.id);
+  const car = state.cars.find((item) => item.id === bus.id);
   assert.ok(car, `${bus.id} must be in motion before it can complete a leg`);
   state.cars.splice(state.cars.indexOf(car), 1);
   state.completeShuttle(car);
@@ -60,7 +83,7 @@ const finish = (state, bus) => {
 const relaunch = (state, bus, extraSeconds = 16) => {
   state.clock = Math.max(state.clock + 1, bus.readyAt + extraSeconds);
   state.prepareShuttles(live());
-  return state.cars.some(car => car.id === bus.id);
+  return state.cars.some((car) => car.id === bus.id);
 };
 
 // ---- 1. waiting demand is NOT parked occupancy --------------------------
@@ -71,7 +94,11 @@ test('a full-but-not-ready lot generates zero pickup demand; only readiness does
   // auto-registers every parkedVehicles car at construction, so the readiness
   // must exist BEFORE createShuttleDemand (a later re-register is a no-op via
   // the "known" set). Readiness — not the parking itself — is what makes demand.
-  const parked = Array.from({ length: 487 }, (_, i) => ({ id: `b-${i}`, target: 'b', zone: 'bSouth' }));
+  const parked = Array.from({ length: 487 }, (_, i) => ({
+    id: `b-${i}`,
+    target: 'b',
+    zone: 'bSouth',
+  }));
   parked[0].readyAt = 10; // ready 10s in, so NOT yet ready at t=0
   const state = ledgerState({ parkedVehicles: parked, occupancy: { b: 487 } });
   const demand = createShuttleDemand(state, TRIP);
@@ -100,12 +127,21 @@ test('zero demand holds the bus at home (demand-hold, no launch)', () => {
   state.shuttleConfig.demandOverride = undefined; // no demand at all
   state.prepareShuttles(live());
   const bus = state.shuttles[0];
-  assert.equal(state.cars.some(car => car.id === bus.id), false, 'no bus launches with zero demand');
+  assert.equal(
+    state.cars.some((car) => car.id === bus.id),
+    false,
+    'no bus launches with zero demand',
+  );
   assert.equal(bus.phase, 'demand-hold');
   assert.ok(bus.circuit == null, 'no circuit is assigned with zero demand');
   // Still zero demand later: it must STILL hold, not launch on a timer.
-  state.clock = 300; state.prepareShuttles(live());
-  assert.equal(state.cars.some(car => car.id === bus.id), false, 'a bus never launches on its own while demand is zero');
+  state.clock = 300;
+  state.prepareShuttles(live());
+  assert.equal(
+    state.cars.some((car) => car.id === bus.id),
+    false,
+    'a bus never launches on its own while demand is zero',
+  );
   assert.equal(bus.phase, 'demand-hold');
 });
 
@@ -113,7 +149,11 @@ test('zero demand holds the bus at home (demand-hold, no launch)', () => {
 
 test('a reservation is capacity-capped and a fully-met area stops attracting buses', () => {
   const state = ledgerState();
-  state.shuttleConfig.demandOverride = { b: { toHome: 20, toLot: 0 }, cNorth: { toHome: 0, toLot: 0 }, cSouth: { toHome: 0, toLot: 0 } };
+  state.shuttleConfig.demandOverride = {
+    b: { toHome: 20, toLot: 0 },
+    cNorth: { toHome: 0, toLot: 0 },
+    cSouth: { toHome: 0, toLot: 0 },
+  };
   const demand = createShuttleDemand(state, TRIP);
   demand.update(); // one-shot reset -> b.waiting.toHome = 20; capacity is 20 by default
 
@@ -132,7 +172,11 @@ test('a reservation is capacity-capped and a fully-met area stops attracting bus
 
   // Over-demand stays bounded per bus, and the residual is still eligible.
   const state2 = ledgerState();
-  state2.shuttleConfig.demandOverride = { b: { toHome: 100, toLot: 0 }, cNorth: { toHome: 0, toLot: 0 }, cSouth: { toHome: 0, toLot: 0 } };
+  state2.shuttleConfig.demandOverride = {
+    b: { toHome: 100, toLot: 0 },
+    cNorth: { toHome: 0, toLot: 0 },
+    cSouth: { toHome: 0, toLot: 0 },
+  };
   const demand2 = createShuttleDemand(state2, TRIP);
   demand2.update();
   const b2 = { number: 1 };
@@ -147,7 +191,7 @@ test('an area waiting past maxWait outranks a busier area (quiet-area safeguard)
   const mk = () => {
     const state = ledgerState();
     state.shuttleConfig.estimatedPeoplePerCar = 8;
-    state.shuttleConfig.estimatedRideShare = 1;   // -> 8 * 1 = 8 units/car
+    state.shuttleConfig.estimatedRideShare = 1; // -> 8 * 1 = 8 units/car
     const demand = createShuttleDemand(state, TRIP);
     // Old, quiet cNorth demand seeded at clock 0 via a fresh arrival.
     state.clock = 0;
@@ -197,9 +241,13 @@ test('the C branch switches at the roundabout when demand requires it', () => {
   // At the roundabout, cSouth becomes the only uncovered demand.
   state.shuttleConfig.demandOverride = { ...DEMAND, cSouth: { toHome: 60, toLot: 0 } };
   state.prepareShuttles(live()); // demand.update() applies the new override
-  state.clock = bus.readyAt; state.prepareShuttles(live());
-  assert.ok(state.cars.some(car => car.id === bus.id), 'bus reaches the roundabout');
-  finish(state, bus);            // completes the cRoundabout leg -> re-branch
+  state.clock = bus.readyAt;
+  state.prepareShuttles(live());
+  assert.ok(
+    state.cars.some((car) => car.id === bus.id),
+    'bus reaches the roundabout',
+  );
+  finish(state, bus); // completes the cRoundabout leg -> re-branch
   assert.equal(bus.circuit, 'cSouth', 'branch switches at the roundabout when demand demands it');
 });
 
@@ -209,7 +257,8 @@ test('a demand change on a non-roundabout C leg does not re-branch the bus', () 
   state.prepareShuttles(live());
   const bus = state.shuttles[0];
   assert.equal(bus.circuit, 'cNorth');
-  state.clock = bus.readyAt; state.prepareShuttles(live());
+  state.clock = bus.readyAt;
+  state.prepareShuttles(live());
   finish(state, bus); // at roundabout, cNorth still the demand -> keep cNorth, leg -> 1
   assert.equal(bus.circuit, 'cNorth');
   assert.equal(bus.leg, 1); // now on the cNorth pickup leg (stop = cNorth, not roundabout)
@@ -248,8 +297,14 @@ test('a retiring bus finishes its remote legs then clears pending demand at home
   finish(state, bus); // home leg done -> circuit null, pending cleared, home-dwell
 
   // At home and retired: no pending demand, no relaunch.
-  state.clock += 60; state.cars = []; state.prepareShuttles(live());
-  assert.equal(state.cars.some(car => car.id === bus.id), false, 'a retired bus at home does not relaunch');
+  state.clock += 60;
+  state.cars = [];
+  state.prepareShuttles(live());
+  assert.equal(
+    state.cars.some((car) => car.id === bus.id),
+    false,
+    'a retired bus at home does not relaunch',
+  );
   assert.equal(bus.demandAssignment, null, 'pending demand assignment is cleared at home');
   assert.equal(bus.circuit, null);
 });
@@ -262,8 +317,14 @@ test('a disabled bus at home clears pending demand and holds (no remote legs lef
   // Bus is at home with a pending cSouth assignment (no remote legs left).
   assert.equal(bus.demandAssignment?.area, 'cSouth');
   state.shuttleConfig.enabled = false;
-  state.clock = 15; state.cars = []; state.prepareShuttles(live());
-  assert.equal(state.cars.some(car => car.id === bus.id), false, 'disabled bus stays parked');
+  state.clock = 15;
+  state.cars = [];
+  state.prepareShuttles(live());
+  assert.equal(
+    state.cars.some((car) => car.id === bus.id),
+    false,
+    'disabled bus stays parked',
+  );
   assert.equal(bus.demandAssignment, null, 'pending demand is cleared when disabled at home');
   assert.equal(bus.circuit, null);
   assert.ok(['home', 'service-break'].includes(bus.phase), `unexpected phase ${bus.phase}`);
@@ -285,20 +346,33 @@ test('an identical scripted drive reproduces the exact same dispatch sequence tw
       };
       state.prepareShuttles(live());
       // Deterministically finish every bus that is currently in motion.
-      for (const car of [...state.cars].filter(car => car.fleetBus)) {
+      for (const car of [...state.cars].filter((car) => car.fleetBus)) {
         state.cars.splice(state.cars.indexOf(car), 1);
         state.completeShuttle(car);
       }
-      trace.push(JSON.stringify({
-        d: state.shuttleDemand,
-        buses: state.shuttles.map(b => ({ n: b.number, p: b.phase, c: b.circuit, l: b.leg, s: b.stop, r: b.readyAt })),
-      }));
+      trace.push(
+        JSON.stringify({
+          d: state.shuttleDemand,
+          buses: state.shuttles.map((b) => ({
+            n: b.number,
+            p: b.phase,
+            c: b.circuit,
+            l: b.leg,
+            s: b.stop,
+            r: b.readyAt,
+          })),
+        }),
+      );
     }
     return trace;
   };
   const run = () => {
     const state = busState({ dispatchMode: 'demand', activeCount: 5, dwellSeconds: 10 });
-    state.shuttleConfig.demandOverride = { ...DEMAND, b: { toHome: 120, toLot: 0 }, cNorth: { toHome: 20, toLot: 0 } };
+    state.shuttleConfig.demandOverride = {
+      ...DEMAND,
+      b: { toHome: 120, toLot: 0 },
+      cNorth: { toHome: 20, toLot: 0 },
+    };
     return drive(state);
   };
   const first = run();
@@ -359,5 +433,9 @@ test('demandOverride is a one-shot reset on a CHANGED json; a pickup drains it',
   demand.update();
   const probe3 = { number: 9 };
   demand.reserve(probe3, demand.choose());
-  assert.equal(probe3.demandAssignment.toHome, 20, 'fresh 30 waiting -> capped 20, not the old 100 or drained 80');
+  assert.equal(
+    probe3.demandAssignment.toHome,
+    20,
+    'fresh 30 waiting -> capped 20, not the old 100 or drained 80',
+  );
 });

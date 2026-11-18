@@ -5,7 +5,8 @@ import { tracedLayout } from '../tracedMap.js';
 
 function loadDraft() {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem('parking-flow-layout-v1');
+    const stored =
+      localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem('parking-flow-layout-v1');
     if (stored) {
       const raw = JSON.parse(stored);
       if (raw.sourcePair !== SOURCE_PAIR) {

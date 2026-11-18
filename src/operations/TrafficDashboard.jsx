@@ -30,7 +30,11 @@ export default function TrafficDashboard({
         <summary>Flow details & advanced settings</summary>
         <div className="traffic-controls" aria-label="Corporate Drive traffic controls">
           {children}
-          <StaffingControls options={trafficOptions} setOptions={setTrafficOptions} onReset={onReset} />
+          <StaffingControls
+            options={trafficOptions}
+            setOptions={setTrafficOptions}
+            onReset={onReset}
+          />
           <SundayControls
             options={trafficOptions}
             setOptions={setTrafficOptions}
@@ -84,13 +88,13 @@ export default function TrafficDashboard({
             ))}
           </div>
           <small>
-            {trafficStats.active} on road · {trafficStats.entered.reduce((a, b) => a + b, 0)} entered ·{' '}
-            {trafficStats.exited.reduce((a, b) => a + b, 0)} reached lot ·{' '}
+            {trafficStats.active} on road · {trafficStats.entered.reduce((a, b) => a + b, 0)}{' '}
+            entered · {trafficStats.exited.reduce((a, b) => a + b, 0)} reached lot ·{' '}
             {trafficStats.waiting.reduce((a, b) => a + b, 0)} waiting off-map
           </small>
           <small>
-            Feeder arrivals normally fill A → B → C, with 10% continuing along Corporate to B, then C,
-            even while A is open.{' '}
+            Feeder arrivals normally fill A → B → C, with 10% continuing along Corporate to B, then
+            C, even while A is open.{' '}
             {finalService
               ? 'At 1:15, both Equity approaches use B’s main entrance; C is fallback only.'
               : 'Both Equity approaches enter staffed Lot C. If C is unavailable, Equity cars wait outside campus.'}
@@ -108,25 +112,25 @@ export default function TrafficDashboard({
               {trafficStats.sentAway ?? 0} redirected past campus ·{' '}
               {(trafficStats.throughEntered ?? []).reduce((sum, n) => sum + n, 0) -
                 (trafficStats.throughExited ?? []).reduce((sum, n) => sum + n, 0)}{' '}
-              passing through · {(trafficStats.overflowWaiting ?? []).reduce((sum, n) => sum + n, 0)}{' '}
-              waiting to join the road. Equity arrivals also leave via Feeder. Authorized badge parking
-              is separate.
+              passing through ·{' '}
+              {(trafficStats.overflowWaiting ?? []).reduce((sum, n) => sum + n, 0)} waiting to join
+              the road. Equity arrivals also leave via Feeder. Authorized badge parking is separate.
             </small>
           </div>
           <small>
-            {Object.values(trafficStats.departed ?? {}).reduce((a, b) => a + b, 0)} departed campus ·{' '}
-            {trafficStats.departing ?? 0} exiting now. Cars become ready around their own service
+            {Object.values(trafficStats.departed ?? {}).reduce((a, b) => a + b, 0)} departed campus
+            · {trafficStats.departing ?? 0} exiting now. Cars become ready around their own service
             dismissal, including the final service. Lots A, B, and C use parking hubs; black permit
             parking uses its section staging point.
           </small>
           <small>
-            Lot B exits: North splits between the north and west exits. South uses north; Banana uses
-            west; Pocket uses north.
+            Lot B exits: North splits between the north and west exits. South uses north; Banana
+            uses west; Pocket uses north.
           </small>
           <RouteSourcesPanel />
           <small>
-            Black Permit · badge arrivals fixed at 5% · {trafficStats.badgeParking ?? 0} / 51 parked ·{' '}
-            {trafficStats.badgeReserved ?? 0} inbound. Included in Lot A's total.
+            Black Permit · badge arrivals fixed at 5% · {trafficStats.badgeParking ?? 0} / 51 parked
+            · {trafficStats.badgeReserved ?? 0} inbound. Included in Lot A's total.
           </small>
           <small>
             {Object.values(trafficStats.assignments ?? {}).reduce((a, b) => a + b, 0) -
@@ -137,9 +141,9 @@ export default function TrafficDashboard({
           <section className="capacity-status" aria-label="Standing traffic priority">
             <strong>Right of way: {TRAFFIC_PRIORITY_ORDER.join(' → ')}</strong>
             <small>
-              1 shuttle = at least {SHUTTLE_CAR_EQUIVALENT} cars of priority. Keep buses moving; clear
-              occupied crossings and maintain safe following. Priority does not allow overtaking through
-              a queue.
+              1 shuttle = at least {SHUTTLE_CAR_EQUIVALENT} cars of priority. Keep buses moving;
+              clear occupied crossings and maintain safe following. Priority does not allow
+              overtaking through a queue.
             </small>
             <small aria-live="polite">
               Waiting on-road: {trafficStats.priorityWaiting?.shuttle ?? 0} buses ·{' '}

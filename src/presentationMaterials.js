@@ -2,7 +2,8 @@
 // Commander requested one pavement color, superseding earlier per-section tones.
 // Reuse approved B North #aca9a2; not a claim that all aerial samples match it.
 export const WORLD_PAVEMENT_MATERIAL = Object.freeze({
-  color: '#aca9a2', roughness: 1,
+  color: '#aca9a2',
+  roughness: 1,
   evidence: 'Commander-requested uniform treatment; approved B North tone reused',
 });
 

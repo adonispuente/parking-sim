@@ -31,11 +31,11 @@ import assert from 'node:assert/strict';
 import { blankZones, distributeInitialOccupancy } from '../src/parkingZones.js';
 import { createServiceController, serviceTimeline } from '../src/sundayServices.js';
 
-const NINE_BEGIN = 495;   // 8:15
-const NINE_DISMISSAL = 615;   // 10:15
+const NINE_BEGIN = 495; // 8:15
+const NINE_DISMISSAL = 615; // 10:15
 const ELEVEN_BEGIN = 605; // 10:05 (pre-roll begin override)
 const ELEVEN_DISMISSAL = 735; // 12:15
-const FINAL_BEGIN = 775;  // 12:55 (pre-roll begin override)
+const FINAL_BEGIN = 775; // 12:55 (pre-roll begin override)
 const FINAL_DISMISSAL = 870; // 2:30
 
 // Seconds since the service began for a given wall-clock minute.
@@ -62,11 +62,26 @@ const controller = (id, initial = {}, overrides = {}) =>
 
 test('timeline: all three services start, begin, dismissal = start + 75, previousDismissalMinute', () => {
   const nine = serviceTimeline({ id: 'nine' });
-  assert.deepEqual(nine, { startMinute: 540, beginMinute: 495, dismissalMinute: 615, previousDismissalMinute: null });
+  assert.deepEqual(nine, {
+    startMinute: 540,
+    beginMinute: 495,
+    dismissalMinute: 615,
+    previousDismissalMinute: null,
+  });
   const eleven = serviceTimeline({ id: 'eleven' });
-  assert.deepEqual(eleven, { startMinute: 660, beginMinute: 605, dismissalMinute: 735, previousDismissalMinute: 615 });
+  assert.deepEqual(eleven, {
+    startMinute: 660,
+    beginMinute: 605,
+    dismissalMinute: 735,
+    previousDismissalMinute: 615,
+  });
   const final = serviceTimeline({ id: 'final' });
-  assert.deepEqual(final, { startMinute: 795, beginMinute: 725, dismissalMinute: 870, previousDismissalMinute: 735 });
+  assert.deepEqual(final, {
+    startMinute: 795,
+    beginMinute: 725,
+    dismissalMinute: 870,
+    previousDismissalMinute: 735,
+  });
   for (const t of [nine, eleven, final]) {
     assert.equal(t.dismissalMinute, t.startMinute + 75);
   }
@@ -89,7 +104,11 @@ test('eleven begin 605, full A: initial transition latches at the outgoing dismi
   st.clock = at(610, ELEVEN_BEGIN); // 10:10, five minutes before the outgoing cohort dismisses
   c.tick(st);
   assert.equal(c.gated.a, true);
-  assert.equal(st.serviceStatus.gates.a.releaseMinute, NINE_DISMISSAL, 'initial latch must wait on the outgoing cohort dismissal');
+  assert.equal(
+    st.serviceStatus.gates.a.releaseMinute,
+    NINE_DISMISSAL,
+    'initial latch must wait on the outgoing cohort dismissal',
+  );
   assert.equal(st.serviceStatus.previousDismissalMinute, 615);
   assert.equal(st.serviceStatus.dismissalMinute, 735);
   assert.equal(st.serviceStatus.gates.a.reason, 'until-dismissal');
@@ -151,7 +170,11 @@ test('badge spaces never count as general: a fully-reserved badge row releases A
   st.badgeReserved = 51; // all 51 reservations are badge holders
   st.clock = at(615, ELEVEN_BEGIN); // 10:15, dismissal passed
   c.tick(st);
-  assert.equal(st.serviceStatus.gates.a.generalUsed, 130, 'badge occupancy and badge reservations are excluded from the general threshold');
+  assert.equal(
+    st.serviceStatus.gates.a.generalUsed,
+    130,
+    'badge occupancy and badge reservations are excluded from the general threshold',
+  );
   assert.equal(c.gated.a, false, '130 general at dismissal must open A');
   assert.equal(st.serviceStatus.gates.a.reason, 'open');
 });
@@ -187,10 +210,21 @@ test('B and C never inherit A latch: full B/C (and manual B/C closures) stay ung
   st = makeState({ a: 411, b: 487, c: 686 });
   st.zoneOccupancy.aNorth = 30; // A at half -> latch at 10:15
   st.clock = at(610, ELEVEN_BEGIN);
-  c.tick(st, [{ id: 'b', open: false }, { id: 'c', open: false }]);
+  c.tick(st, [
+    { id: 'b', open: false },
+    { id: 'c', open: false },
+  ]);
   assert.equal(c.gated.a, true);
-  assert.equal(st.serviceStatus.gates.b.closed, false, 'B has no special service gate even manual-closed');
-  assert.equal(st.serviceStatus.gates.c.closed, false, 'C has no special service gate even manual-closed');
+  assert.equal(
+    st.serviceStatus.gates.b.closed,
+    false,
+    'B has no special service gate even manual-closed',
+  );
+  assert.equal(
+    st.serviceStatus.gates.c.closed,
+    false,
+    'C has no special service gate even manual-closed',
+  );
 });
 
 // ---------------------------------------------------------------------------
@@ -230,7 +264,11 @@ test('nine: A filling to full latches at its own dismissal 10:15, stays above ha
   st.zoneOccupancy = { ...blankZones(), aSouth: 181, aBadge: 51 };
   st.clock = at(650, NINE_BEGIN); // 10:50
   c.tick(st);
-  assert.equal(c.gated.a, false, '181 in an already-open lot stays open (re-closure is full-or-manual)');
+  assert.equal(
+    c.gated.a,
+    false,
+    '181 in an already-open lot stays open (re-closure is full-or-manual)',
+  );
   assert.equal(st.serviceStatus.gates.a.reason, 'open');
 });
 
@@ -249,14 +287,22 @@ test('final: initial latch (181 > half) waits, reopens at the 180 boundary, and 
   st.zoneOccupancy = { ...blankZones(), aSouth: 180 };
   st.clock = at(790, FINAL_BEGIN); // 13:10
   c.tick(st);
-  assert.equal(c.gated.a, false, '180 must release the initial latch once the relevant dismissal has passed');
+  assert.equal(
+    c.gated.a,
+    false,
+    '180 must release the initial latch once the relevant dismissal has passed',
+  );
   assert.equal(st.serviceStatus.gates.a.reason, 'open');
   // A refills to full at 13:20: a later fill releases at the CURRENT 2:30 dismissal.
   st.zoneOccupancy = { ...blankZones(), aNorth: 210, aSouth: 150 }; // 360 = full
   st.clock = at(800, FINAL_BEGIN); // 13:20, before the 2:30 dismissal
   c.tick(st);
   assert.equal(c.gated.a, true);
-  assert.equal(st.serviceStatus.gates.a.releaseMinute, FINAL_DISMISSAL, 'a later fill waits on the current 1:15 cohort dismissal');
+  assert.equal(
+    st.serviceStatus.gates.a.releaseMinute,
+    FINAL_DISMISSAL,
+    'a later fill waits on the current 1:15 cohort dismissal',
+  );
   assert.equal(st.serviceStatus.gates.a.reason, 'until-dismissal');
   st.zoneOccupancy = { ...blankZones(), aSouth: 181 }; // 181
   st.clock = at(875, FINAL_BEGIN); // 2:35, after dismissal
@@ -311,7 +357,11 @@ test('eleven: re-fill after reopen latches at the current cohort dismissal 12:15
   st.clock = at(735, ELEVEN_BEGIN); // 12:15
   c.tick(st);
   assert.equal(c.gated.a, true);
-  assert.equal(st.serviceStatus.gates.a.releaseMinute, ELEVEN_DISMISSAL, 'a later fill waits on the current 11:00 cohort dismissal');
+  assert.equal(
+    st.serviceStatus.gates.a.releaseMinute,
+    ELEVEN_DISMISSAL,
+    'a later fill waits on the current 11:00 cohort dismissal',
+  );
   st.zoneOccupancy.aNorth = 30; // 180 general
   st.clock = at(750, ELEVEN_BEGIN); // 12:30
   c.tick(st);
@@ -332,8 +382,11 @@ test('manual close while A is latched keeps the relevant dismissal; post-reopen 
   c.tick(st, [{ id: 'a', open: false }]); // fresh close while the outgoing latch is pending
   assert.equal(c.gated.a, true);
   assert.equal(st.serviceStatus.gates.a.reason, 'manual-closure');
-  assert.equal(st.serviceStatus.gates.a.releaseMinute, NINE_DISMISSAL,
-    'the pending initial latch must keep the OUTGOING 10:15 dismissal');
+  assert.equal(
+    st.serviceStatus.gates.a.releaseMinute,
+    NINE_DISMISSAL,
+    'the pending initial latch must keep the OUTGOING 10:15 dismissal',
+  );
   // Reopen the hand-closure before dismissal; the latch re-asserts.
   st.clock = at(612, ELEVEN_BEGIN); // 10:12
   c.tick(st, []);
@@ -351,7 +404,11 @@ test('manual close while A is latched keeps the relevant dismissal; post-reopen 
   c.tick(st, [{ id: 'a', open: false }]);
   assert.equal(c.gated.a, true);
   assert.equal(st.serviceStatus.gates.a.reason, 'manual-closure');
-  assert.equal(st.serviceStatus.gates.a.releaseMinute, ELEVEN_DISMISSAL, 'a manual closure issued after reopening releases at the current dismissal (already passed)');
+  assert.equal(
+    st.serviceStatus.gates.a.releaseMinute,
+    ELEVEN_DISMISSAL,
+    'a manual closure issued after reopening releases at the current dismissal (already passed)',
+  );
   // Lifting the closure at 180 releases A at the current dismissal.
   st.zoneOccupancy.aNorth = 30; // 180 general
   st.clock = at(765, ELEVEN_BEGIN); // 12:45

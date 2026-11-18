@@ -67,7 +67,9 @@ export default function LayoutSidebar({
         ))}
       </div>
       <div className="object-list" role="tabpanel" aria-label={`${tab} objects`}>
-        {list.length === 0 && <p className="empty">Nothing here yet. Choose a tool and tap the map.</p>}
+        {list.length === 0 && (
+          <p className="empty">Nothing here yet. Choose a tool and tap the map.</p>
+        )}
         {list.map((item, index) => (
           <div key={item.id} className={`object-card ${selectedId === item.id ? 'active' : ''}`}>
             <button className="object-select" onClick={() => onSelect(item.id)}>
@@ -110,12 +112,12 @@ export default function LayoutSidebar({
       <div className="sidebar-foot">
         <span className="tiny-label">LABELME · UPDATED TRACE</span>
         <p>
-          {tracedFeatures.length} source-pixel annotations: roof outlines, parking regions, Corporate
-          Drive, roundabouts and shuttle pickup points.
+          {tracedFeatures.length} source-pixel annotations: roof outlines, parking regions,
+          Corporate Drive, roundabouts and shuttle pickup points.
           <br />
           <strong>
-            These regions are not counted parking stalls. Capacities remain A 411 · B 487 · C 686 (1,584
-            total).
+            These regions are not counted parking stalls. Capacities remain A 411 · B 487 · C 686
+            (1,584 total).
           </strong>
         </p>
         <button className="text-button" onClick={onToggleTrace}>

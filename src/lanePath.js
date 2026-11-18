@@ -4,16 +4,20 @@
 // behavior unchanged: this is an index optimization, not a different route.
 export function indexLanePath(path) {
   path.getPoint = function getIndexedPoint(t, target) {
-    const distance=t*this.getLength(), lengths=this.getCurveLengths();
-    if (!lengths.length || distance>lengths.at(-1)) return null;
-    let lo=0,hi=lengths.length-1;
-    while(lo<hi) {
-      const mid=(lo+hi)>>1;
-      if(lengths[mid]>=distance)hi=mid;else lo=mid+1;
+    const distance = t * this.getLength(),
+      lengths = this.getCurveLengths();
+    if (!lengths.length || distance > lengths.at(-1)) return null;
+    let lo = 0,
+      hi = lengths.length - 1;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (lengths[mid] >= distance) hi = mid;
+      else lo = mid + 1;
     }
-    const curve=this.curves[lo],length=curve.getLength();
-    const u=length===0?0:1-(lengths[lo]-distance)/length;
-    return curve.getPointAt(u,target);
+    const curve = this.curves[lo],
+      length = curve.getLength();
+    const u = length === 0 ? 0 : 1 - (lengths[lo] - distance) / length;
+    return curve.getPointAt(u, target);
   };
   return path;
 }

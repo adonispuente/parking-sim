@@ -3,6 +3,7 @@
 What every person on the map does, where the code implements it, and which new points are advisory only.
 
 ## Registry API
+
 - `POSITIONS`: the **unchanged eight staffed source points** (#57–#64).
 - `CONTROL_POINTS`: the existing unstaffed Equity / Clay stop; unlike a new stub, it has implemented stop behavior.
 - `C_HUB_POSITIONS`: the active Lot C roundabout marshal from `images/LotCHubs.json` #48. Its four-way area is #49; source indices belong to that separate drawing.
@@ -10,19 +11,19 @@ What every person on the map does, where the code implements it, and which new p
 - `ALL_POSITIONS`: all four lists combined. `positionById('pos:...')` includes new points. `positionByIndex` only resolves original source indices/aliases; null never resolves to an advisory entry.
 - `duty`, `implemented`, `intended`, `provisional`, `controllers`: real duty versus actual model behavior, unmodeled duties, estimates, and implementing files. Describe them honestly.
 
-| # | id | Position |
-|---|---|---|
-| 57 (alias 31) | aMain | Lot A Main |
-| 58 | aExitOfficer | Lot A Feeder exit officer |
-| 59 | corporateOfficer | Feeder / Corporate officer |
-| 60 | permitOfficer | Black Permit officer |
-| 61 (alias 32) | bEntrance | Lot B entrance |
-| 62 (alias 33) | bExit | Lot B north exit |
-| 63 (alias 34) | cEntrance | Lot C staffed entrance |
-| 64 (alias 35) | cExit | Lot C exit |
-| — | equityClayStop | Equity / Clay three-way stop (implemented, unstaffed) |
-| LotCHubs #48 | cRoundabout | Active four-way marshal: shuttles, exits, then entries; compatible movements continue together |
-| — | pos:c-layout-demo | Illustrative unstaffed overlay sample; not a real worker location |
+| #             | id                | Position                                                                                       |
+| ------------- | ----------------- | ---------------------------------------------------------------------------------------------- |
+| 57 (alias 31) | aMain             | Lot A Main                                                                                     |
+| 58            | aExitOfficer      | Lot A Feeder exit officer                                                                      |
+| 59            | corporateOfficer  | Feeder / Corporate officer                                                                     |
+| 60            | permitOfficer     | Black Permit officer                                                                           |
+| 61 (alias 32) | bEntrance         | Lot B entrance                                                                                 |
+| 62 (alias 33) | bExit             | Lot B north exit                                                                               |
+| 63 (alias 34) | cEntrance         | Lot C staffed entrance                                                                         |
+| 64 (alias 35) | cExit             | Lot C exit                                                                                     |
+| —             | equityClayStop    | Equity / Clay three-way stop (implemented, unstaffed)                                          |
+| LotCHubs #48  | cRoundabout       | Active four-way marshal: shuttles, exits, then entries; compatible movements continue together |
+| —             | pos:c-layout-demo | Illustrative unstaffed overlay sample; not a real worker location                              |
 
 ## Staffing scenarios
 

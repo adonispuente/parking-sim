@@ -11,37 +11,66 @@ import { traceWorldPoint } from '../src/tracedMap.js';
 import { vectorToTrace } from '../src/routes/vectorRoutes.js';
 import { indexLanePath } from '../src/lanePath.js';
 import { zoneArrivalRoute, zoneDepartureRoute } from '../src/routes/parkingRoutes.js';
-import { attachMainPositionToLane, mainStopBack, mainHoldBack, MAIN_STOP_BACK,
-  MAIN_DEPARTURE_HOLD_BACK } from '../src/lotAControl.js';
+import {
+  attachMainPositionToLane,
+  mainStopBack,
+  mainHoldBack,
+  MAIN_STOP_BACK,
+  MAIN_DEPARTURE_HOLD_BACK,
+} from '../src/lotAControl.js';
 
-const CONFLICT_WIDTH = .9, HALF = 1.35 / 2, PAD = .6;
-const point = ([x, y]) => { const [wx, wz] = traceWorldPoint([x, y]); return new THREE.Vector3(wx, .6, wz); };
+const CONFLICT_WIDTH = 0.9,
+  HALF = 1.35 / 2,
+  PAD = 0.6;
+const point = ([x, y]) => {
+  const [wx, wz] = traceWorldPoint([x, y]);
+  return new THREE.Vector3(wx, 0.6, wz);
+};
 const build = (raw, approach) => {
-  const pts = keepRight(raw.map(vectorToTrace)).map(point), path = new THREE.CurvePath();
-  for (let i = 1; i < pts.length; i++) if (pts[i].distanceTo(pts[i - 1]) > .00001) path.add(new THREE.LineCurve3(pts[i - 1], pts[i]));
+  const pts = keepRight(raw.map(vectorToTrace)).map(point),
+    path = new THREE.CurvePath();
+  for (let i = 1; i < pts.length; i++)
+    if (pts[i].distanceTo(pts[i - 1]) > 0.00001) path.add(new THREE.LineCurve3(pts[i - 1], pts[i]));
   indexLanePath(path);
   const lane = { path, length: path.getLength() };
   assert.ok(attachMainPositionToLane(lane, raw, approach), 'lane passes Main');
   return lane;
 };
 const at = (l, d) => l.path.getPointAt(Math.max(0, Math.min(1, d / l.length)));
-const sample = (l, a, b) => { const n = Math.max(1, Math.ceil((b - a) / .05)); return Array.from({ length: n + 1 }, (_, i) => at(l, a + (b - a) * i / n)); };
-const gap = (A, B) => { let g = Infinity; for (const p of A) for (const q of B) g = Math.min(g, Math.hypot(p.x - q.x, p.z - q.z)); return g; };
+const sample = (l, a, b) => {
+  const n = Math.max(1, Math.ceil((b - a) / 0.05));
+  return Array.from({ length: n + 1 }, (_, i) => at(l, a + ((b - a) * i) / n));
+};
+const gap = (A, B) => {
+  let g = Infinity;
+  for (const p of A) for (const q of B) g = Math.min(g, Math.hypot(p.x - q.x, p.z - q.z));
+  return g;
+};
 const arrivals = [];
-for (const key of ['a', 'eA']) for (const zone of ['aNorth', 'aSouth']) {
-  // a/aNorth enters on AddNorthRoute and never passes Main (2026-11-12).
-  if (key === 'a' && zone === 'aNorth') continue;
-  let raw; try { raw = zoneArrivalRoute(key, zone); } catch { continue; }
-  arrivals.push({ key, zone, raw, lane: build(raw, 'aMain') });
-}
-const north = zoneDepartureRoute('a', 'aNorth'), northLane = build(north, 'aNorth');
+for (const key of ['a', 'eA'])
+  for (const zone of ['aNorth', 'aSouth']) {
+    // a/aNorth enters on AddNorthRoute and never passes Main (2026-11-12).
+    if (key === 'a' && zone === 'aNorth') continue;
+    let raw;
+    try {
+      raw = zoneArrivalRoute(key, zone);
+    } catch {
+      continue;
+    }
+    arrivals.push({ key, zone, raw, lane: build(raw, 'aMain') });
+  }
+const north = zoneDepartureRoute('a', 'aNorth'),
+  northLane = build(north, 'aNorth');
 
 test('aNorth departure is held at the measured setback; mainStopBack itself unchanged', () => {
   assert.equal(mainStopBack(north), MAIN_STOP_BACK);
   assert.equal(MAIN_DEPARTURE_HOLD_BACK.aNorth, 3.0);
   assert.equal(mainHoldBack(north, 'aNorth'), 3.0);
   const c = northLane.aControl;
-  assert.ok(Math.abs(c.mergeDistance - c.stopDistance - 3.0) < 1e-9, 'applied stop is 3.0 before Main');
+  assert.ok(
+    Math.abs(c.mergeDistance - c.stopDistance - 3.0) < 1e-9,
+    'applied stop is 3.0 before Main',
+  );
   assert.ok(c.stopDistance > 0, 'stop stays on the lane');
   assert.ok(c.releaseDistance > c.mergeDistance, 'release unchanged after Main');
 });
@@ -51,7 +80,10 @@ test('held aNorth departure body clears every admitted arrival path past Main', 
   const body = sample(northLane, Math.max(0, c.stopDistance - HALF - PAD), c.stopDistance + HALF);
   for (const a of arrivals) {
     const o = a.lane.aControl;
-    const g = gap(body, sample(a.lane, o.stopDistance, Math.min(a.lane.length, o.mergeDistance + 4)));
-    assert.ok(g >= CONFLICT_WIDTH + .2, `${a.key}:${a.zone} gap ${g.toFixed(3)} world`);
+    const g = gap(
+      body,
+      sample(a.lane, o.stopDistance, Math.min(a.lane.length, o.mergeDistance + 4)),
+    );
+    assert.ok(g >= CONFLICT_WIDTH + 0.2, `${a.key}:${a.zone} gap ${g.toFixed(3)} world`);
   }
 });

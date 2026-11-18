@@ -63,8 +63,8 @@ export default function ObjectInspector({
               <span>Toggle</span>
             </button>
             <p className="field-note">
-              A: 411 · B: 487 · C: 686. Total: 1,584, supplied by you. Drawn spaces are approximate and
-              counted separately.
+              A: 411 · B: 487 · C: 686. Total: 1,584, supplied by you. Drawn spaces are approximate
+              and counted separately.
             </p>
           </>
         )}
@@ -166,8 +166,8 @@ export default function ObjectInspector({
         />
         {selected.points && (
           <p className="field-note">
-            Satellite-traced shape. Position and rotation move the entire trace; width and depth describe
-            its bounds, not a shape-resizing control.
+            Satellite-traced shape. Position and rotation move the entire trace; width and depth
+            describe its bounds, not a shape-resizing control.
           </p>
         )}
         <button

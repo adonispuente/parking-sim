@@ -42,7 +42,9 @@ function instances(parent, geometry, color, positions, rotation) {
 // Bake stationary detail, including every instance transform, into one mesh.
 // A bus's textured sign remains a separate MeshBasicMaterial mesh.
 function mergeActorMeshes(group) {
-  const parts = group.children.filter(child => child.material instanceof THREE.MeshStandardMaterial);
+  const parts = group.children.filter(
+    (child) => child.material instanceof THREE.MeshStandardMaterial,
+  );
   const geometries = [];
   const instanceMatrix = new THREE.Matrix4();
   const transform = new THREE.Matrix4();
@@ -71,9 +73,15 @@ function mergeActorMeshes(group) {
     }
     const merged = mergeGeometries(geometries);
     if (!merged) throw new Error('Could not merge actor geometry');
-    const mesh = new THREE.Mesh(merged, new THREE.MeshStandardMaterial({
-      color: 0xffffff, vertexColors: true, roughness: 0.82, metalness: 0.04,
-    }));
+    const mesh = new THREE.Mesh(
+      merged,
+      new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        vertexColors: true,
+        roughness: 0.82,
+        metalness: 0.04,
+      }),
+    );
     for (const part of parts) {
       group.remove(part);
       part.geometry.dispose();
@@ -90,16 +98,42 @@ function lights(group, width, depth, y) {
   const x = width / 2 - 0.12;
   const z = depth / 2 - 0.016;
   const geometry = new THREE.BoxGeometry(0.105, 0.065, 0.02);
-  instances(group, geometry, '#f8ebc9', [[-x, y, z], [x, y, z]], [0, 0, 0]);
-  instances(group, new THREE.BoxGeometry(0.105, 0.065, 0.02), '#ba625f',
-    [[-x, y, -z], [x, y, -z]], [0, 0, 0]);
+  instances(
+    group,
+    geometry,
+    '#f8ebc9',
+    [
+      [-x, y, z],
+      [x, y, z],
+    ],
+    [0, 0, 0],
+  );
+  instances(
+    group,
+    new THREE.BoxGeometry(0.105, 0.065, 0.02),
+    '#ba625f',
+    [
+      [-x, y, -z],
+      [x, y, -z],
+    ],
+    [0, 0, 0],
+  );
 }
 
 function wheels(group, width, depth, radius, frontZ, rearZ, y) {
   const x = width / 2 - 0.05;
-  instances(group, new THREE.CylinderGeometry(radius, radius, 0.09, 10), '#273035',
-    [[-x, y, frontZ], [x, y, frontZ], [-x, y, rearZ], [x, y, rearZ]],
-    [0, 0, Math.PI / 2]);
+  instances(
+    group,
+    new THREE.CylinderGeometry(radius, radius, 0.09, 10),
+    '#273035',
+    [
+      [-x, y, frontZ],
+      [x, y, frontZ],
+      [-x, y, rearZ],
+      [x, y, rearZ],
+    ],
+    [0, 0, Math.PI / 2],
+  );
 }
 
 function busSignTexture(busNumber, width, height, fontPx) {
@@ -130,8 +164,10 @@ function busMarking(group, busNumber) {
   const map = busSignTexture(busNumber, 256, 80, 44);
   if (!map) return;
   // Each sign owns one material and one plane, so release() disposes each generated map once.
-  const sign = new THREE.Mesh(new THREE.PlaneGeometry(0.49, 0.15),
-    new THREE.MeshBasicMaterial({ map, side: THREE.DoubleSide }));
+  const sign = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.49, 0.15),
+    new THREE.MeshBasicMaterial({ map, side: THREE.DoubleSide }),
+  );
   sign.rotation.y = Math.PI / 2;
   sign.position.set(0.43, 0.43, 0.36);
   group.add(sign);
@@ -139,8 +175,10 @@ function busMarking(group, busNumber) {
   // Unlit so it reads the same under any scene lighting. Visual only.
   const roofMap = busSignTexture(busNumber, 512, 160, 96);
   if (!roofMap) return;
-  const roof = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 0.6),
-    new THREE.MeshBasicMaterial({ map: roofMap, side: THREE.DoubleSide }));
+  const roof = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.9, 0.6),
+    new THREE.MeshBasicMaterial({ map: roofMap, side: THREE.DoubleSide }),
+  );
   roof.rotation.set(-Math.PI / 2, 0, Math.PI / 2);
   roof.position.set(0, 0.96, -0.08);
   group.add(roof);
@@ -167,8 +205,16 @@ export function createVehicleVisual(car = {}) {
     block(visual, [0.75, 0.26, 2.15], '#344750', [0, 0.77, -0.08], 0.34);
     block(visual, [0.76, 0.055, 2.32], '#b84ef0', [0, 0.925, -0.08]);
     // Window dividers repeat on both sides; baked with the body below.
-    instances(visual, new THREE.BoxGeometry(0.015, 0.23, 0.035), '#ffffff',
-      [-0.94, -0.32, 0.3, 0.91].flatMap(z => [[-0.385, 0.78, z], [0.385, 0.78, z]]), [0, 0, 0]);
+    instances(
+      visual,
+      new THREE.BoxGeometry(0.015, 0.23, 0.035),
+      '#ffffff',
+      [-0.94, -0.32, 0.3, 0.91].flatMap((z) => [
+        [-0.385, 0.78, z],
+        [0.385, 0.78, z],
+      ]),
+      [0, 0, 0],
+    );
     block(visual, [0.65, 0.23, 0.013], '#344750', [0, 0.75, 1.443], 0.34);
     wheels(visual, width, depth, 0.17, 1.2, -1.16, 0.17);
     lights(visual, width, depth, 0.36);
@@ -179,7 +225,7 @@ export function createVehicleVisual(car = {}) {
     // Body-colored hood and boot keep the glazing below the vehicle footprint.
     block(visual, [0.54, 0.025, 0.23], paint, [0, 0.435, 0.535]);
     wheels(visual, width, depth, 0.13, 0.48, -0.46, 0.13);
-    lights(visual, width, depth, 0.30);
+    lights(visual, width, depth, 0.3);
   }
   const body = mergeActorMeshes(visual);
   if (!bus) {

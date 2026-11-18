@@ -2,9 +2,29 @@ import { overflowRoute } from './routes/overflowRoutes.js';
 import { selectArrivalAccess, selectBDepartureAccess } from './trafficPolicy.js';
 import { attachShuttles } from './shuttles.js';
 import { advanceSharedTraffic } from './sharedTraffic.js';
-import { ZONE_BY_ID, GENERAL_CAPACITY, blankZones, distributeInitialOccupancy, lotTotals, chooseZone } from './parkingZones.js';
-import { createServiceController, seededFraction, serviceArrivalPriorities, NEXT_SERVICE, SUNDAY_SERVICES, configuredServiceOptions } from './sundayServices.js';
-import { zoneArrivalRoute, zoneDepartureRoute, redirectedArrivalRoute, feederReliefRoute, arrivalBypassesMain } from './routes/parkingRoutes.js';
+import {
+  ZONE_BY_ID,
+  GENERAL_CAPACITY,
+  blankZones,
+  distributeInitialOccupancy,
+  lotTotals,
+  chooseZone,
+} from './parkingZones.js';
+import {
+  createServiceController,
+  seededFraction,
+  serviceArrivalPriorities,
+  NEXT_SERVICE,
+  SUNDAY_SERVICES,
+  configuredServiceOptions,
+} from './sundayServices.js';
+import {
+  zoneArrivalRoute,
+  zoneDepartureRoute,
+  redirectedArrivalRoute,
+  feederReliefRoute,
+  arrivalBypassesMain,
+} from './routes/parkingRoutes.js';
 import { attachAlphaQueueRelief, beforeAlphaDecision } from './alphaQueueRelief.js';
 import { onStreet } from './routes/pavementRouting.js';
 import { attachLotAControl, attachMainPositionToLane } from './lotAControl.js';
@@ -16,48 +36,129 @@ import { attachEquityClayStop } from './equityClayStop.js';
 import { fromWorld } from './clearImageSource.js';
 import { attachNorthernCorporateControl } from './northernCorporateControl.js';
 import { attachWideAisles } from './wideAisles.js';
-import { C_HUBS, C_HUB_RELEASE_SLOTS, cHubForCar, cHubById, hubsForZone } from './routes/cHubSource.js';
+import {
+  C_HUBS,
+  C_HUB_RELEASE_SLOTS,
+  cHubForCar,
+  cHubById,
+  hubsForZone,
+} from './routes/cHubSource.js';
 import { attachCEntranceControl } from './cEntranceControl.js';
 import { attachCRoundaboutControl } from './cRoundaboutControl.js';
 
 import { AB_HUBS, abHubForCar, abHubById, abHubsForZone } from './routes/abHubSource.js';
 
-const ids=['a','b','c'];
+const ids = ['a', 'b', 'c'];
 // Parked metadata must not retain inbound lane/control flags. The departure
 // must be admitted afresh at Main/Corporate rather than inheriting aMergePassed.
-const parkedRecord=car=>Object.fromEntries(['id','source','target','zone','access','badge','badgePool','parkingIntent','cHubId','abHubId',
-  'initialStaged','cohort','serviceId','dismissalMinute','readinessMinute','departureGroup','departureOrdinal','readyAt','parkedAt']
-  .filter(key=>car[key]!==undefined).map(key=>[key,car[key]]));
+const parkedRecord = (car) =>
+  Object.fromEntries(
+    [
+      'id',
+      'source',
+      'target',
+      'zone',
+      'access',
+      'badge',
+      'badgePool',
+      'parkingIntent',
+      'cHubId',
+      'abHubId',
+      'initialStaged',
+      'cohort',
+      'serviceId',
+      'dismissalMinute',
+      'readinessMinute',
+      'departureGroup',
+      'departureOrdinal',
+      'readyAt',
+      'parkedAt',
+    ]
+      .filter((key) => car[key] !== undefined)
+      .map((key) => [key, car[key]]),
+  );
 export function createZonedCampus(options, makeLane, legacyLanes) {
-  const state={staffing:{...options.staffing},lanes:[...legacyLanes],cars:[],clock:0,entered:[0,0,0],exited:[0,0,0],departed:{a:0,b:0,c:0},departedBySource:[0,0,0],
-    overflowWaiting:[0,0,0],throughEntered:[0,0,0],throughExited:[0,0,0],
-    waiting:[0,0,0],arrivalQueues:[[],[],[]],pendingIntent:[null,null,null],credit:[0,0,0],occupancy:{a:0,b:0,c:0},reserved:{a:0,b:0,c:0},parked:{a:0,b:0,c:0},assignments:{a:0,b:0,c:0},
-    denied:0,overflow:0,sentAway:0,sentAwayBySource:[0,0,0],atCapacity:false,badgePercent:Math.max(0,Math.min(100,Number(options.badgePercent)||0)),
-    badgeParking:0,badgeReserved:0,pendingCategory:[null,null,null],phase:options.phase??'arrival',mode:'campus',routeHistory:[],parkedVehicles:[],
-    zoneOccupancy:distributeInitialOccupancy(options.initialOccupancy,options.initialZoneOccupancy),zoneReserved:blankZones(),
-    zonePreferences:{a:'auto',b:'auto',c:'auto',...options.zonePreferences},closedZones:[],gateStatus:{a:false,b:false,c:false},routingIssues:[],redirected:0,
+  const state = {
+    staffing: { ...options.staffing },
+    lanes: [...legacyLanes],
+    cars: [],
+    clock: 0,
+    entered: [0, 0, 0],
+    exited: [0, 0, 0],
+    departed: { a: 0, b: 0, c: 0 },
+    departedBySource: [0, 0, 0],
+    overflowWaiting: [0, 0, 0],
+    throughEntered: [0, 0, 0],
+    throughExited: [0, 0, 0],
+    waiting: [0, 0, 0],
+    arrivalQueues: [[], [], []],
+    pendingIntent: [null, null, null],
+    credit: [0, 0, 0],
+    occupancy: { a: 0, b: 0, c: 0 },
+    reserved: { a: 0, b: 0, c: 0 },
+    parked: { a: 0, b: 0, c: 0 },
+    assignments: { a: 0, b: 0, c: 0 },
+    denied: 0,
+    overflow: 0,
+    sentAway: 0,
+    sentAwayBySource: [0, 0, 0],
+    atCapacity: false,
+    badgePercent: Math.max(0, Math.min(100, Number(options.badgePercent) || 0)),
+    badgeParking: 0,
+    badgeReserved: 0,
+    pendingCategory: [null, null, null],
+    phase: options.phase ?? 'arrival',
+    mode: 'campus',
+    routeHistory: [],
+    parkedVehicles: [],
+    zoneOccupancy: distributeInitialOccupancy(
+      options.initialOccupancy,
+      options.initialZoneOccupancy,
+    ),
+    zoneReserved: blankZones(),
+    zonePreferences: { a: 'auto', b: 'auto', c: 'auto', ...options.zonePreferences },
+    closedZones: [],
+    gateStatus: { a: false, b: false, c: false },
+    routingIssues: [],
+    redirected: 0,
   };
-  const overflowQueues=[[],[],[]],overflowLanes=new Map();
-  const carry=options.service?.enabled?options.initialServiceCarry:null;
-  let service=options.service?.enabled?createServiceController({...options.service,initialGate:carry?.gate},state.zoneOccupancy):null;
-  const originMinute=service?.preset.beginMinute;
-  const autoContinue=options.autoContinue===true;
-  const controllers=new Map(service?[[service.preset.id,service]]:[]);
-  state.serviceTraffic=structuredClone(carry?.serviceTraffic??{});
-  const registerService=controller=>{
-    state.serviceTraffic[controller.preset.id]??={id:controller.preset.id,label:controller.preset.label,
-      demand:controller.arrivals.length,entered:0,reachedParking:0,turnedAway:0,passingThrough:0,passedThrough:0,waitingToPass:0};
+  const overflowQueues = [[], [], []],
+    overflowLanes = new Map();
+  const carry = options.service?.enabled ? options.initialServiceCarry : null;
+  let service = options.service?.enabled
+    ? createServiceController({ ...options.service, initialGate: carry?.gate }, state.zoneOccupancy)
+    : null;
+  const originMinute = service?.preset.beginMinute;
+  const autoContinue = options.autoContinue === true;
+  const controllers = new Map(service ? [[service.preset.id, service]] : []);
+  state.serviceTraffic = structuredClone(carry?.serviceTraffic ?? {});
+  const registerService = (controller) => {
+    state.serviceTraffic[controller.preset.id] ??= {
+      id: controller.preset.id,
+      label: controller.preset.label,
+      demand: controller.arrivals.length,
+      entered: 0,
+      reachedParking: 0,
+      turnedAway: 0,
+      passingThrough: 0,
+      passedThrough: 0,
+      waitingToPass: 0,
+    };
   };
-  if(service)registerService(service);
-  state.serviceController=service;state.transitionActive=service?.isTransition??false;
-  const sync=()=>{
-    state.occupancy=lotTotals(state.zoneOccupancy);state.parked={...state.occupancy};
-    state.reserved=lotTotals(state.zoneReserved);state.badgeParking=state.zoneOccupancy.aBadge;state.badgeReserved=state.zoneReserved.aBadge;
-    state.cHubOccupancy=Object.fromEntries(C_HUBS.map(h=>[h.id,0]));
-    state.abHubOccupancy=Object.fromEntries(AB_HUBS.map(h=>[h.id,0]));
-    for(const car of state.parkedVehicles) {
-      if(car.cHubId)state.cHubOccupancy[car.cHubId]++;
-      if(car.abHubId)state.abHubOccupancy[car.abHubId]++;
+  if (service) registerService(service);
+  state.serviceController = service;
+  state.transitionActive = service?.isTransition ?? false;
+  const sync = () => {
+    state.occupancy = lotTotals(state.zoneOccupancy);
+    state.parked = { ...state.occupancy };
+    state.reserved = lotTotals(state.zoneReserved);
+    state.badgeParking = state.zoneOccupancy.aBadge;
+    state.badgeReserved = state.zoneReserved.aBadge;
+    state.cHubOccupancy = Object.fromEntries(C_HUBS.map((h) => [h.id, 0]));
+    state.abHubOccupancy = Object.fromEntries(AB_HUBS.map((h) => [h.id, 0]));
+    for (const car of state.parkedVehicles) {
+      if (car.cHubId) state.cHubOccupancy[car.cHubId]++;
+      if (car.abHubId) state.abHubOccupancy[car.abHubId]++;
     }
   };
   sync();
@@ -66,326 +167,675 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
   // advanceSharedTraffic, in the same order as they are attached here.
   // A controller runs unless its options set enabled:false or the position is
   // unstaffed in state.staffing.
-  const staffed=(controllerOptions,position)=>controllerOptions?.enabled!==false&&state.staffing[position]!==false;
+  const staffed = (controllerOptions, position) =>
+    controllerOptions?.enabled !== false && state.staffing[position] !== false;
   attachLotAControl(state);
-  attachFeederOfficer(state,{...options.feederOfficer,enabled:staffed(options.feederOfficer,'aExitOfficer')});
-  attachCorporateDriveOperators(state,options.corporateOperators);
-  attachExitPriorityJunction(state,{...options.corporateOperators,enabled:staffed(options.corporateOperators,'corporateOfficer')});
+  attachFeederOfficer(state, {
+    ...options.feederOfficer,
+    enabled: staffed(options.feederOfficer, 'aExitOfficer'),
+  });
+  attachCorporateDriveOperators(state, options.corporateOperators);
+  attachExitPriorityJunction(state, {
+    ...options.corporateOperators,
+    enabled: staffed(options.corporateOperators, 'corporateOfficer'),
+  });
   attachBlackPermitControl(state);
   attachEquityClayStop(state);
-  attachNorthernCorporateControl(state,options.northernControl);
+  attachNorthernCorporateControl(state, options.northernControl);
   attachWideAisles(state);
-  attachCRoundaboutControl(state,{...options.cRoundabout,enabled:staffed(options.cRoundabout,'cRoundabout')});
-  attachCEntranceControl(state,{...options.cEntrance,enabled:staffed(options.cEntrance,'cEntrance')});
-  attachAlphaQueueRelief(state,{...options.alphaQueueRelief,enabled:staffed(options.alphaQueueRelief,'corporateOfficer')});
-  let sequence=0,manualFeederCount=0;
-  service?.tick(state,options.lotSettings);state.gateStatus={...(service?.gated??{a:false,b:false,c:false})};
-  const ordinals={a:0,b:0,c:0};
-  for(const [zone,count] of Object.entries(state.zoneOccupancy))for(let i=0;i<count;i++) {
-    const target=ZONE_BY_ID[zone].lot,badge=zone==='aBadge';
-    state.parkedVehicles.push({id:sequence++,source:null,target,zone,...(target==='c'?{cHubId:cHubForCar(zone,i).id}:{abHubId:abHubForCar(zone,i)?.id}),access:badge?'badgeA':{a:'a',b:'bWest',c:'cWest'}[target],badge,badgePool:badge,
-      phase:'parked',initialStaged:true,cohort:'previous',...(service?service.departureMetadata(ordinals[target]++,target):{readyAt:0})});
-  }
-  if(carry) {
-    const restored=structuredClone(carry.parkedVehicles);
-    const counts=blankZones();
-    for(const car of restored) {
-      if(!ZONE_BY_ID[car.zone]||car.target!==ZONE_BY_ID[car.zone].lot||!Number.isFinite(car.readinessMinute))throw new Error('Invalid carried vehicle metadata');
-      counts[car.zone]++;
-      if(car.target==='c') {
-        // Older carry checkpoints predate hubs; upgrade deterministically once.
-        car.cHubId??=cHubForCar(car.zone,car.id).id;
-        if(cHubById(car.cHubId).side!==(car.zone.endsWith('North')?'north':'south'))throw new Error('Carried Lot C hub does not match section');
-      }
-      if(abHubsForZone(car.zone).length) {
-        car.abHubId??=abHubForCar(car.zone,car.id).id;
-        if(abHubById(car.abHubId).zone!==car.zone)throw new Error('Carried A/B hub does not match section');
-      }
-      car.readyAt=(car.readinessMinute-service.preset.beginMinute)*60;
-      car.cohort=car.serviceId===service.preset.id?'current':'previous';
+  attachCRoundaboutControl(state, {
+    ...options.cRoundabout,
+    enabled: staffed(options.cRoundabout, 'cRoundabout'),
+  });
+  attachCEntranceControl(state, {
+    ...options.cEntrance,
+    enabled: staffed(options.cEntrance, 'cEntrance'),
+  });
+  attachAlphaQueueRelief(state, {
+    ...options.alphaQueueRelief,
+    enabled: staffed(options.alphaQueueRelief, 'corporateOfficer'),
+  });
+  let sequence = 0,
+    manualFeederCount = 0;
+  service?.tick(state, options.lotSettings);
+  state.gateStatus = { ...(service?.gated ?? { a: false, b: false, c: false }) };
+  const ordinals = { a: 0, b: 0, c: 0 };
+  for (const [zone, count] of Object.entries(state.zoneOccupancy))
+    for (let i = 0; i < count; i++) {
+      const target = ZONE_BY_ID[zone].lot,
+        badge = zone === 'aBadge';
+      state.parkedVehicles.push({
+        id: sequence++,
+        source: null,
+        target,
+        zone,
+        ...(target === 'c'
+          ? { cHubId: cHubForCar(zone, i).id }
+          : { abHubId: abHubForCar(zone, i)?.id }),
+        access: badge ? 'badgeA' : { a: 'a', b: 'bWest', c: 'cWest' }[target],
+        badge,
+        badgePool: badge,
+        phase: 'parked',
+        initialStaged: true,
+        cohort: 'previous',
+        ...(service ? service.departureMetadata(ordinals[target]++, target) : { readyAt: 0 }),
+      });
     }
-    if(Object.keys(counts).some(zone=>counts[zone]!==state.zoneOccupancy[zone]))throw new Error('Carried vehicles do not match section occupancy');
-    if(new Set(restored.map(car=>car.id)).size!==restored.length)throw new Error('Duplicate carried vehicle IDs');
-    state.parkedVehicles=restored;sequence=Math.max(0,...restored.map(car=>car.id+1));
+  if (carry) {
+    const restored = structuredClone(carry.parkedVehicles);
+    const counts = blankZones();
+    for (const car of restored) {
+      if (
+        !ZONE_BY_ID[car.zone] ||
+        car.target !== ZONE_BY_ID[car.zone].lot ||
+        !Number.isFinite(car.readinessMinute)
+      )
+        throw new Error('Invalid carried vehicle metadata');
+      counts[car.zone]++;
+      if (car.target === 'c') {
+        // Older carry checkpoints predate hubs; upgrade deterministically once.
+        car.cHubId ??= cHubForCar(car.zone, car.id).id;
+        if (cHubById(car.cHubId).side !== (car.zone.endsWith('North') ? 'north' : 'south'))
+          throw new Error('Carried Lot C hub does not match section');
+      }
+      if (abHubsForZone(car.zone).length) {
+        car.abHubId ??= abHubForCar(car.zone, car.id).id;
+        if (abHubById(car.abHubId).zone !== car.zone)
+          throw new Error('Carried A/B hub does not match section');
+      }
+      car.readyAt = (car.readinessMinute - service.preset.beginMinute) * 60;
+      car.cohort = car.serviceId === service.preset.id ? 'current' : 'previous';
+    }
+    if (Object.keys(counts).some((zone) => counts[zone] !== state.zoneOccupancy[zone]))
+      throw new Error('Carried vehicles do not match section occupancy');
+    if (new Set(restored.map((car) => car.id)).size !== restored.length)
+      throw new Error('Duplicate carried vehicle IDs');
+    state.parkedVehicles = restored;
+    sequence = Math.max(0, ...restored.map((car) => car.id + 1));
   }
   sync();
-  const arrivalHub=zone=>{
-    const hubs=zone.startsWith('c')?hubsForZone(zone):abHubsForZone(zone);
-    if(!hubs.length)return undefined;
-    const count=hub=>(state.cHubOccupancy[hub.id]??state.abHubOccupancy[hub.id]??0)+state.cars.filter(car=>car.phase==='arrival'&&(car.cHubId??car.abHubId)===hub.id).length;
-    return hubs.reduce((best,hub)=>count(hub)<count(best)?hub:best).id;
+  const arrivalHub = (zone) => {
+    const hubs = zone.startsWith('c') ? hubsForZone(zone) : abHubsForZone(zone);
+    if (!hubs.length) return undefined;
+    const count = (hub) =>
+      (state.cHubOccupancy[hub.id] ?? state.abHubOccupancy[hub.id] ?? 0) +
+      state.cars.filter((car) => car.phase === 'arrival' && (car.cHubId ?? car.abHubId) === hub.id)
+        .length;
+    return hubs.reduce((best, hub) => (count(hub) < count(best) ? hub : best)).id;
   };
-  const currentOrdinals={};
-  const updateServiceCarry=()=>{
-    if(!service)return;
-    for(const [id,controller] of controllers) {
-      const totals=state.serviceTraffic[id];
-      totals.issued=controller.issued;totals.scheduled=totals.demand-totals.issued;
-      totals.waiting=totals.issued-totals.entered-totals.turnedAway;
-      totals.onRoad=totals.entered-totals.reachedParking;
-      totals.waitingToPass=totals.turnedAway-(totals.passingThrough??0)-(totals.passedThrough??0);
+  const currentOrdinals = {};
+  const updateServiceCarry = () => {
+    if (!service) return;
+    for (const [id, controller] of controllers) {
+      const totals = state.serviceTraffic[id];
+      totals.issued = controller.issued;
+      totals.scheduled = totals.demand - totals.issued;
+      totals.waiting = totals.issued - totals.entered - totals.turnedAway;
+      totals.onRoad = totals.entered - totals.reachedParking;
+      totals.waitingToPass =
+        totals.turnedAway - (totals.passingThrough ?? 0) - (totals.passedThrough ?? 0);
     }
-    const status=state.serviceStatus;
-    const idle=status.remaining===0&&overflowQueues.every(queue=>queue.length===0)&&state.waiting.every(n=>n===0)&&Object.values(state.reserved).every(n=>n===0)&&!state.cars.some(car=>!car.fleetBus);
+    const status = state.serviceStatus;
+    const idle =
+      status.remaining === 0 &&
+      overflowQueues.every((queue) => queue.length === 0) &&
+      state.waiting.every((n) => n === 0) &&
+      Object.values(state.reserved).every((n) => n === 0) &&
+      !state.cars.some((car) => !car.fleetBus);
     // Only expose a transferable checkpoint after cars finish their road legs.
     // Readiness is absolute; lane/controller closures are rebuilt, never copied.
-    state.serviceCarry=idle?{minute:status.minute,serviceTraffic:structuredClone(state.serviceTraffic),parkedVehicles:state.parkedVehicles.map(parkedRecord),
-      gate:{closed:service.gated.a,releaseMinute:status.gates.a.releaseMinute,
-        reopenedMinute:service.reopenedAt.a==null?null:service.preset.beginMinute+service.reopenedAt.a/60}}:null;
+    state.serviceCarry = idle
+      ? {
+          minute: status.minute,
+          serviceTraffic: structuredClone(state.serviceTraffic),
+          parkedVehicles: state.parkedVehicles.map(parkedRecord),
+          gate: {
+            closed: service.gated.a,
+            releaseMinute: status.gates.a.releaseMinute,
+            reopenedMinute:
+              service.reopenedAt.a == null
+                ? null
+                : service.preset.beginMinute + service.reopenedAt.a / 60,
+          },
+        }
+      : null;
   };
   updateServiceCarry();
-  if(options.shuttles)attachShuttles(state,makeLane,{...options.shuttles,...(service?{activeCount:service.preset.activeBuses}:{} )});
-  state.setPhase=phase=>{state.phase=['arrival','departure','mixed'].includes(phase)?phase:'arrival';};
-  state.setZonePreferences=preferences=>Object.assign(state.zonePreferences,preferences);
+  if (options.shuttles)
+    attachShuttles(state, makeLane, {
+      ...options.shuttles,
+      ...(service ? { activeCount: service.preset.activeBuses } : {}),
+    });
+  state.setPhase = (phase) => {
+    state.phase = ['arrival', 'departure', 'mixed'].includes(phase) ? phase : 'arrival';
+  };
+  state.setZonePreferences = (preferences) => Object.assign(state.zonePreferences, preferences);
   // Commander rule (2026-11-07): C cars use both C exits about 50/50. 'split' is a
   // deterministic id-parity split (rewind stays exact); 'west'/'east' force one exit.
   // Shuttles never use this policy: they keep the #64 return with its Corporate hold.
-  const cPolicy=value=>['west','east','split'].includes(value)?value:'split';
-  state.departurePolicy={b:'split',...options.departurePolicy};
-  state.departurePolicy.c=cPolicy(state.departurePolicy.c);
-  state.setDeparturePolicy=policy=>{Object.assign(state.departurePolicy,policy);state.departurePolicy.c=cPolicy(state.departurePolicy.c);};
-  const routeLanes=new Map();
-  const getLane=(key,zone,out=false,hubId)=>{
-    const origin=key==='eCWest'?'Equity Entrance → C staffed entrance':key==='e2CWest'?'Equity entrance/exit 2 → C staffed entrance':key;
-    const name=`${out?'Departure':'Arrival'} · ${origin} · ${zone}${hubId?` · ${hubId}`:''}`;
-    const cached=routeLanes.get(name);
-    if(cached instanceof Error)throw cached;
-    if(cached===undefined) {
+  const cPolicy = (value) => (['west', 'east', 'split'].includes(value) ? value : 'split');
+  state.departurePolicy = { b: 'split', ...options.departurePolicy };
+  state.departurePolicy.c = cPolicy(state.departurePolicy.c);
+  state.setDeparturePolicy = (policy) => {
+    Object.assign(state.departurePolicy, policy);
+    state.departurePolicy.c = cPolicy(state.departurePolicy.c);
+  };
+  const routeLanes = new Map();
+  const getLane = (key, zone, out = false, hubId) => {
+    const origin =
+      key === 'eCWest'
+        ? 'Equity Entrance → C staffed entrance'
+        : key === 'e2CWest'
+          ? 'Equity entrance/exit 2 → C staffed entrance'
+          : key;
+    const name = `${out ? 'Departure' : 'Arrival'} · ${origin} · ${zone}${hubId ? ` · ${hubId}` : ''}`;
+    const cached = routeLanes.get(name);
+    if (cached instanceof Error) throw cached;
+    if (cached === undefined) {
       try {
-        const points=out?zoneDepartureRoute(key,zone,hubId):zoneArrivalRoute(key,zone,hubId);
-        const index=state.lanes.length,lane=makeLane(points,name);
+        const points = out
+          ? zoneDepartureRoute(key, zone, hubId)
+          : zoneArrivalRoute(key, zone, hubId);
+        const index = state.lanes.length,
+          lane = makeLane(points, name);
         // North arrivals on the two-way AddNorthRoute entry never pass Main.
-        if(['aNorth','aSouth'].includes(zone) && (out||!arrivalBypassesMain(key,zone)) &&
-          !attachMainPositionToLane(lane,points,out?zone:'aMain'))
+        if (
+          ['aNorth', 'aSouth'].includes(zone) &&
+          (out || !arrivalBypassesMain(key, zone)) &&
+          !attachMainPositionToLane(lane, points, out ? zone : 'aMain')
+        )
           throw new Error('Lot A route misses Lot A Main Position');
-        state.lanes.push(lane);routeLanes.set(name,index);
-      } catch(error) {
+        state.lanes.push(lane);
+        routeLanes.set(name, index);
+      } catch (error) {
         // Geometry is immutable for this simulation. An unresolved route stays
         // visible in routingIssues, but must not run A* again for every queued
         // car on every substep. Restarting the scenario clears this cache.
-        routeLanes.set(name,error instanceof Error?error:new Error(String(error)));
+        routeLanes.set(name, error instanceof Error ? error : new Error(String(error)));
         throw routeLanes.get(name);
       }
     }
     return routeLanes.get(name);
   };
-  const logIssue=error=>{const text=error.message;if(!state.routingIssues.includes(text))state.routingIssues.push(text);};
-  const startClear=index=>{
-    const path=state.lanes[index];
-    return !state.cars.some(car=>{
-      if(car.lane===index)return car.distance<2.9;
-      const p=state.lanes[car.lane].path.getPointAt(Math.min(1,car.distance/state.lanes[car.lane].length));
-      return p.distanceTo(path.path.getPointAt(0))<1.6;
+  const logIssue = (error) => {
+    const text = error.message;
+    if (!state.routingIssues.includes(text)) state.routingIssues.push(text);
+  };
+  const startClear = (index) => {
+    const path = state.lanes[index];
+    return !state.cars.some((car) => {
+      if (car.lane === index) return car.distance < 2.9;
+      const p = state.lanes[car.lane].path.getPointAt(
+        Math.min(1, car.distance / state.lanes[car.lane].length),
+      );
+      return p.distanceTo(path.path.getPointAt(0)) < 1.6;
     });
   };
-  const departureAccess=car=>{
-    if(car.badgePool)return 'badgeA';
-    if(car.target==='b')return selectBDepartureAccess(car,state.departurePolicy.b);
-    if(car.target==='c') {
-      const c=state.departurePolicy.c;
-      return c==='east'?'cEast':c==='west'?'cWest':(Math.abs(car.id|0)%2===0?'cWest':'cEast');
+  const departureAccess = (car) => {
+    if (car.badgePool) return 'badgeA';
+    if (car.target === 'b') return selectBDepartureAccess(car, state.departurePolicy.b);
+    if (car.target === 'c') {
+      const c = state.departurePolicy.c;
+      return c === 'east'
+        ? 'cEast'
+        : c === 'west'
+          ? 'cWest'
+          : Math.abs(car.id | 0) % 2 === 0
+            ? 'cWest'
+            : 'cEast';
     }
     return car.access;
   };
-  state.step=(delta,rates=[0,0,0],lotSettings)=>{
-    const dt=Math.max(0,Math.min(.1,Number(delta)||0));state.clock+=dt;
-    const live=ids.map(id=>{
-      const item=(lotSettings??options.lotSettings??[]).find(x=>x.id===id||x.id===`lot-${id}`);
-      return {id,capacity:GENERAL_CAPACITY[id],open:item?.open!==false};
+  state.step = (delta, rates = [0, 0, 0], lotSettings) => {
+    const dt = Math.max(0, Math.min(0.1, Number(delta) || 0));
+    state.clock += dt;
+    const live = ids.map((id) => {
+      const item = (lotSettings ?? options.lotSettings ?? []).find(
+        (x) => x.id === id || x.id === `lot-${id}`,
+      );
+      return { id, capacity: GENERAL_CAPACITY[id], open: item?.open !== false };
     });
     sync();
     // Switch on the Sunday clock, even when previous-service roads are busy.
     // All controllers share the engine origin; vehicles and buses keep moving.
-    while(service&&autoContinue&&NEXT_SERVICE[service.preset.id]&&
-      originMinute+state.clock/60+1e-8>=SUNDAY_SERVICES[NEXT_SERVICE[service.preset.id]].beginMinute) {
-      const nextId=NEXT_SERVICE[service.preset.id];
-      const gate={closed:service.gated.a,releaseMinute:state.serviceStatus.gates.a.releaseMinute,
-        reopenedMinute:service.reopenedAt.a==null?null:originMinute+service.reopenedAt.a/60};
-      service=createServiceController({...configuredServiceOptions(options,nextId),beginMinute:originMinute,initialGate:gate},state.zoneOccupancy);
-      controllers.set(nextId,service);registerService(service);
-      state.serviceController=service;state.transitionActive=service.isTransition;
+    while (
+      service &&
+      autoContinue &&
+      NEXT_SERVICE[service.preset.id] &&
+      originMinute + state.clock / 60 + 1e-8 >=
+        SUNDAY_SERVICES[NEXT_SERVICE[service.preset.id]].beginMinute
+    ) {
+      const nextId = NEXT_SERVICE[service.preset.id];
+      const gate = {
+        closed: service.gated.a,
+        releaseMinute: state.serviceStatus.gates.a.releaseMinute,
+        reopenedMinute:
+          service.reopenedAt.a == null ? null : originMinute + service.reopenedAt.a / 60,
+      };
+      service = createServiceController(
+        {
+          ...configuredServiceOptions(options, nextId),
+          beginMinute: originMinute,
+          initialGate: gate,
+        },
+        state.zoneOccupancy,
+      );
+      controllers.set(nextId, service);
+      registerService(service);
+      state.serviceController = service;
+      state.transitionActive = service.isTransition;
     }
-    service?.tick(state,live);
-    state.gateStatus={...(service?.gated??{a:false,b:false,c:false})};
-    const open=id=>live.find(s=>s.id===id).open&&!state.gateStatus[id];
-    const zoneFor=(lot,badge=false)=>chooseZone(lot,state.zoneOccupancy,state.zoneReserved,{category:badge?'badge':'general',preferred:state.zonePreferences[lot],closed:state.closedZones});
+    service?.tick(state, live);
+    state.gateStatus = { ...(service?.gated ?? { a: false, b: false, c: false }) };
+    const open = (id) => live.find((s) => s.id === id).open && !state.gateStatus[id];
+    const zoneFor = (lot, badge = false) =>
+      chooseZone(lot, state.zoneOccupancy, state.zoneReserved, {
+        category: badge ? 'badge' : 'general',
+        preferred: state.zonePreferences[lot],
+        closed: state.closedZones,
+      });
     state.prepareAlphaQueueRelief();
     // Ready buses get first safe launch opportunity, then departures, then
     // arrivals. An occupied start still blocks a bus; priority is not teleporting.
-    if(service&&state.shuttleConfig)Object.assign(state.shuttleConfig,{activeCount:service.preset.activeBuses,dispatchDuringDepartures:service.isTransition});
+    if (service && state.shuttleConfig)
+      Object.assign(state.shuttleConfig, {
+        activeCount: service.preset.activeBuses,
+        dispatchDuringDepartures: service.isTransition,
+      });
     state.prepareShuttles?.(live);
-    const canDepart=!!service||state.phase!=='arrival';
+    const canDepart = !!service || state.phase !== 'arrival';
     // Hubs abstract whole parking rows. Keep their waiting cars parked rather
     // than materializing an unlimited queue across adjoining aisle crossings.
     // Each hub may feed two cars into C's interior at once; cars already on the
     // public exit road no longer consume an interior launch slot.
-    const cHubDepartures=new Map();
-    for(const car of state.cars)if(car.phase==='departing'&&car.cHubId&&state.inWideAisle(car))
-      cHubDepartures.set(car.cHubId,(cHubDepartures.get(car.cHubId)??0)+1);
-    const abHubDepartures=new Map(),abSectionDepartures=new Map();
-    for(const car of state.cars)if(car.phase==='departing'&&car.abHubId) {
-      const p=state.lanes[car.lane].path.getPointAt(Math.min(1,car.distance/state.lanes[car.lane].length));
-      if(!onStreet(fromWorld([p.x,p.z]))) {
-        abHubDepartures.set(car.abHubId,(abHubDepartures.get(car.abHubId)??0)+1);
-        abSectionDepartures.set(car.zone,(abSectionDepartures.get(car.zone)??0)+1);
+    const cHubDepartures = new Map();
+    for (const car of state.cars)
+      if (car.phase === 'departing' && car.cHubId && state.inWideAisle(car))
+        cHubDepartures.set(car.cHubId, (cHubDepartures.get(car.cHubId) ?? 0) + 1);
+    const abHubDepartures = new Map(),
+      abSectionDepartures = new Map();
+    for (const car of state.cars)
+      if (car.phase === 'departing' && car.abHubId) {
+        const p = state.lanes[car.lane].path.getPointAt(
+          Math.min(1, car.distance / state.lanes[car.lane].length),
+        );
+        if (!onStreet(fromWorld([p.x, p.z]))) {
+          abHubDepartures.set(car.abHubId, (abHubDepartures.get(car.abHubId) ?? 0) + 1);
+          abSectionDepartures.set(car.zone, (abSectionDepartures.get(car.zone) ?? 0) + 1);
+        }
       }
-    }
-    const attemptedDepartures=new Set();
-    if(canDepart)for(let i=0;i<state.parkedVehicles.length;i++) {
-      const parked=state.parkedVehicles[i];
-      if(service&&parked.readyAt>state.clock)continue;
-      if(parked.cHubId&&(cHubDepartures.get(parked.cHubId)??0)>=C_HUB_RELEASE_SLOTS)continue;
-      if(parked.abHubId&&(abHubDepartures.get(parked.abHubId)??0)>=2)continue;
-      // Hubs share section approaches. Keep excess cars parked so waiting
-      // queues do not fill adjoining aisle crossings.
-      if(parked.abHubId&&(abSectionDepartures.get(parked.zone)??0)>=2)continue;
-      const normal=departureAccess(parked),key=state.northernDepartureAccess(parked,normal);
-      if(!key)continue;
-      const request=`${key}:${parked.zone}:${parked.cHubId??parked.abHubId??''}`;let index;
-      // A route has one shared launch point. If its first eligible car is
-      // blocked (or just launched), later cars cannot launch this substep either.
-      if(attemptedDepartures.has(request))continue;
-      attemptedDepartures.add(request);
-      try{index=getLane(key,parked.zone,true,parked.cHubId??parked.abHubId);}catch(error){logIssue(error);continue;}
-      if(!startClear(index))continue;
-      state.parkedVehicles.splice(i--,1);state.zoneOccupancy[parked.zone]--;sync();
-      state.observeNorthernDeparture(parked,normal,key);
-      if(parked.cHubId)cHubDepartures.set(parked.cHubId,(cHubDepartures.get(parked.cHubId)??0)+1);
-      if(parked.abHubId) {
-        abHubDepartures.set(parked.abHubId,(abHubDepartures.get(parked.abHubId)??0)+1);
-        abSectionDepartures.set(parked.zone,(abSectionDepartures.get(parked.zone)??0)+1);
+    const attemptedDepartures = new Set();
+    if (canDepart)
+      for (let i = 0; i < state.parkedVehicles.length; i++) {
+        const parked = state.parkedVehicles[i];
+        if (service && parked.readyAt > state.clock) continue;
+        if (parked.cHubId && (cHubDepartures.get(parked.cHubId) ?? 0) >= C_HUB_RELEASE_SLOTS)
+          continue;
+        if (parked.abHubId && (abHubDepartures.get(parked.abHubId) ?? 0) >= 2) continue;
+        // Hubs share section approaches. Keep excess cars parked so waiting
+        // queues do not fill adjoining aisle crossings.
+        if (parked.abHubId && (abSectionDepartures.get(parked.zone) ?? 0) >= 2) continue;
+        const normal = departureAccess(parked),
+          key = state.northernDepartureAccess(parked, normal);
+        if (!key) continue;
+        const request = `${key}:${parked.zone}:${parked.cHubId ?? parked.abHubId ?? ''}`;
+        let index;
+        // A route has one shared launch point. If its first eligible car is
+        // blocked (or just launched), later cars cannot launch this substep either.
+        if (attemptedDepartures.has(request)) continue;
+        attemptedDepartures.add(request);
+        try {
+          index = getLane(key, parked.zone, true, parked.cHubId ?? parked.abHubId);
+        } catch (error) {
+          logIssue(error);
+          continue;
+        }
+        if (!startClear(index)) continue;
+        state.parkedVehicles.splice(i--, 1);
+        state.zoneOccupancy[parked.zone]--;
+        sync();
+        state.observeNorthernDeparture(parked, normal, key);
+        if (parked.cHubId)
+          cHubDepartures.set(parked.cHubId, (cHubDepartures.get(parked.cHubId) ?? 0) + 1);
+        if (parked.abHubId) {
+          abHubDepartures.set(parked.abHubId, (abHubDepartures.get(parked.abHubId) ?? 0) + 1);
+          abSectionDepartures.set(parked.zone, (abSectionDepartures.get(parked.zone) ?? 0) + 1);
+        }
+        state.cars.push({
+          ...parked,
+          lane: index,
+          access: key,
+          routeName: state.lanes[index].name,
+          phase: 'departing',
+          distance: 0,
+          speed: 2.6 + seededFraction(parked.id) * 0.5,
+          exitDirection: ['a', 'badgeA', 'bWest'].includes(key) ? 'feeder-north' : 'equity-east',
+        });
       }
-      state.cars.push({...parked,lane:index,access:key,routeName:state.lanes[index].name,phase:'departing',distance:0,
-        speed:2.6+seededFraction(parked.id)*.5,exitDirection:['a','badgeA','bWest'].includes(key)?'feeder-north':'equity-east'});
-    }
-    const choose=(source,badge,parkingIntent='general',serviceId=state.arrivalQueues[source][0]?.serviceId??service?.preset.id)=>{
-      if(badge&&(options.accessPolicy?.blackPermit?.badge??true)&&live[0].open&&zoneFor('a',true))return {target:'a',zone:'aBadge',badgePool:true};
-      if(badge)return null; // Badge permission never creates general spaces in a full badge zone.
-      const priorities=serviceArrivalPriorities(serviceId,source,parkingIntent,options.arrivalPriority);
-      if(source===0&&parkingIntent==='general'&&state.alphaQueueRelief.active&&priorities[0]==='a'&&open('b')) {
-        const zone=zoneFor('b');if(zone)return {target:'b',zone,badgePool:false,alphaDiverted:true};
+    const choose = (
+      source,
+      badge,
+      parkingIntent = 'general',
+      serviceId = state.arrivalQueues[source][0]?.serviceId ?? service?.preset.id,
+    ) => {
+      if (
+        badge &&
+        (options.accessPolicy?.blackPermit?.badge ?? true) &&
+        live[0].open &&
+        zoneFor('a', true)
+      )
+        return { target: 'a', zone: 'aBadge', badgePool: true };
+      if (badge) return null; // Badge permission never creates general spaces in a full badge zone.
+      const priorities = serviceArrivalPriorities(
+        serviceId,
+        source,
+        parkingIntent,
+        options.arrivalPriority,
+      );
+      if (
+        source === 0 &&
+        parkingIntent === 'general' &&
+        state.alphaQueueRelief.active &&
+        priorities[0] === 'a' &&
+        open('b')
+      ) {
+        const zone = zoneFor('b');
+        if (zone) return { target: 'b', zone, badgePool: false, alphaDiverted: true };
       }
-      for(const target of priorities)if(open(target)){
-        const zone=zoneFor(target);if(zone)return {target,zone,badgePool:false};
-      }
+      for (const target of priorities)
+        if (open(target)) {
+          const zone = zoneFor(target);
+          if (zone) return { target, zone, badgePool: false };
+        }
       return null;
     };
     // Reroute before crossing a driveway. Cars already inside remain in their lot.
     // Reservations protect spaces while vehicles are en route.
-    for(const car of state.cars.filter(c=>c.phase==='arrival'&&!c.fleetBus)) {
-      if(car.badgePool)continue;
-      const old=state.lanes[car.lane],p=old.path.getPointAt(Math.min(1,car.distance/old.length));
-      const relief=state.alphaQueueRelief.active&&car.target==='a'&&car.source===0&&
-        car.parkingIntent==='general'&&beforeAlphaDecision(fromWorld([p.x,p.z]))&&open('b')&&zoneFor('b');
+    for (const car of state.cars.filter((c) => c.phase === 'arrival' && !c.fleetBus)) {
+      if (car.badgePool) continue;
+      const old = state.lanes[car.lane],
+        p = old.path.getPointAt(Math.min(1, car.distance / old.length));
+      const relief =
+        state.alphaQueueRelief.active &&
+        car.target === 'a' &&
+        car.source === 0 &&
+        car.parkingIntent === 'general' &&
+        beforeAlphaDecision(fromWorld([p.x, p.z])) &&
+        open('b') &&
+        zoneFor('b');
       // A service latch closes NEW assignments, not space already reserved by
       // admitted arrivals. Otherwise the last inbound reservations can deadlock
       // or be redirected merely because their own reservations filled the lot.
       // Explicit manual closure still follows the normal rerouting behavior.
-      const reservedBeforeLatch=service&&car.target==='a'&&live[0].open;
-      if((open(car.target)||reservedBeforeLatch)&&!relief){car.holdForGate=false;continue;}
-      const pixel=fromWorld([p.x,p.z]);if(!onStreet(pixel))continue;
-      state.zoneReserved[car.zone]--;sync();
-      const next=relief?{target:'b',zone:relief,badgePool:false,alphaDiverted:true}:choose(car.source,false,car.parkingIntent,car.serviceId);
-      if(!next){state.zoneReserved[car.zone]++;car.holdForGate=true;continue;}
-      const selection=selectArrivalAccess({target:next.target,source:car.source,policy:options.accessPolicy});
-      const assignedHub=arrivalHub(next.zone),cHubId=next.target==='c'?assignedHub:undefined,abHubId=next.target!=='c'?assignedHub:undefined;
+      const reservedBeforeLatch = service && car.target === 'a' && live[0].open;
+      if ((open(car.target) || reservedBeforeLatch) && !relief) {
+        car.holdForGate = false;
+        continue;
+      }
+      const pixel = fromWorld([p.x, p.z]);
+      if (!onStreet(pixel)) continue;
+      state.zoneReserved[car.zone]--;
+      sync();
+      const next = relief
+        ? { target: 'b', zone: relief, badgePool: false, alphaDiverted: true }
+        : choose(car.source, false, car.parkingIntent, car.serviceId);
+      if (!next) {
+        state.zoneReserved[car.zone]++;
+        car.holdForGate = true;
+        continue;
+      }
+      const selection = selectArrivalAccess({
+        target: next.target,
+        source: car.source,
+        policy: options.accessPolicy,
+      });
+      const assignedHub = arrivalHub(next.zone),
+        cHubId = next.target === 'c' ? assignedHub : undefined,
+        abHubId = next.target !== 'c' ? assignedHub : undefined;
       try {
-        const route=relief?feederReliefRoute(pixel,selection.route,next.zone,assignedHub):redirectedArrivalRoute(pixel,selection.route,next.zone,assignedHub),index=state.lanes.length;
-        const lane=makeLane(route,`Redirected · ${next.zone}`,{startPoint:pixel,phase:'arrival',source:car.source,access:selection.access});
-        const start=lane.path.getPointAt(0);
-        if(Math.hypot(start.x-p.x,start.z-p.z)>1e-6)throw new Error('Redirect changed vehicle position');
-        if(['aNorth','aSouth'].includes(next.zone)&&!arrivalBypassesMain(selection.route,next.zone)&&!attachMainPositionToLane(lane,route,'aMain'))
+        const route = relief
+            ? feederReliefRoute(pixel, selection.route, next.zone, assignedHub)
+            : redirectedArrivalRoute(pixel, selection.route, next.zone, assignedHub),
+          index = state.lanes.length;
+        const lane = makeLane(route, `Redirected · ${next.zone}`, {
+          startPoint: pixel,
+          phase: 'arrival',
+          source: car.source,
+          access: selection.access,
+        });
+        const start = lane.path.getPointAt(0);
+        if (Math.hypot(start.x - p.x, start.z - p.z) > 1e-6)
+          throw new Error('Redirect changed vehicle position');
+        if (
+          ['aNorth', 'aSouth'].includes(next.zone) &&
+          !arrivalBypassesMain(selection.route, next.zone) &&
+          !attachMainPositionToLane(lane, route, 'aMain')
+        )
           throw new Error('Redirected Lot A route misses Lot A Main Position');
         state.lanes.push(lane);
-        const previous={target:car.target,zone:car.zone,access:car.access,routeName:car.routeName};
-        Object.assign(car,next,{cHubId,abHubId,access:selection.access,lane:index,distance:0,holdForGate:false,routeName:state.lanes[index].name});
+        const previous = {
+          target: car.target,
+          zone: car.zone,
+          access: car.access,
+          routeName: car.routeName,
+        };
+        Object.assign(car, next, {
+          cHubId,
+          abHubId,
+          access: selection.access,
+          lane: index,
+          distance: 0,
+          holdForGate: false,
+          routeName: state.lanes[index].name,
+        });
         // A new lane must not inherit old-lane stop/pass state.
-        for(const key of ['aMergePassed','controlStopDistance','holdForBatch','feederMergePassed','feederStopDistance','holdForOfficer','corridorStopDistance','holdForCorridor','corporatePassed','corporateJunctionStopDistance','holdForCorporateJunction','permitStopDistance','holdForPermit'])delete car[key];
-        state.zoneReserved[next.zone]++;state.redirected++;
-        state.assignments[previous.target]--;state.assignments[next.target]++;
-        if(relief)state.alphaQueueRelief.redirected++;
-        const history=state.routeHistory.find(record=>record.id===car.id);
-        if(history) {
-          (history.redirects??=[]).push({...previous,clock:state.clock,reason:relief?'Alpha queue backup':'lot unavailable'});
-          Object.assign(history,{target:car.target,zone:car.zone,cHubId:car.cHubId,abHubId:car.abHubId,access:car.access,arrivalRoute:car.routeName});
+        for (const key of [
+          'aMergePassed',
+          'controlStopDistance',
+          'holdForBatch',
+          'feederMergePassed',
+          'feederStopDistance',
+          'holdForOfficer',
+          'corridorStopDistance',
+          'holdForCorridor',
+          'corporatePassed',
+          'corporateJunctionStopDistance',
+          'holdForCorporateJunction',
+          'permitStopDistance',
+          'holdForPermit',
+        ])
+          delete car[key];
+        state.zoneReserved[next.zone]++;
+        state.redirected++;
+        state.assignments[previous.target]--;
+        state.assignments[next.target]++;
+        if (relief) state.alphaQueueRelief.redirected++;
+        const history = state.routeHistory.find((record) => record.id === car.id);
+        if (history) {
+          (history.redirects ??= []).push({
+            ...previous,
+            clock: state.clock,
+            reason: relief ? 'Alpha queue backup' : 'lot unavailable',
+          });
+          Object.assign(history, {
+            target: car.target,
+            zone: car.zone,
+            cHubId: car.cHubId,
+            abHubId: car.abHubId,
+            access: car.access,
+            arrivalRoute: car.routeName,
+          });
         }
-      }catch(error){state.zoneReserved[car.zone]++;car.holdForGate=true;logIssue(error);}
+      } catch (error) {
+        state.zoneReserved[car.zone]++;
+        car.holdForGate = true;
+        logIssue(error);
+      }
       sync();
     }
-    for(let source=0;source<3;source++) {
-      if(!service&&state.phase==='departure')continue;
-      if(!service){state.credit[source]+=dt*Math.max(0,Number(rates[source])||0)/60;const n=Math.floor(state.credit[source]);state.credit[source]-=n;state.waiting[source]+=n;}
-      if(!state.waiting[source])continue;
-      const request=state.arrivalQueues[source][0];
-      if(!state.pendingIntent[source])state.pendingIntent[source]=request?.parkingIntent??(source===0&&manualFeederCount%10===9?'corporate':'general');
-      let parkingIntent=state.pendingIntent[source];
-      if(!state.pendingCategory[source]) {
+    for (let source = 0; source < 3; source++) {
+      if (!service && state.phase === 'departure') continue;
+      if (!service) {
+        state.credit[source] += (dt * Math.max(0, Number(rates[source]) || 0)) / 60;
+        const n = Math.floor(state.credit[source]);
+        state.credit[source] -= n;
+        state.waiting[source] += n;
+      }
+      if (!state.waiting[source]) continue;
+      const request = state.arrivalQueues[source][0];
+      if (!state.pendingIntent[source])
+        state.pendingIntent[source] =
+          request?.parkingIntent ??
+          (source === 0 && manualFeederCount % 10 === 9 ? 'corporate' : 'general');
+      let parkingIntent = state.pendingIntent[source];
+      if (!state.pendingCategory[source]) {
         // Decide once per scheduled request, independently of lane admission.
         // A full badge pool must not repeatedly classify every following car
         // using the same unadvanced vehicle sequence number.
-        const category=request?.category??(source===0&&(!request||parkingIntent==='general')&&
-          seededFraction((request?.arrivalOrdinal??sequence)+37)*100<state.badgePercent?'badge':'general');
-        state.pendingCategory[source]=category;
-        if(request)request.category=category;
+        const category =
+          request?.category ??
+          (source === 0 &&
+          (!request || parkingIntent === 'general') &&
+          seededFraction((request?.arrivalOrdinal ?? sequence) + 37) * 100 < state.badgePercent
+            ? 'badge'
+            : 'general');
+        state.pendingCategory[source] = category;
+        if (request) request.category = category;
       }
       // The Corporate bypass quota applies to general traffic, not authorized
       // badge arrivals. Keep manual badge-only scenarios eligible for Black Permit.
-      if(state.pendingCategory[source]==='badge')parkingIntent=state.pendingIntent[source]='general';
-      const badge=state.pendingCategory[source]==='badge',next=choose(source,badge,parkingIntent);
-      if(!next) {
-        const generalFull=ids.every(id=>!zoneFor(id));
-        if(generalFull&&(!badge||!zoneFor('a',true))){
-          const n=state.waiting[source];
-          for(let i=0;i<n;i++) {
-            const queued=state.arrivalQueues[source][i]??{};
+      if (state.pendingCategory[source] === 'badge')
+        parkingIntent = state.pendingIntent[source] = 'general';
+      const badge = state.pendingCategory[source] === 'badge',
+        next = choose(source, badge, parkingIntent);
+      if (!next) {
+        const generalFull = ids.every((id) => !zoneFor(id));
+        if (generalFull && (!badge || !zoneFor('a', true))) {
+          const n = state.waiting[source];
+          for (let i = 0; i < n; i++) {
+            const queued = state.arrivalQueues[source][i] ?? {};
             overflowQueues[source].push(queued);
-            if(state.serviceTraffic[queued.serviceId])state.serviceTraffic[queued.serviceId].turnedAway++;
+            if (state.serviceTraffic[queued.serviceId])
+              state.serviceTraffic[queued.serviceId].turnedAway++;
           }
-          state.sentAway+=n;state.sentAwayBySource[source]+=n;state.denied+=n;state.overflow+=n;
-          state.waiting[source]=0;state.arrivalQueues[source]=[];state.pendingCategory[source]=null;state.pendingIntent[source]=null;
-        } else if(request) {
+          state.sentAway += n;
+          state.sentAwayBySource[source] += n;
+          state.denied += n;
+          state.overflow += n;
+          state.waiting[source] = 0;
+          state.arrivalQueues[source] = [];
+          state.pendingCategory[source] = null;
+          state.pendingIntent[source] = null;
+        } else if (request) {
           // Keep the car waiting for eligible parking, while following requests
           // can use other lots. Preserve category, intent and service identity.
           state.arrivalQueues[source].push(state.arrivalQueues[source].shift());
-          state.pendingCategory[source]=null;state.pendingIntent[source]=null;
+          state.pendingCategory[source] = null;
+          state.pendingIntent[source] = null;
         }
         continue;
       }
-      const selection=selectArrivalAccess({target:next.target,source,category:badge?'badge':'general',policy:options.accessPolicy});let index;
-      const assignedHub=arrivalHub(next.zone),cHubId=next.target==='c'?assignedHub:undefined,abHubId=next.target!=='c'?assignedHub:undefined;
-      try{index=getLane(selection.route,next.zone,false,assignedHub);}catch(error){logIssue(error);continue;}
-      if(!startClear(index))continue;
-      const car={id:sequence++,lane:index,routeName:state.lanes[index].name,phase:'arrival',distance:0,source,...next,cHubId,abHubId,access:selection.access,badge,
-        parkingIntent,serviceId:request?.serviceId??service?.preset.id,cohort:'current',speed:2.5+seededFraction(sequence)*.65};
-      state.zoneReserved[next.zone]++;state.assignments[next.target]++;state.cars.push(car);
-      if(next.alphaDiverted)state.alphaQueueRelief.assigned++;
-      state.routeHistory.push({id:car.id,source,target:car.target,zone:car.zone,cHubId,abHubId,access:car.access,arrivalRoute:car.routeName,badge,badgePool:car.badgePool,parkingIntent,serviceId:car.serviceId});
-      if(state.serviceTraffic[car.serviceId])state.serviceTraffic[car.serviceId].entered++;
-      state.waiting[source]--;state.entered[source]++;state.arrivalQueues[source].shift();state.pendingCategory[source]=null;state.pendingIntent[source]=null;
-      if(source===0&&!request&&!badge)manualFeederCount++;
+      const selection = selectArrivalAccess({
+        target: next.target,
+        source,
+        category: badge ? 'badge' : 'general',
+        policy: options.accessPolicy,
+      });
+      let index;
+      const assignedHub = arrivalHub(next.zone),
+        cHubId = next.target === 'c' ? assignedHub : undefined,
+        abHubId = next.target !== 'c' ? assignedHub : undefined;
+      try {
+        index = getLane(selection.route, next.zone, false, assignedHub);
+      } catch (error) {
+        logIssue(error);
+        continue;
+      }
+      if (!startClear(index)) continue;
+      const car = {
+        id: sequence++,
+        lane: index,
+        routeName: state.lanes[index].name,
+        phase: 'arrival',
+        distance: 0,
+        source,
+        ...next,
+        cHubId,
+        abHubId,
+        access: selection.access,
+        badge,
+        parkingIntent,
+        serviceId: request?.serviceId ?? service?.preset.id,
+        cohort: 'current',
+        speed: 2.5 + seededFraction(sequence) * 0.65,
+      };
+      state.zoneReserved[next.zone]++;
+      state.assignments[next.target]++;
+      state.cars.push(car);
+      if (next.alphaDiverted) state.alphaQueueRelief.assigned++;
+      state.routeHistory.push({
+        id: car.id,
+        source,
+        target: car.target,
+        zone: car.zone,
+        cHubId,
+        abHubId,
+        access: car.access,
+        arrivalRoute: car.routeName,
+        badge,
+        badgePool: car.badgePool,
+        parkingIntent,
+        serviceId: car.serviceId,
+      });
+      if (state.serviceTraffic[car.serviceId]) state.serviceTraffic[car.serviceId].entered++;
+      state.waiting[source]--;
+      state.entered[source]++;
+      state.arrivalQueues[source].shift();
+      state.pendingCategory[source] = null;
+      state.pendingIntent[source] = null;
+      if (source === 0 && !request && !badge) manualFeederCount++;
       sync();
     }
     // Parking refusal is counted above; each refused car still drives its public
     // road leg. Launch at safe spacing, without claiming or entering any lot.
-    for(let source=0;source<3;source++) {
-      if(!overflowQueues[source].length)continue;
-      let index=overflowLanes.get(source);
+    for (let source = 0; source < 3; source++) {
+      if (!overflowQueues[source].length) continue;
+      let index = overflowLanes.get(source);
       try {
-        if(index===undefined) {
-          index=state.lanes.length;
-          state.lanes.push(makeLane(overflowRoute(source),`Through · ${['Feeder','Equity Entrance','Equity entrance/exit 2'][source]} → Feeder north exit`));
-          overflowLanes.set(source,index);
+        if (index === undefined) {
+          index = state.lanes.length;
+          state.lanes.push(
+            makeLane(
+              overflowRoute(source),
+              `Through · ${['Feeder', 'Equity Entrance', 'Equity entrance/exit 2'][source]} → Feeder north exit`,
+            ),
+          );
+          overflowLanes.set(source, index);
         }
-      }catch(error){logIssue(error);continue;}
-      if(!startClear(index))continue;
-      const request=overflowQueues[source].shift();
-      state.cars.push({id:sequence++,lane:index,routeName:state.lanes[index].name,source,
-        serviceId:request.serviceId,phase:'through',access:'overflowFeeder',target:null,
-        distance:0,speed:2.7,exitDirection:'feeder-north'});
+      } catch (error) {
+        logIssue(error);
+        continue;
+      }
+      if (!startClear(index)) continue;
+      const request = overflowQueues[source].shift();
+      state.cars.push({
+        id: sequence++,
+        lane: index,
+        routeName: state.lanes[index].name,
+        source,
+        serviceId: request.serviceId,
+        phase: 'through',
+        access: 'overflowFeeder',
+        target: null,
+        distance: 0,
+        speed: 2.7,
+        exitDirection: 'feeder-north',
+      });
       state.throughEntered[source]++;
-      if(state.serviceTraffic[request.serviceId])state.serviceTraffic[request.serviceId].passingThrough++;
+      if (state.serviceTraffic[request.serviceId])
+        state.serviceTraffic[request.serviceId].passingThrough++;
     }
-    state.overflowWaiting=overflowQueues.map(queue=>queue.length);
+    state.overflowWaiting = overflowQueues.map((queue) => queue.length);
     state.prepareLotAControl();
     state.prepareFeederOfficer();
     state.prepareCorporateDriveOperators();
@@ -395,38 +845,72 @@ export function createZonedCampus(options, makeLane, legacyLanes) {
     state.prepareNorthernCorporateControl();
     state.prepareCRoundaboutControl();
     state.prepareCEntranceControl();
-    advanceSharedTraffic(state,dt);
+    advanceSharedTraffic(state, dt);
     state.observeLotAControl();
     state.observeFeederOfficer();
     state.observeCorporateExitJunction();
     state.observeEquityClayStop();
     state.observeCorporateDriveOperators();
-    state.cars=state.cars.filter(car=>{
-      if(car.distance<state.lanes[car.lane].length)return true;
-      if(car.fleetBus){state.completeShuttle(car);return false;}
-      if(car.phase==='through') {
-        state.throughExited[car.source]++;
-        const totals=state.serviceTraffic[car.serviceId];
-        if(totals){totals.passingThrough--;totals.passedThrough++;}
+    state.cars = state.cars.filter((car) => {
+      if (car.distance < state.lanes[car.lane].length) return true;
+      if (car.fleetBus) {
+        state.completeShuttle(car);
         return false;
       }
-      if(car.phase==='arrival') {
-        if(state.serviceTraffic[car.serviceId])state.serviceTraffic[car.serviceId].reachedParking++;
-        state.exited[car.source]++;state.zoneReserved[car.zone]--;state.zoneOccupancy[car.zone]++;
+      if (car.phase === 'through') {
+        state.throughExited[car.source]++;
+        const totals = state.serviceTraffic[car.serviceId];
+        if (totals) {
+          totals.passingThrough--;
+          totals.passedThrough++;
+        }
+        return false;
+      }
+      if (car.phase === 'arrival') {
+        if (state.serviceTraffic[car.serviceId])
+          state.serviceTraffic[car.serviceId].reachedParking++;
+        state.exited[car.source]++;
+        state.zoneReserved[car.zone]--;
+        state.zoneOccupancy[car.zone]++;
         // Retain inbound lane as local endpoint evidence for continuity checks;
         // parkedRecord strips it from transferable carry checkpoints.
         // Assign the quota at the actual parked lot, not an earlier reservation:
         // a manually closed lot may have redirected this arrival en route.
-        const controller=controllers.get(car.serviceId)??service;
-        const ordinals=currentOrdinals[car.serviceId]??={a:0,b:0,c:0};
-        const timing=controller?controller.departureMetadata(ordinals[car.target]++,car.target,car.serviceId??controller.preset.id):{readyAt:Infinity};
-        state.parkedVehicles.push({...parkedRecord(car),...timing,lane:car.lane,phase:'parked',parkedAt:state.clock});
+        const controller = controllers.get(car.serviceId) ?? service;
+        const ordinals = (currentOrdinals[car.serviceId] ??= { a: 0, b: 0, c: 0 });
+        const timing = controller
+          ? controller.departureMetadata(
+              ordinals[car.target]++,
+              car.target,
+              car.serviceId ?? controller.preset.id,
+            )
+          : { readyAt: Infinity };
+        state.parkedVehicles.push({
+          ...parkedRecord(car),
+          ...timing,
+          lane: car.lane,
+          phase: 'parked',
+          parkedAt: state.clock,
+        });
         state.observeShuttleParking?.(state.parkedVehicles.at(-1));
-      } else {state.departed[car.target]++;if(car.source!==null)state.departedBySource[car.source]++;}
+      } else {
+        state.departed[car.target]++;
+        if (car.source !== null) state.departedBySource[car.source]++;
+      }
       return false;
     });
-    sync();state.atCapacity=ids.every(id=>!zoneFor(id));
-    state.zoneStats=Object.fromEntries(Object.keys(ZONE_BY_ID).map(id=>[id,{occupied:state.zoneOccupancy[id],reserved:state.zoneReserved[id],capacity:ZONE_BY_ID[id].capacity}]));
+    sync();
+    state.atCapacity = ids.every((id) => !zoneFor(id));
+    state.zoneStats = Object.fromEntries(
+      Object.keys(ZONE_BY_ID).map((id) => [
+        id,
+        {
+          occupied: state.zoneOccupancy[id],
+          reserved: state.zoneReserved[id],
+          capacity: ZONE_BY_ID[id].capacity,
+        },
+      ]),
+    );
     updateServiceCarry();
   };
   return state;

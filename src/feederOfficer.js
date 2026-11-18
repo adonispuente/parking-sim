@@ -5,150 +5,236 @@ import { FEEDER_OFFICER_POSITION } from './positions/index.js';
 import { compareTrafficPriority } from './trafficPriority.js';
 import { WORLD_SCALE } from './clearImageSource.js';
 
-const SCALE=WORLD_SCALE;
+const SCALE = WORLD_SCALE;
 // separationGap: a lane passing the officer whose built path stays at least this
 // far (world) from every Lot A exit lane inside the officer area is the opposite
 // lane of the two-way Lot A access road (Commander 2026-11-12: "that section all
 // allows for 2 directions of traffic"). It is not held for exits. Measured: Lot A
 // North arrivals stay 2.77 world from all A exits there (research/runs/
 // lot-a-north-two-way-claud/separation.mjs). 1.6 = 0.9 conflict width + one body.
-export const FEEDER_OFFICER_DEFAULTS=Object.freeze({enabled:true,stopAhead:3.4,clearAfter:3.4,busLookahead:12,conflictRadius:2.8,exitRoomGap:.5,separationGap:1.6});
-export function attachFeederOfficer(state,options={}) {
-  const config={...FEEDER_OFFICER_DEFAULTS,...options};
-  const station={x:FEEDER_OFFICER_POSITION[0]*SCALE,z:FEEDER_OFFICER_POSITION[1]*SCALE};
-  const laneControls=new WeakMap();
-  const gate=state.feederOfficer={name:'Lot A feeder exit officer',position:FEEDER_OFFICER_POSITION,
-    provisional:true,enabled:config.enabled,admittedId:null,waitingExit:0,waitingFeeder:0,passed:0,reason:'idle'};
-  let admitted=null;
-  const control=car=>{
-    const lane=state.lanes[car.lane];
-    if(!lane)return null;
-    if(!laneControls.has(lane)) {
-      let best=Infinity,distance=0;
-      const n=Math.max(1,Math.ceil(lane.length/.4));
-      for(let i=0;i<=n;i++) {
-        const p=lane.path.getPointAt(i/n),d=Math.hypot(p.x-station.x,p.z-station.z);
-        if(d<best){best=d;distance=lane.length*i/n;}
+export const FEEDER_OFFICER_DEFAULTS = Object.freeze({
+  enabled: true,
+  stopAhead: 3.4,
+  clearAfter: 3.4,
+  busLookahead: 12,
+  conflictRadius: 2.8,
+  exitRoomGap: 0.5,
+  separationGap: 1.6,
+});
+export function attachFeederOfficer(state, options = {}) {
+  const config = { ...FEEDER_OFFICER_DEFAULTS, ...options };
+  const station = { x: FEEDER_OFFICER_POSITION[0] * SCALE, z: FEEDER_OFFICER_POSITION[1] * SCALE };
+  const laneControls = new WeakMap();
+  const gate = (state.feederOfficer = {
+    name: 'Lot A feeder exit officer',
+    position: FEEDER_OFFICER_POSITION,
+    provisional: true,
+    enabled: config.enabled,
+    admittedId: null,
+    waitingExit: 0,
+    waitingFeeder: 0,
+    passed: 0,
+    reason: 'idle',
+  });
+  let admitted = null;
+  const control = (car) => {
+    const lane = state.lanes[car.lane];
+    if (!lane) return null;
+    if (!laneControls.has(lane)) {
+      let best = Infinity,
+        distance = 0;
+      const n = Math.max(1, Math.ceil(lane.length / 0.4));
+      for (let i = 0; i <= n; i++) {
+        const p = lane.path.getPointAt(i / n),
+          d = Math.hypot(p.x - station.x, p.z - station.z);
+        if (d < best) {
+          best = d;
+          distance = (lane.length * i) / n;
+        }
       }
       // Region includes the exit/feeder lane widths, not merely the officer's
       // point. Conservative radius is disclosed/configurable until field review.
-      laneControls.set(lane,best<=config.conflictRadius?{merge:distance,stop:Math.max(0,distance-config.stopAhead),
-        release:Math.min(lane.length,distance+config.clearAfter)}:null);
+      laneControls.set(
+        lane,
+        best <= config.conflictRadius
+          ? {
+              merge: distance,
+              stop: Math.max(0, distance - config.stopAhead),
+              release: Math.min(lane.length, distance + config.clearAfter),
+            }
+          : null,
+      );
     }
     return laneControls.get(lane);
   };
-  const isExit=car=>car.phase==='departing'&&car.access==='a';
+  const isExit = (car) => car.phase === 'departing' && car.access === 'a';
   // Lanes that have carried a Lot A exit. Lanes are built lazily, so a lane's
   // separation is re-checked whenever a new exit lane appears.
-  const exitLanes=new Set(),regions=new WeakMap(),separation=new WeakMap();
-  const region=lane=>{
-    if(!regions.has(lane)) {
-      const reach=config.conflictRadius+config.clearAfter,n=Math.max(1,Math.ceil(lane.length/.2)),points=[];
-      for(let i=0;i<=n;i++) {
-        const p=lane.path.getPointAt(i/n);
-        if(Math.hypot(p.x-station.x,p.z-station.z)<reach)points.push(p);
+  const exitLanes = new Set(),
+    regions = new WeakMap(),
+    separation = new WeakMap();
+  const region = (lane) => {
+    if (!regions.has(lane)) {
+      const reach = config.conflictRadius + config.clearAfter,
+        n = Math.max(1, Math.ceil(lane.length / 0.2)),
+        points = [];
+      for (let i = 0; i <= n; i++) {
+        const p = lane.path.getPointAt(i / n);
+        if (Math.hypot(p.x - station.x, p.z - station.z) < reach) points.push(p);
       }
-      regions.set(lane,points);
+      regions.set(lane, points);
     }
     return regions.get(lane);
   };
   // True when this lane is the opposite side of the two-way access road: it never
   // comes within separationGap of any known Lot A exit lane near the officer.
-  const separated=lane=>{
-    if(!lane||!exitLanes.size||exitLanes.has(lane))return false;
-    const cached=separation.get(lane);
-    if(cached&&cached.exits===exitLanes.size)return cached.value;
-    const mine=region(lane);
-    let value=mine.length>0;
-    for(const exit of exitLanes) {
-      if(!value)break;
-      for(const q of region(exit)) {
-        if(mine.some(p=>Math.hypot(p.x-q.x,p.z-q.z)<config.separationGap)){value=false;break;}
+  const separated = (lane) => {
+    if (!lane || !exitLanes.size || exitLanes.has(lane)) return false;
+    const cached = separation.get(lane);
+    if (cached && cached.exits === exitLanes.size) return cached.value;
+    const mine = region(lane);
+    let value = mine.length > 0;
+    for (const exit of exitLanes) {
+      if (!value) break;
+      for (const q of region(exit)) {
+        if (mine.some((p) => Math.hypot(p.x - q.x, p.z - q.z) < config.separationGap)) {
+          value = false;
+          break;
+        }
       }
     }
-    separation.set(lane,{exits:exitLanes.size,value});
+    separation.set(lane, { exits: exitLanes.size, value });
     return value;
   };
-  const controlled=car=>!car.fleetBus&&!!control(car)&&!separated(state.lanes[car.lane]);
-  const remaining=()=>state.cars.filter(c=>controlled(c)&&!c.feederMergePassed);
-  const inZone=car=>{
+  const controlled = (car) => !car.fleetBus && !!control(car) && !separated(state.lanes[car.lane]);
+  const remaining = () => state.cars.filter((c) => controlled(c) && !c.feederMergePassed);
+  const inZone = (car) => {
     // Buses still occupy the merge; only separated (opposite-lane) traffic does not.
-    if(separated(state.lanes[car.lane]))return false;
-    const c=control(car);if(!c)return false;
-    const half=(car.bodyLength??1.35)/2;
-    return car.distance+half>c.merge-1.7&&car.distance-half<c.release;
+    if (separated(state.lanes[car.lane])) return false;
+    const c = control(car);
+    if (!c) return false;
+    const half = (car.bodyLength ?? 1.35) / 2;
+    return car.distance + half > c.merge - 1.7 && car.distance - half < c.release;
   };
   // Do not admit a car into a merge it cannot leave. This retains the existing
   // 0.9-world conflict width; buses remain governed by the priority check below.
-  const exitRoom=car=>{
-    const lane=state.lanes[car.lane],c=control(car);
-    const end=Math.min(lane.length,c.release+(car.bodyLength??1.35)+config.exitRoomGap);
-    const others=state.cars.filter(other=>other!==car&&!other.fleetBus).map(other=>{
-      const otherLane=state.lanes[other.lane];
-      return otherLane.path.getPointAt(Math.min(1,Math.max(0,other.distance/otherLane.length)));
-    });
-    const blocked=distance=>{
-      const point=lane.path.getPointAt(Math.min(1,distance/lane.length));
-      return others.some(other=>Math.hypot(other.x-point.x,other.z-point.z)<.9);
+  const exitRoom = (car) => {
+    const lane = state.lanes[car.lane],
+      c = control(car);
+    const end = Math.min(lane.length, c.release + (car.bodyLength ?? 1.35) + config.exitRoomGap);
+    const others = state.cars
+      .filter((other) => other !== car && !other.fleetBus)
+      .map((other) => {
+        const otherLane = state.lanes[other.lane];
+        return otherLane.path.getPointAt(
+          Math.min(1, Math.max(0, other.distance / otherLane.length)),
+        );
+      });
+    const blocked = (distance) => {
+      const point = lane.path.getPointAt(Math.min(1, distance / lane.length));
+      return others.some((other) => Math.hypot(other.x - point.x, other.z - point.z) < 0.9);
     };
-    for(let distance=c.merge;distance<end;distance+=.2) {
-      if(blocked(distance))return false;
+    for (let distance = c.merge; distance < end; distance += 0.2) {
+      if (blocked(distance)) return false;
     }
     return !blocked(end);
   };
   // Read-only, for tests/diagnostics. Not stored on the gate (gate is saved state).
-  state.feederOfficerSeparatedLane=lane=>separated(lane);
-  state.prepareFeederOfficer=()=>{
-    for(const car of state.cars){delete car.feederStopDistance;car.holdForOfficer=false;}
-    if(!config.enabled){gate.reason='Unstaffed';return;}
-    if(admitted&&!state.cars.includes(admitted)){admitted=null;gate.admittedId=null;}
-    for(const car of state.cars)if(isExit(car)&&state.lanes[car.lane])exitLanes.add(state.lanes[car.lane]);
-    for(const car of state.cars) {
-      const c=control(car);
-      if(c&&car!==admitted&&(car.distance>=state.lanes[car.lane].length||
-        car.distance-(car.bodyLength??1.35)/2>=c.release))car.feederMergePassed=true;
+  state.feederOfficerSeparatedLane = (lane) => separated(lane);
+  state.prepareFeederOfficer = () => {
+    for (const car of state.cars) {
+      delete car.feederStopDistance;
+      car.holdForOfficer = false;
     }
-    const candidates=remaining();
-    gate.waitingExit=candidates.filter(isExit).length;
-    gate.waitingFeeder=candidates.filter(c=>!isExit(c)).length;
+    if (!config.enabled) {
+      gate.reason = 'Unstaffed';
+      return;
+    }
+    if (admitted && !state.cars.includes(admitted)) {
+      admitted = null;
+      gate.admittedId = null;
+    }
+    for (const car of state.cars)
+      if (isExit(car) && state.lanes[car.lane]) exitLanes.add(state.lanes[car.lane]);
+    for (const car of state.cars) {
+      const c = control(car);
+      if (
+        c &&
+        car !== admitted &&
+        (car.distance >= state.lanes[car.lane].length ||
+          car.distance - (car.bodyLength ?? 1.35) / 2 >= c.release)
+      )
+        car.feederMergePassed = true;
+    }
+    const candidates = remaining();
+    gate.waitingExit = candidates.filter(isExit).length;
+    gate.waitingFeeder = candidates.filter((c) => !isExit(c)).length;
     // No exit waiting: feeder flow remains free. Cars already in the zone keep
     // going even when an A departure subsequently joins the queue.
     // Keep the merge clear in free flow too: a car not yet in the zone may not
     // enter it without exit room (same exitRoom test as admission).
-    if(!gate.waitingExit&&!admitted){
-      gate.reason='feeder free';
-      for(const car of candidates) {
-        if(inZone(car)||exitRoom(car))continue;
-        car.feederStopDistance=control(car).stop;
-        car.holdForOfficer=car.distance>=control(car).stop-.01;
-        gate.reason='feeder free, keep merge clear';
+    if (!gate.waitingExit && !admitted) {
+      gate.reason = 'feeder free';
+      for (const car of candidates) {
+        if (inZone(car) || exitRoom(car)) continue;
+        car.feederStopDistance = control(car).stop;
+        car.holdForOfficer = car.distance >= control(car).stop - 0.01;
+        gate.reason = 'feeder free, keep merge clear';
       }
       return;
     }
-    const ready=candidates.filter(c=>!c.holdForGate&&c.distance>=control(c).stop-.25&&exitRoom(c));
-    const occupied=state.cars.some(c=>c!==admitted&&inZone(c));
-    const priorityBus=state.cars.some(c=>c.fleetBus&&control(c)&&
-      c.distance<control(c).release&&control(c).merge-c.distance<config.busLookahead);
-    if(!admitted&&!occupied&&!priorityBus) {
-      const next=ready.filter(c=>!inZone(c)).sort((a,b)=>compareTrafficPriority(a,b)||
-        (control(a).stop-a.distance)-(control(b).stop-b.distance))[0];
-      if(next){admitted=next;gate.admittedId=next.id;}
+    const ready = candidates.filter(
+      (c) => !c.holdForGate && c.distance >= control(c).stop - 0.25 && exitRoom(c),
+    );
+    const occupied = state.cars.some((c) => c !== admitted && inZone(c));
+    const priorityBus = state.cars.some(
+      (c) =>
+        c.fleetBus &&
+        control(c) &&
+        c.distance < control(c).release &&
+        control(c).merge - c.distance < config.busLookahead,
+    );
+    if (!admitted && !occupied && !priorityBus) {
+      const next = ready
+        .filter((c) => !inZone(c))
+        .sort(
+          (a, b) =>
+            compareTrafficPriority(a, b) ||
+            control(a).stop - a.distance - (control(b).stop - b.distance),
+        )[0];
+      if (next) {
+        admitted = next;
+        gate.admittedId = next.id;
+      }
     }
-    gate.reason=occupied?'clear occupied merge':priorityBus?'shuttle priority':admitted?'admitted vehicle clearing':'await ready traffic';
-    for(const car of candidates) {
-      if(car===admitted||inZone(car))continue;
+    gate.reason = occupied
+      ? 'clear occupied merge'
+      : priorityBus
+        ? 'shuttle priority'
+        : admitted
+          ? 'admitted vehicle clearing'
+          : 'await ready traffic';
+    for (const car of candidates) {
+      if (car === admitted || inZone(car)) continue;
       // Do not trap a priority bus behind a feeder car held by this officer.
       // Let that physical lead queue clear; only the competing A exit waits.
-      if(priorityBus&&!isExit(car))continue;
-      car.feederStopDistance=control(car).stop;
-      car.holdForOfficer=car.distance>=control(car).stop-.01;
+      if (priorityBus && !isExit(car)) continue;
+      car.feederStopDistance = control(car).stop;
+      car.holdForOfficer = car.distance >= control(car).stop - 0.01;
     }
   };
-  state.observeFeederOfficer=()=>{
-    if(!admitted)return;
-    if(admitted.distance<state.lanes[admitted.lane].length&&
-      admitted.distance-(admitted.bodyLength??1.35)/2<control(admitted).release)return;
-    admitted.feederMergePassed=true;delete admitted.feederStopDistance;admitted.holdForOfficer=false;
-    gate.passed++;admitted=null;gate.admittedId=null;
+  state.observeFeederOfficer = () => {
+    if (!admitted) return;
+    if (
+      admitted.distance < state.lanes[admitted.lane].length &&
+      admitted.distance - (admitted.bodyLength ?? 1.35) / 2 < control(admitted).release
+    )
+      return;
+    admitted.feederMergePassed = true;
+    delete admitted.feederStopDistance;
+    admitted.holdForOfficer = false;
+    gate.passed++;
+    admitted = null;
+    gate.admittedId = null;
   };
 }
