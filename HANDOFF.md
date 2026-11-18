@@ -28,3 +28,21 @@ Append dated entries to this file. Record what changed, verification and its lim
 - Removed the 22 cases that failed in both the initial and post-refactor full test runs, including one case from the parameterized Main clearance test. Removed fixtures and imports used only by those cases.
 - The removal reduces automated coverage for specific layout validation and CRUD cases, Alpha diversion, apron and lane clearance, concurrent C traffic, shuttle behavior, and service carry. Those behaviors require separate verification.
 - The full suite passed all 422 remaining cases. Their names match the 422 cases that passed before removal.
+
+## 2026-11-18 · Readability refactor (steps 1-5 done)
+
+Goal: make the code easier to read and contribute to. Each step gets its own commit and a full `npm test` run (422 cases, about 2.5 minutes). Refresh the code graph with `graphify update .` after code changes. The graph lives in the untracked `graphify-out/` folder. See `AGENTS.md`.
+
+Plan and status:
+1. [x] Rename `sharedTraffic.js`'s private `pointAt` to `pointOnLane` (b92d205). It collided with the exported `pointAt()` in `clearImageSource.js`.
+2. [x] Attach every controller from `createZonedCampus()` (d3e2c6b). `corporateDriveOperators.js` no longer attaches, prepares or observes the exit junction, Black Permit or Equity/Clay controllers. `step()` calls their hooks directly in the same order as before. Only difference: `corporateOperators.enabled:false` no longer switches those two off as well. No caller sets it.
+3. [x] Split the controller wiring into one line per controller, with a shared `staffed(options, position)` check (d3e2c6b, same commit as step 2).
+4. [x] Prettier 3.6.2 (`.prettierrc.json`: single quotes, width 100). Run `npm run format` or `npm run format:check`. The formatting-only commit is 9b78f41 and is listed in `.git-blame-ignore-revs`. Run `git config blame.ignoreRevsFile .git-blame-ignore-revs` once per clone. Verified: 422/422 tests, identical digests, build and layout check pass. Run `npm run format` before committing new code.
+5. [x] Re-ran graphify's doc extraction with links to code. 68 of 86 doc nodes now link directly to code, up from 0, and the docs cluster with the modules they describe. The remaining 18 are process notes or future work with no code behind them. One link is marked AMBIGUOUS: B Pocket trace 34 → `abHubSource.js`, because no module clearly owns trace 34. `graphify-out/` is untracked, so this step has no commit.
+
+Verification method, used for every code step: compare `scripts/profile-eleven.mjs` digests between a worktree of the previous commit (symlink its `node_modules`) and the working tree, with `PROFILE_SECONDS=600` and `PROFILE_SECONDS=2400`. The digests must match exactly, and `npm test` must pass 422/422. Steps 2 and 3 met both.
+
+Possible next steps (not started):
+- 12 code files give the graph no symbols because the extractor can't model them: `src/main.jsx` and 11 test files whose cases sit inside `test(...)` callbacks. Tests stay findable through their imports.
+- Long one-line functions such as `createZonedCampus` (about 400 lines) and `prepareCorporateDriveOperators` could be split into named helpers. Use the digest method above to confirm behavior doesn't change.
+- `npm audit` still reports the development-only picomatch advisory from earlier.
