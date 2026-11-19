@@ -1,7 +1,8 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { WORLD } from './model.js';
+import { WORLD, COLORS } from './model.js';
+import { declutter, mapLabelEntries } from './areaLabels.js';
 import { createCampusTraffic } from './traffic.js';
 import { createSeekablePlayback } from './playback.js';
 import { captureTrafficFrame } from './playbackFrames.js';
@@ -93,6 +94,184 @@ function label(parent, text, x, y, z, color = '#e9f0e9', size = 13) {
   };
   parent.add(sprite);
   return sprite;
+}
+
+// Lot accent dots match the lot colours used in the editor sidebar.
+const LOT_DOT = { a: COLORS[0], b: COLORS[1], c: COLORS[2] };
+const AREA_NAME_PX = 26; // on-screen pill height in CSS pixels, at any zoom
+
+/**
+ * A pill-shaped area name ("Lot B North"). Its scale is recomputed every frame
+ * so it keeps a constant on-screen size — legible on a phone even when zoomed out.
+ */
+const SHUTTLE_PURPLE = '#7a2fc0';
+
+/** White bus pictogram (front-quarter view), drawn into a 2D canvas. */
+function drawBusIcon(ctx, x, y, size, color = '#ffffff') {
+  const u = size / 16;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.roundRect(1 * u, 1 * u, 14 * u, 12 * u, 2.5 * u); // body
+  ctx.fill();
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.fillRect(3 * u, 3 * u, 4.5 * u, 4 * u); // windows
+  ctx.fillRect(8.5 * u, 3 * u, 4.5 * u, 4 * u);
+  ctx.fillRect(3 * u, 9.5 * u, 2 * u, 1.5 * u); // headlights
+  ctx.fillRect(11 * u, 9.5 * u, 2 * u, 1.5 * u);
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillRect(3 * u, 13 * u, 3 * u, 2.5 * u); // wheels
+  ctx.fillRect(10 * u, 13 * u, 3 * u, 2.5 * u);
+  ctx.restore();
+}
+
+function areaNameSprite(text, { dotColor, kind = 'area' } = {}) {
+  const shuttle = kind === 'shuttle';
+  const ratio = 3; // canvas pixels per CSS pixel, for crisp text
+  const font = `600 ${13 * ratio}px 'Fira Sans', system-ui, sans-serif`;
+  const measure = document.createElement('canvas').getContext('2d');
+  measure.font = font;
+  const padX = 10 * ratio,
+    dot = (shuttle ? 14 : 8) * ratio,
+    gap = 6 * ratio;
+  const height = AREA_NAME_PX * ratio;
+  const width = Math.ceil(padX * 2 + dot + gap + measure.measureText(text).width);
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = shuttle ? SHUTTLE_PURPLE : 'rgba(18, 40, 32, 0.9)';
+  ctx.strokeStyle = shuttle ? 'rgba(255, 255, 255, 0.85)' : 'rgba(228, 238, 219, 0.45)';
+  ctx.lineWidth = ratio;
+  ctx.beginPath();
+  ctx.roundRect(ratio / 2, ratio / 2, width - ratio, height - ratio, (height - ratio) / 2);
+  ctx.fill();
+  ctx.stroke();
+  if (shuttle) drawBusIcon(ctx, padX, (height - dot) / 2, dot);
+  else {
+    ctx.fillStyle = dotColor;
+    ctx.beginPath();
+    ctx.arc(padX + dot / 2, height / 2, dot / 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.font = font;
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(text, padX + dot + gap, height / 2 + ratio / 2);
+  const map = new THREE.CanvasTexture(canvas);
+  map.userData.generated = true;
+  map.colorSpace = THREE.SRGBColorSpace;
+  map.generateMipmaps = false; // mipmaps blur small text; linear stays crisp
+  map.minFilter = THREE.LinearFilter;
+  const sprite = new THREE.Sprite(
+    new THREE.SpriteMaterial({ map, depthTest: false, transparent: true }),
+  );
+  sprite.renderOrder = 30;
+  sprite.userData.cssSize = [width / ratio, height / ratio];
+  sprite.userData.kind = kind;
+  return sprite;
+}
+
+const FLAG_WIDTH = 2.4,
+  FLAG_HEIGHT = 1.5,
+  POLE_HEIGHT = 4.6,
+  FLAG_MIN_POLE_PX = 52; // flags never shrink below this on screen
+
+/**
+ * A purple shuttle-pickup flag on a pole. The cloth turns to face the camera and waves.
+ * The cloth and finial draw over buildings (like a map pin) so a pickup is never hidden;
+ * `poleHeight` lets a stop beside a tall roof (Lot A home) rise clear of it.
+ */
+function createShuttleFlag(poleHeight = POLE_HEIGHT) {
+  const flag = new THREE.Group();
+  const pole = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.07, 0.09, poleHeight, 8),
+    new THREE.MeshStandardMaterial({ color: '#f2f2ee', roughness: 0.5 }),
+  );
+  pole.position.y = poleHeight / 2;
+  const finial = new THREE.Mesh(
+    new THREE.SphereGeometry(0.16, 12, 8),
+    new THREE.MeshBasicMaterial({ color: '#f5c542', depthTest: false }),
+  );
+  finial.position.y = poleHeight + 0.08;
+  finial.renderOrder = 26;
+  const canvas = document.createElement('canvas');
+  canvas.width = 256;
+  canvas.height = 160;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = SHUTTLE_PURPLE;
+  ctx.fillRect(0, 0, 256, 160);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, 256, 10); // white hem top and bottom
+  ctx.fillRect(0, 150, 256, 10);
+  drawBusIcon(ctx, 128 - 52, 80 - 54, 104);
+  const map = new THREE.CanvasTexture(canvas);
+  map.userData.generated = true;
+  map.colorSpace = THREE.SRGBColorSpace;
+  const geometry = new THREE.PlaneGeometry(FLAG_WIDTH, FLAG_HEIGHT, 16, 1);
+  geometry.translate(FLAG_WIDTH / 2, 0, 0); // hoist edge on the pole
+  const cloth = new THREE.Mesh(
+    geometry,
+    new THREE.MeshBasicMaterial({ map, side: THREE.DoubleSide, depthTest: false }),
+  );
+  cloth.position.set(0.08, poleHeight - FLAG_HEIGHT / 2 - 0.1, 0);
+  cloth.renderOrder = 25;
+  flag.add(pole, finial, cloth);
+  flag.userData.cloth = cloth;
+  flag.userData.rest = geometry.attributes.position.array.slice();
+  return flag;
+}
+
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+/** Face each flag's cloth toward the camera, keep a minimum screen size, and wave it. */
+function animateShuttleFlags(group, camera, controls, viewportHeight, seconds) {
+  const worldPerPixel = (camera.top - camera.bottom) / camera.zoom / viewportHeight;
+  const scale = Math.max(1, (FLAG_MIN_POLE_PX * worldPerPixel) / POLE_HEIGHT);
+  const azimuth = Math.atan2(
+    camera.position.x - controls.target.x,
+    camera.position.z - controls.target.z,
+  );
+  const wave = !prefersReducedMotion();
+  for (const flag of group.children) {
+    flag.scale.setScalar(scale);
+    flag.rotation.y = azimuth;
+    if (!wave) continue;
+    const { cloth, rest } = flag.userData;
+    const positions = cloth.geometry.attributes.position;
+    for (let i = 0; i < positions.count; i++) {
+      const x = rest[i * 3],
+        u = x / FLAG_WIDTH; // 0 at the pole, 1 at the fly end
+      positions.array[i * 3 + 2] = Math.sin(seconds * 3 + u * 5 + flag.id) * 0.22 * u;
+    }
+    positions.needsUpdate = true;
+  }
+}
+
+/**
+ * Keep map names a constant screen size and hide ones that would overlap.
+ * `show` says which kinds take part: { area, shuttle }.
+ */
+function layoutAreaNames(group, camera, viewport, show) {
+  const worldPerPixel = (camera.top - camera.bottom) / camera.zoom / viewport.height;
+  const projected = new THREE.Vector3();
+  const rects = group.children.map((sprite) => {
+    const [w, h] = sprite.userData.cssSize;
+    sprite.scale.set(w * worldPerPixel, h * worldPerPixel, 1);
+    if (!show[sprite.userData.kind]) return null;
+    projected.copy(sprite.position).project(camera);
+    if (Math.abs(projected.x) > 1 || Math.abs(projected.y) > 1) return null;
+    return {
+      x: ((projected.x + 1) / 2) * viewport.width,
+      // sprite.center shifts the pill off its anchor (shuttle names hang below the flag).
+      y: ((1 - projected.y) / 2) * viewport.height + (sprite.center.y - 0.5) * h,
+      w,
+      h,
+    };
+  });
+  declutter(rects).forEach((visible, i) => (group.children[i].visible = visible));
 }
 
 function line(parent, points, color, y = 0.3) {
@@ -327,6 +506,8 @@ export default function Scene({
   traced = false,
   world = false,
   showLabels = true,
+  showAreaNames = true,
+  showShuttleNames = true,
   showOccupancy = true,
   cameraFocus = 'campus',
   cameraReset = 0,
@@ -535,8 +716,43 @@ export default function Scene({
       parkedMarkers = new THREE.Group(),
       staffing = new THREE.Group(),
       shuttleStops = new THREE.Group(),
-      occupancyFills = new THREE.Group();
-    scene.add(objects, traffic, parkedMarkers, staffing, shuttleStops, occupancyFills);
+      occupancyFills = new THREE.Group(),
+      areaNames = new THREE.Group(),
+      shuttleFlags = new THREE.Group();
+    scene.add(
+      objects,
+      traffic,
+      parkedMarkers,
+      staffing,
+      shuttleStops,
+      occupancyFills,
+      areaNames,
+      shuttleFlags,
+    );
+    // Children are in declutter priority order (see mapLabelEntries).
+    for (const entry of mapLabelEntries(
+      tracedFeatures,
+      C_ZONE_PIECES,
+      traceWorldPoint,
+      SHUTTLE_STOPS,
+    )) {
+      const sprite = areaNameSprite(entry.name, { dotColor: LOT_DOT[entry.lot], kind: entry.kind });
+      // Area names sit over the lot; shuttle names hang just below their flag's base.
+      sprite.position.set(entry.point[0], entry.kind === 'shuttle' ? 0.6 : 1.4, entry.point[1]);
+      if (entry.kind === 'shuttle') sprite.center.set(0.5, 1.25);
+      sprite.name = entry.name;
+      areaNames.add(sprite);
+      if (entry.kind === 'shuttle') {
+        // Shuttle Home stands right against Lot A's tall roof; give it a taller pole.
+        const flag = createShuttleFlag(entry.id === 'home' ? POLE_HEIGHT * 1.6 : POLE_HEIGHT);
+        flag.position.set(entry.point[0], 0.6, entry.point[1]);
+        flag.name = `${entry.name} flag`;
+        shuttleFlags.add(flag);
+      }
+    }
+    areaNames.visible = false;
+    areaNames.userData.show = { area: true, shuttle: false };
+    shuttleFlags.visible = false;
     // One grouped marker per hub, plus the black permit section. Departures update counts
     // without reallocating geometry/material/texture ownership.
     const parkedByZone = new Map();
@@ -601,16 +817,7 @@ export default function Scene({
       );
       marker.rotation.x = -Math.PI / 2;
       marker.position.set(x, 0.7, z);
-      shuttleStops.add(marker);
-      label(
-        shuttleStops,
-        stop.id === 'home' ? 'SHUTTLE HOME · A' : stop.label,
-        x,
-        1.5,
-        z - 1.5,
-        '#e8a5ff',
-        13,
-      );
+      shuttleStops.add(marker); // named by its flag + pill in areaNames
     });
     const ray = new THREE.Raycaster(),
       pointer = new THREE.Vector2(),
@@ -861,6 +1068,8 @@ export default function Scene({
       staffing,
       shuttleStops,
       occupancyFills,
+      areaNames,
+      shuttleFlags,
       ground,
       base,
       source,
@@ -1037,6 +1246,13 @@ export default function Scene({
           lastReport = time;
         }
       }
+      const viewport = {
+        width: renderer.domElement.clientWidth,
+        height: renderer.domElement.clientHeight,
+      };
+      if (shuttleFlags.visible)
+        animateShuttleFlags(shuttleFlags, camera, controls, viewport.height, time / 1000);
+      if (areaNames.visible) layoutAreaNames(areaNames, camera, viewport, areaNames.userData.show);
       renderer.render(scene, camera);
     };
     frame = requestAnimationFrame(animate);
@@ -1151,10 +1367,34 @@ export default function Scene({
             trafficOptions.staffing?.[id] !== false && (!object.userData.isLabel || showLabels);
       });
     e.occupancyFills.visible = showOccupancy;
+    // Shuttle flags always show in the 3D world. Their purple name pills appear only in
+    // Top view, where an upright flag is seen end-on; in 3D the flag alone marks the stop.
+    e.areaNames.visible = world;
+    e.areaNames.userData.show = {
+      area: showAreaNames,
+      shuttle: view === 'top' && showShuttleNames,
+    };
+    e.shuttleFlags.visible = world;
+    e.renderer.domElement.dataset.areaNamesVisible = String(showAreaNames && world);
+    e.renderer.domElement.dataset.shuttleFlags = String(world ? e.shuttleFlags.children.length : 0);
+    e.renderer.domElement.dataset.shuttleNames = String(
+      world && view === 'top' && showShuttleNames,
+    );
     e.renderer.domElement.dataset.occupancyVisible = String(showOccupancy);
     e.parkedMarkers.visible = showRoutes;
     e.renderer.domElement.dataset.hubsVisible = String(showRoutes);
-  }, [showLabels, showOccupancy, showRoutes, world, layout, selectedId, trafficOptions.staffing]);
+  }, [
+    showLabels,
+    showAreaNames,
+    showShuttleNames,
+    showOccupancy,
+    showRoutes,
+    world,
+    view,
+    layout,
+    selectedId,
+    trafficOptions.staffing,
+  ]);
   useEffect(() => {
     const e = engine.current;
     if (!e) return;

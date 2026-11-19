@@ -12,6 +12,8 @@ import { initialLayout, makeItem, deleteItem, stats } from './model.js';
 import useLayoutDraft from './editor/useLayoutDraft.js';
 
 import { tracedLayout } from './tracedMap.js';
+import ConfirmDialog from './ConfirmDialog.jsx';
+import { TOTAL_LOT_CAPACITY, formatCount } from './format.js';
 import clearPhotoUrl from '../images/Clear Image.png';
 
 export default function App() {
@@ -24,7 +26,9 @@ export default function App() {
   const traced = presentation === 'trace',
     world = presentation === 'world';
   const [showLabels, setShowLabels] = useState(false),
-    [showOccupancy, setShowOccupancy] = useState(true);
+    [showOccupancy, setShowOccupancy] = useState(true),
+    [showAreaNames, setShowAreaNames] = useState(false),
+    [showShuttleNames, setShowShuttleNames] = useState(false);
   const [showPhoto, setShowPhoto] = useState(false);
   const [cameraFocus, setCameraFocus] = useState('campus'),
     [cameraReset, setCameraReset] = useState(0);
@@ -90,7 +94,7 @@ export default function App() {
   const [view, setView] = useState('3d'),
     [zoom, setZoom] = useState(1),
     [showRoutes, setShowRoutes] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(null);
   const [confirmation, setConfirmation] = useState(null);
   const messageTimer = useRef(null);
   const selected = layout.items.find((i) => i.id === selectedId),
@@ -106,10 +110,10 @@ export default function App() {
 
   useEffect(() => () => clearTimeout(messageTimer.current), []);
 
-  function notify(text) {
-    setMessage(text);
+  function notify(text, { undoable = false } = {}) {
+    setMessage({ text, undoable });
     clearTimeout(messageTimer.current);
-    messageTimer.current = setTimeout(() => setMessage(''), 6000);
+    messageTimer.current = setTimeout(() => setMessage(null), 6000);
   }
   function update(id, patch) {
     edit((current) => ({
@@ -157,6 +161,7 @@ export default function App() {
     edit((current) => deleteItem(current, selected.id));
     setSelectedId(null);
     setTool('select');
+    notify(`${selected.name} deleted.`, { undoable: true });
   }
   function resetTraffic() {
     setRunning(false);
@@ -170,6 +175,7 @@ export default function App() {
   function confirmTraceUpdate() {
     setConfirmation({
       title: 'Apply updated LabelMe map?',
+      confirmLabel: 'Apply Trace',
       description:
         'Replaces the old generated map geometry with the updated source trace. Existing custom objects and lot operating settings remain. Undo can restore this draft.',
       action: () => {
@@ -177,7 +183,7 @@ export default function App() {
         setTraced(false);
         setSelectedId(null);
         setRunning(false);
-        notify('Updated LabelMe geometry applied. Undo restores the previous draft.');
+        notify('Updated LabelMe geometry applied.', { undoable: true });
       },
     });
   }
@@ -186,20 +192,19 @@ export default function App() {
     <div className={`app ${world ? 'world-app' : ''}`}>
       <header className="header">
         <a className="brand" href="./" aria-label="Parking Flow home">
-          <span className="brand-icon">
-            P<span>↗</span>
+          <span className="brand-icon" aria-hidden="true">
+            P
           </span>
-          <span>
-            parking<span className="brand-light">flow</span>
-            <small>HOPE CITY / CAMPUS SIMULATOR</small>
+          <span className="brand-name" aria-hidden="true">
+            parking<span>flow</span>
           </span>
         </a>
-        <div className="project-heading">
-          <span className="eyebrow">YOUR CAMPUS</span>
-          <strong>{layout.name}</strong>
-        </div>
+        <h1 className="project-heading">
+          <span className="eyebrow">Campus simulator</span>
+          <span className="project-name">{layout.name}</span>
+        </h1>
         <span className={`save-state ${saved === 'Local saving unavailable' ? 'unsaved' : ''}`}>
-          <i />
+          <i aria-hidden="true" />
           {saved}
         </span>
       </header>
@@ -213,19 +218,7 @@ export default function App() {
         speed={playbackSpeed}
         onSpeed={setPlaybackSpeed}
         onReset={resetTraffic}
-      >
-        <div className="map-quick-controls" role="group" aria-label="Map visibility">
-          <button aria-pressed={reference} onClick={toggleSatellite}>
-            Satellite overlay
-          </button>
-          <button aria-pressed={showRoutes} onClick={() => setShowRoutes((v) => !v)}>
-            Routes
-          </button>
-          <button aria-pressed={showOccupancy} onClick={() => setShowOccupancy((v) => !v)}>
-            Lot fullness
-          </button>
-        </div>
-      </SimulationControls>
+      />
 
       <div className="workspace">
         <LayoutSidebar
@@ -255,6 +248,8 @@ export default function App() {
             world={world}
             showLabels={showLabels || !world}
             showOccupancy={showOccupancy}
+            showAreaNames={showAreaNames}
+            showShuttleNames={showShuttleNames}
             cameraFocus={cameraFocus}
             cameraReset={cameraReset}
             running={running}
@@ -271,14 +266,39 @@ export default function App() {
             onPick={world ? () => {} : setSelectedId}
             onPlace={world ? () => {} : place}
           />
+          <div className="map-layers" role="group" aria-label="Map layers">
+            <button aria-pressed={reference} onClick={toggleSatellite}>
+              Satellite
+            </button>
+            <button aria-pressed={showRoutes} onClick={() => setShowRoutes((v) => !v)}>
+              Routes
+            </button>
+            <button aria-pressed={showOccupancy} onClick={() => setShowOccupancy((v) => !v)}>
+              Lot fullness
+            </button>
+            {world && (
+              <button aria-pressed={showAreaNames} onClick={() => setShowAreaNames((v) => !v)}>
+                Area names
+              </button>
+            )}
+            {/* Shuttle name pills only exist in Top view (3D shows the flags alone). */}
+            {world && view === 'top' && (
+              <button
+                aria-pressed={showShuttleNames}
+                onClick={() => setShowShuttleNames((v) => !v)}
+              >
+                Shuttle names
+              </button>
+            )}
+          </div>
           {view === 'top' && (
-            <div className="north">
-              <span>Ｎ</span>
+            <div className="north" aria-hidden="true">
+              <span>N</span>
               <div>↑</div>
             </div>
           )}
           <div className="view-controls">
-            <div className="segmented">
+            <div className="segmented" role="group" aria-label="Camera view">
               <button aria-pressed={view === 'top'} onClick={() => setView('top')}>
                 Top
               </button>
@@ -286,7 +306,7 @@ export default function App() {
                 3D
               </button>
             </div>
-            <div className="zoom-controls">
+            <div className="zoom-controls" role="group" aria-label="Zoom">
               <button aria-label="Zoom in" onClick={() => setZoom((z) => Math.min(5, z + 0.3))}>
                 +
               </button>
@@ -301,7 +321,21 @@ export default function App() {
                   setCameraReset((v) => v + 1);
                 }}
               >
-                ⌖
+                <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
+                  <circle
+                    cx="10"
+                    cy="10"
+                    r="5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                  />
+                  <path
+                    d="M10 1v5M10 14v5M1 10h5M14 10h5"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                  />
+                </svg>
               </button>
             </div>
           </div>
@@ -336,8 +370,12 @@ export default function App() {
                     <span>
                       Different extent and scale from the approved trace. Not aligned to this map.
                     </span>
-                    <button aria-label="Close clear photo" onClick={() => setShowPhoto(false)}>
-                      ×
+                    <button
+                      className="icon-button"
+                      aria-label="Close clear photo"
+                      onClick={() => setShowPhoto(false)}
+                    >
+                      <span aria-hidden="true">×</span>
                     </button>
                   </figcaption>
                   <img
@@ -351,7 +389,7 @@ export default function App() {
           )}
           {!world && (
             <div className="map-caption">
-              <span className="caption-rule" />
+              <span className="caption-rule" aria-hidden="true" />
               <span>
                 {traced ? 'IMAGE-PIXEL TRACE · NOT TRAFFIC RULES' : 'SCHEMATIC ONLY · NOT TO SCALE'}
               </span>
@@ -360,15 +398,17 @@ export default function App() {
           <div className="map-bottom" hidden={world}>
             <div className="tool-hint">
               {tool === 'select'
-                ? 'Drag to pan · pinch to zoom · tap to inspect'
+                ? selected
+                  ? `${selected.name} selected · edit details below the map`
+                  : 'Drag to pan · pinch to zoom · tap to inspect'
                 : tool === 'move'
                   ? 'Tap the new location for the selected object'
                   : `Tap the map to place ${tool === 'spaces' ? 'a parking row' : `a ${tool}`}`}
-              <button disabled={!canUndo} onClick={undo} aria-label="Undo last edit">
-                ↶ Undo
+              <button disabled={!canUndo} onClick={undo}>
+                <span aria-hidden="true">↶</span> Undo
               </button>
             </div>
-            <div className="toolbar" aria-label="Layout tools">
+            <div className="toolbar" role="toolbar" aria-label="Layout tools">
               {TOOLS.map(([id, icon, name]) => (
                 <button
                   key={id}
@@ -376,7 +416,9 @@ export default function App() {
                   aria-pressed={tool === id}
                   onClick={() => setTool(id)}
                 >
-                  <span className="tool-icon">{icon}</span>
+                  <span className="tool-icon" aria-hidden="true">
+                    {icon}
+                  </span>
                   <span>{name}</span>
                 </button>
               ))}
@@ -395,7 +437,6 @@ export default function App() {
           playbackState={playbackState}
         >
           <section className="map-settings" aria-label="Map display settings">
-            <strong>Map display</strong>
             <div className="presentation-switch" role="group" aria-label="Presentation mode">
               {[
                 ['world', '3D World'],
@@ -440,73 +481,70 @@ export default function App() {
         )}
       </div>
       <footer className="footer">
-        <span>
-          <strong>LAYOUT FIRST.</strong> Confidence follows.
+        <span className="footer-tagline">
+          <strong>Layout first.</strong> Confidence follows.
         </span>
-        <span>
-          {totals.marked} drawn spaces <b>·</b> *User-supplied capacities · 1,584 total <b>·</b>{' '}
-          Draft v0.1
+        <span className="footer-meta">
+          {formatCount(totals.marked)} drawn spaces · *User-supplied capacities ·{' '}
+          {formatCount(TOTAL_LOT_CAPACITY)} total · Draft v0.1
         </span>
         <button
+          className="button ghost"
           onClick={() =>
             setConfirmation({
               title: 'Reset to starter layout?',
+              confirmLabel: 'Reset Layout',
               description:
                 'This replaces your current layout with the provisional screenshot-based starter. Use Undo after resetting to restore the current layout.',
               action: () => {
                 edit(initialLayout);
                 setSelectedId(null);
                 setRunning(false);
-                notify('Starter layout restored.');
+                notify('Starter layout restored.', { undoable: true });
               },
             })
           }
         >
-          Reset draft
+          Reset Draft
         </button>
-        <blockquote className="header-verse footer-verse">
-          <cite>Colossians 3:23</cite>
+        <blockquote className="footer-verse">
           <p>
-            "Whatever you do, work at it with all your heart, as working for the Lord, not for human
-            masters."
+            “Whatever you do, work at it with all your heart, as working for the Lord, not for human
+            masters.”
           </p>
+          <cite>Colossians 3:23</cite>
         </blockquote>
       </footer>
-      {message && (
-        <div className="toast" role="status">
-          {message}
-          <button aria-label="Dismiss message" onClick={() => setMessage('')}>
-            ×
-          </button>
-        </div>
-      )}
+      <div className="toast-region" role="status" aria-live="polite">
+        {message && (
+          <div className="toast">
+            <span>{message.text}</span>
+            {message.undoable && canUndo && (
+              <button className="toast-action" onClick={undo}>
+                Undo
+              </button>
+            )}
+            <button
+              className="icon-button"
+              aria-label="Dismiss message"
+              onClick={() => setMessage(null)}
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+        )}
+      </div>
       {confirmation && (
-        <div className="modal-backdrop">
-          <section
-            className="modal"
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="confirm-title"
-            aria-describedby="confirm-description"
-          >
-            <h2 id="confirm-title">{confirmation.title}</h2>
-            <p id="confirm-description">{confirmation.description}</p>
-            <div>
-              <button className="button subtle" autoFocus onClick={() => setConfirmation(null)}>
-                Cancel
-              </button>
-              <button
-                className="button dark"
-                onClick={() => {
-                  confirmation.action();
-                  setConfirmation(null);
-                }}
-              >
-                Replace layout
-              </button>
-            </div>
-          </section>
-        </div>
+        <ConfirmDialog
+          title={confirmation.title}
+          description={confirmation.description}
+          confirmLabel={confirmation.confirmLabel}
+          onCancel={() => setConfirmation(null)}
+          onConfirm={() => {
+            confirmation.action();
+            setConfirmation(null);
+          }}
+        />
       )}
     </div>
   );

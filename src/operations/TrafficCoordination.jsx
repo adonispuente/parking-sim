@@ -1,9 +1,20 @@
 import React from 'react';
 
 export default function TrafficCoordination({ trafficStats }) {
+  const active = [
+    'equityClayStop',
+    'cEntrance',
+    'cRoundabout',
+    'northernRadio',
+    'blackPermitControl',
+    'corporateExitJunction',
+    'feederOfficer',
+  ].some((key) => trafficStats[key]);
   return (
-    <details className="coordination-details">
-      <summary>Live traffic coordination</summary>
+    <div className="coordination-list">
+      {!active && (
+        <p className="panel-note">Start traffic to see live controller status at each position.</p>
+      )}
       {trafficStats.equityClayStop && (
         <section className="traffic-control" aria-label="Equity Clay three way stop">
           <strong>Equity / Clay · three-way stop</strong>
@@ -111,6 +122,6 @@ export default function TrafficCoordination({ trafficStats }) {
           </small>
         </section>
       )}
-    </details>
+    </div>
   );
 }

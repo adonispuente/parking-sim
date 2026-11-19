@@ -3,7 +3,7 @@ import React from 'react';
 export default function ShuttleControls({ trafficStats, shuttles, scheduled, onUpdateShuttles }) {
   return (
     <section className="shuttle-panel" aria-label="Shuttle fleet controls">
-      <strong>Shuttle fleet · 5 buses</strong>
+      <p className="panel-lede">Fleet of 5 buses</p>
       <small>
         Home: Lot A pickup/drop-off. 9:00: three active buses. Transitions: all five. B circuit
         visits South then North pickup before returning home. C circuit visits the roundabout then
@@ -12,7 +12,6 @@ export default function ShuttleControls({ trafficStats, shuttles, scheduled, onU
       <label>
         Shuttle service
         <select
-          aria-label="Shuttle service"
           value={shuttles.enabled ? 'on' : 'off'}
           onChange={(e) => onUpdateShuttles({ enabled: e.target.value === 'on' })}
         >
@@ -23,7 +22,6 @@ export default function ShuttleControls({ trafficStats, shuttles, scheduled, onU
       <label>
         Dispatch strategy
         <select
-          aria-label="Shuttle dispatch strategy"
           value={shuttles.dispatchMode ?? 'demand'}
           onChange={(e) => onUpdateShuttles({ dispatchMode: e.target.value })}
         >
@@ -35,7 +33,6 @@ export default function ShuttleControls({ trafficStats, shuttles, scheduled, onU
         <label>
           Switch all buses to C at B occupancy (%)
           <input
-            aria-label="Shuttle B occupancy threshold"
             type="number"
             min="1"
             max="100"
@@ -97,7 +94,6 @@ export default function ShuttleControls({ trafficStats, shuttles, scheduled, onU
         Active buses (manual mode)
         <select
           disabled={scheduled}
-          aria-label="Active shuttle count"
           value={shuttles.activeCount}
           onChange={(e) => onUpdateShuttles({ activeCount: Number(e.target.value) })}
         >
@@ -111,7 +107,6 @@ export default function ShuttleControls({ trafficStats, shuttles, scheduled, onU
       <label>
         Boarding time
         <select
-          aria-label="Shuttle boarding variation"
           value={shuttles.randomDwell !== false ? 'random' : 'fixed'}
           onChange={(e) => onUpdateShuttles({ randomDwell: e.target.value === 'random' })}
         >
@@ -123,7 +118,6 @@ export default function ShuttleControls({ trafficStats, shuttles, scheduled, onU
         <label>
           Fixed stop dwell (simulation seconds)
           <input
-            aria-label="Shuttle stop dwell"
             type="number"
             min="0"
             max="120"

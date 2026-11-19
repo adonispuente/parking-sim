@@ -6,16 +6,16 @@ import {
   updateServiceInputs,
   formatServiceClock,
 } from './sundayServices.js';
+import { PARKING_ZONES } from './parkingZones.js';
+import { serviceCarryOptions } from './serviceCarry.js';
 
-const SERVICE_MENU_LABELS = {
+export const SERVICE_MENU_LABELS = {
   nine: '9:00 AM',
   eleven: '11:00 AM',
   easter: 'Easter',
   final: '1:15 PM',
 };
-const SERVICE_MENU_ORDER = ['nine', 'eleven', 'final', 'easter'];
-import { PARKING_ZONES } from './parkingZones.js';
-import { serviceCarryOptions } from './serviceCarry.js';
+export const SERVICE_MENU_ORDER = ['nine', 'eleven', 'final', 'easter'];
 
 export function ServiceSelect({ options, setOptions, onReset }) {
   const config = options.service ?? {};
@@ -40,7 +40,6 @@ export function ServiceSelect({ options, setOptions, onReset }) {
     <label>
       Service time
       <select
-        aria-label="Sunday service scenario"
         value={config.enabled ? config.id : 'manual'}
         onChange={(e) => {
           if (e.target.value === 'manual') {
@@ -85,7 +84,7 @@ export default function SundayControls({ options, setOptions, stats, onReset, on
       </small>
       {config.enabled && (
         <>
-          <div className="service-clock" role="status">
+          <div className="service-clock">
             <strong>
               {status?.clock ??
                 formatServiceClock(config.beginMinute ?? SUNDAY_SERVICES[config.id].beginMinute)}
@@ -126,7 +125,6 @@ export default function SundayControls({ options, setOptions, stats, onReset, on
           <label>
             Arriving cars for this service
             <input
-              aria-label="Service attendance cars"
               type="number"
               min="0"
               max="2500"
@@ -139,7 +137,6 @@ export default function SundayControls({ options, setOptions, stats, onReset, on
           <label>
             Equity share of arrivals (%) · minimum 10
             <input
-              aria-label="Service Equity share"
               type="number"
               min="10"
               max="90"
@@ -168,7 +165,6 @@ export default function SundayControls({ options, setOptions, stats, onReset, on
               <label>
                 Early arrivals during first 20 minutes (%)
                 <input
-                  aria-label="Early arrival share"
                   type="number"
                   min="0"
                   max="100"
@@ -199,7 +195,7 @@ export default function SundayControls({ options, setOptions, stats, onReset, on
                 onRun();
               }}
             >
-              Apply inputs & restart simulation
+              Apply Inputs & Restart
             </button>
           </div>
           {config.id === 'easter' && (
@@ -212,7 +208,6 @@ export default function SundayControls({ options, setOptions, stats, onReset, on
             <label className="auto-continue">
               <input
                 type="checkbox"
-                aria-label="Auto-continue to next service"
                 checked={options.autoContinue !== false}
                 onChange={(e) => {
                   setOptions((o) => ({ ...o, autoContinue: e.target.checked }));
@@ -226,7 +221,7 @@ export default function SundayControls({ options, setOptions, stats, onReset, on
           {nextService && (
             <>
               <button disabled={!carryReady} onClick={carryForward}>
-                Next service · carry current parked cars
+                Next Service · Carry Parked Cars
               </button>
               <small>
                 Available after scheduled arrivals and car road legs finish. Preserves each car's

@@ -22,9 +22,9 @@ export default function StaffingControls({ options, setOptions, onReset }) {
   };
   return (
     <section className="sunday-panel staffing-panel" aria-label="Position staffing">
-      <strong>
-        Position staffing · {count} / {positions.length} staffed
-      </strong>
+      <p className="panel-lede">
+        {count} / {positions.length} positions staffed
+      </p>
       <small>
         Uncheck a position to leave it unstaffed. Changes restart and pause the simulation. Roads
         stay open; drivers still follow vehicles ahead, yield at conflicts, and obey the Equity /
